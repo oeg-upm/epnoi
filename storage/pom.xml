@@ -61,6 +61,10 @@
 			<groupId>virtuoso-jdbc4</groupId>
 			<artifactId>virtuoso-jdbc4</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+		</dependency>
 
 		<!-- Spring Data Libraries -->
 		<dependency>

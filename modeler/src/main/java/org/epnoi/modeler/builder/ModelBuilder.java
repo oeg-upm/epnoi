@@ -26,7 +26,9 @@ public class ModelBuilder {
     }
 
     public void execute(Runnable modelingTask){
-        this.threadpool.execute(modelingTask);
+        // TODO parallel
+//        this.threadpool.execute(modelingTask);
+        modelingTask.run();
     }
 
 }

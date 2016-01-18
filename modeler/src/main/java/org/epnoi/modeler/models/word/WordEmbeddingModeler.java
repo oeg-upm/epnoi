@@ -35,6 +35,7 @@ public class WordEmbeddingModeler extends ModelingTask {
             //TODO Optimize using Spark.parallel
             List<RegularResource> regularResources = helper.getUdm().findDocumentsByDomain(domain.getUri()).stream().
                     map(uri -> helper.getUdm().readDocument(uri)).
+                    filter(res -> res.isPresent()).map(res -> res.get()).
                     map(document -> helper.getRegularResourceBuilder().from(document.getUri(), document.getTitle(), document.getAuthoredOn(), helper.getAuthorBuilder().composeFromMetadata(document.getAuthoredBy()), document.getTokens())).
                     collect(Collectors.toList());
 
@@ -56,7 +57,9 @@ public class WordEmbeddingModeler extends ModelingTask {
             // Make relations
             //TODO Improve using Spark.parallel
             // First Create
-            List<Word> words = model.getVocabulary().stream().map(word -> findOrCreateWord(word)).collect(Collectors.toList());
+            // TODO use all words of the vocabulary instead of only the existing ones
+            List<Word> words = helper.getUdm().findWords().stream().map(uri -> helper.getUdm().readWord(uri)).filter(res -> res.isPresent()).map(res -> res.get()).collect(Collectors.toList());
+            //List<Word> words = model.getVocabulary().stream().map(word -> findOrCreateWord(word)).collect(Collectors.toList());
             // Then relate
             words.stream().forEach(word -> relateWord(word,model));
 
@@ -75,8 +78,7 @@ public class WordEmbeddingModeler extends ModelingTask {
         float[] vector = model.getRepresentation(word.getLemma());
         helper.getUdm().relateWordToDomain(word.getUri(),domain.getUri(),Arrays.toString(vector));
 
-        // SIMILAR relations
-        // TODO this relation should be done in the COMPARATOR module
+        // PAIRED relations
         List<WordDistribution> words = model.find(word.getLemma()).stream().filter(sim -> sim.getWeight() > helper.getSimilarityThreshold()).collect(Collectors.toList());
         for (WordDistribution wordDistribution : words){
             Optional<String> wordUri = helper.getUdm().findWordByLemma(wordDistribution.getWord());
@@ -97,6 +99,7 @@ public class WordEmbeddingModeler extends ModelingTask {
             wordData.setUri(helper.getUriGenerator().newWord());
             wordData.setCreationTime(helper.getTimeGenerator().getNowAsISO());
             helper.getUdm().saveWord(wordData);
+            LOG.info("Word created from modeler: " + word);
         }else{
             wordData.setUri(result.get());
         }

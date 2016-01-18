@@ -10,10 +10,10 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>epnoi-api</artifactId>
+    <artifactId>epnoi-uia</artifactId>
     <packaging>war</packaging>
-    <name>epnoi api</name>
-    <description>epnoi api</description>
+    <name>epnoi uia</name>
+    <description>epnoi uia</description>
 
     <dependencies>
 

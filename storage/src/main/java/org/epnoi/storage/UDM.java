@@ -321,40 +321,58 @@ public class UDM {
      * Read
      ******************************************************************************/
 
-    public Source readSource(String uri){
-        return sourceColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI,uri));
+    public Optional<Source> readSource(String uri){
+        SourceColumn result = sourceColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI, uri));
+        if (result == null) return Optional.empty();
+        return Optional.of(ResourceUtils.map(result, Source.class));
     }
 
-    public Domain readDomain(String uri){
-        return domainColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI,uri));
+    public Optional<Domain> readDomain(String uri){
+        DomainColumn result = domainColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI, uri));
+        if (result == null) return Optional.empty();
+        return Optional.of(ResourceUtils.map(result, Domain.class));
     }
 
-    public Document readDocument(String uri){
-        return documentColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI,uri));
+    public Optional<Document> readDocument(String uri){
+        DocumentColumn result = documentColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI, uri));
+        if (result == null) return Optional.empty();
+        return Optional.of(ResourceUtils.map(result, Document.class));
     }
 
-    public Item readItem(String uri){
-        return itemColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI,uri));
+    public Optional<Item> readItem(String uri){
+        ItemColumn result = itemColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI, uri));
+        if (result == null) return Optional.empty();
+        return Optional.of(ResourceUtils.map(result, Item.class));
     }
 
-    public Part readPart(String uri){
-        return partColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI,uri));
+    public Optional<Part> readPart(String uri){
+        PartColumn result = partColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI, uri));
+        if (result == null) return Optional.empty();
+        return Optional.of(ResourceUtils.map(result, Part.class));
     }
 
-    public Word readWord(String uri){
-        return wordColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI,uri));
+    public Optional<Word> readWord(String uri){
+        WordColumn result = wordColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI, uri));
+        if (result == null) return Optional.empty();
+        return Optional.of(ResourceUtils.map(result, Word.class));
     }
 
-    public Relation readRelation(String uri){
-        return relationColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI,uri));
+    public Optional<Relation> readRelation(String uri){
+        RelationColumn result = relationColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI, uri));
+        if (result == null) return Optional.empty();
+        return Optional.of(ResourceUtils.map(result, Relation.class));
     }
 
-    public Topic readTopic(String uri){
-        return topicColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI,uri));
+    public Optional<Topic> readTopic(String uri){
+        TopicColumn result = topicColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI, uri));
+        if (result == null) return Optional.empty();
+        return Optional.of(ResourceUtils.map(result, Topic.class));
     }
 
-    public Analysis readAnalysis(String uri){
-        return analysisColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI,uri));
+    public Optional<Analysis> readAnalysis(String uri){
+        AnalysisColumn result = analysisColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI, uri));
+        if (result == null) return Optional.empty();
+        return Optional.of(ResourceUtils.map(result, Analysis.class));
     }
 
     /******************************************************************************
@@ -653,6 +671,78 @@ public class UDM {
      * Find
      ******************************************************************************/
 
+    public List<String> findSources(){
+        LOG.debug("Finding sources");
+        List<String> uris = new ArrayList<>();
+        sourceColumnRepository.findAll().forEach(x -> uris.add(x.getUri()));
+        LOG.info("Sources: " + uris);
+        return uris;
+    }
+
+    public List<String> findDomains(){
+        LOG.debug("Finding domains");
+        List<String> uris = new ArrayList<>();
+        domainColumnRepository.findAll().forEach(x -> uris.add(x.getUri()));
+        LOG.info("domains: " + uris);
+        return uris;
+    }
+
+    public List<String> findDocuments(){
+        LOG.debug("Finding documents");
+        List<String> uris = new ArrayList<>();
+        documentColumnRepository.findAll().forEach(x -> uris.add(x.getUri()));
+        LOG.info("Documents: " + uris);
+        return uris;
+    }
+
+    public List<String> findItems(){
+        LOG.debug("Finding items");
+        List<String> uris = new ArrayList<>();
+        itemColumnRepository.findAll().forEach(x -> uris.add(x.getUri()));
+        LOG.info("Items: " + uris);
+        return uris;
+    }
+
+    public List<String> findParts(){
+        LOG.debug("Finding parts");
+        List<String> uris = new ArrayList<>();
+        partColumnRepository.findAll().forEach(x -> uris.add(x.getUri()));
+        LOG.info("Parts: " + uris);
+        return uris;
+    }
+
+    public List<String> findWords(){
+        LOG.debug("Finding words");
+        List<String> uris = new ArrayList<>();
+        wordColumnRepository.findAll().forEach(x -> uris.add(x.getUri()));
+        LOG.info("Words: " + uris);
+        return uris;
+    }
+
+    public List<String> findTopics(){
+        LOG.debug("Finding topics");
+        List<String> uris = new ArrayList<>();
+        topicColumnRepository.findAll().forEach(x -> uris.add(x.getUri()));
+        LOG.info("Topics: " + uris);
+        return uris;
+    }
+
+    public List<String> findAnalyses(){
+        LOG.debug("Finding analyses");
+        List<String> uris = new ArrayList<>();
+        analysisColumnRepository.findAll().forEach(x -> uris.add(x.getUri()));
+        LOG.info("Analyses: " + uris);
+        return uris;
+    }
+
+    public List<String> findRelations(){
+        LOG.debug("Finding relations");
+        List<String> uris = new ArrayList<>();
+        relationColumnRepository.findAll().forEach(x -> uris.add(x.getUri()));
+        LOG.info("Relations: " + uris);
+        return uris;
+    }
+
     public List<String> findDocumentsByDomain(String uri){
         LOG.debug("Finding documents in domain: " + uri);
         List<String> uris = new ArrayList<>();
@@ -765,7 +855,7 @@ public class UDM {
      * Delete
      ******************************************************************************/
 
-    public void deleteSource(String uri){
+    public Source deleteSource(String uri){
         // column
         sourceColumnRepository.delete(BasicMapId.id(ResourceUtils.URI,uri));
         // document
@@ -775,10 +865,20 @@ public class UDM {
         sourceGraphRepository.delete(source);
 
         //Publish the event
-        eventBus.post(Event.from(ResourceUtils.map(source,Source.class)), RoutingKey.of(Resource.Type.SOURCE, Resource.State.DELETED));
+        Source resource = ResourceUtils.map(source, Source.class);
+        eventBus.post(Event.from(resource), RoutingKey.of(Resource.Type.SOURCE, Resource.State.DELETED));
+        return resource;
     }
 
-    public void deleteDomain(String uri){
+    public void deleteSources(){
+        sourceColumnRepository.deleteAll();
+        sourceDocumentRepository.deleteAll();
+        sourceGraphRepository.deleteAll();
+        LOG.info("All sources removed");
+        //TODO Publish the events
+    }
+
+    public Domain deleteDomain(String uri){
         // column
         domainColumnRepository.delete(BasicMapId.id(ResourceUtils.URI,uri));
         // document
@@ -788,10 +888,20 @@ public class UDM {
         domainGraphRepository.delete(domain);
 
         //Publish the event
-        eventBus.post(Event.from(ResourceUtils.map(domain,Domain.class)), RoutingKey.of(Resource.Type.DOMAIN, Resource.State.DELETED));
+        Domain resource = ResourceUtils.map(domain,Domain.class);
+        eventBus.post(Event.from(resource), RoutingKey.of(Resource.Type.DOMAIN, Resource.State.DELETED));
+        return resource;
     }
 
-    public void deleteDocument(String uri){
+    public void deleteDomains(){
+        domainColumnRepository.deleteAll();
+        domainDocumentRepository.deleteAll();
+        domainGraphRepository.deleteAll();
+        LOG.info("All domains removed");
+        //TODO Publish the events
+    }
+
+    public Document deleteDocument(String uri){
         // column
         documentColumnRepository.delete(BasicMapId.id(ResourceUtils.URI,uri));
         // document
@@ -801,10 +911,20 @@ public class UDM {
         documentGraphRepository.delete(document);
 
         //Publish the event
-        eventBus.post(Event.from(ResourceUtils.map(document,Document.class)), RoutingKey.of(Resource.Type.DOCUMENT, Resource.State.DELETED));
+        Document resource = ResourceUtils.map(document,Document.class);
+        eventBus.post(Event.from(resource), RoutingKey.of(Resource.Type.DOCUMENT, Resource.State.DELETED));
+        return resource;
     }
 
-    public void deleteItem(String uri){
+    public void deleteDocuments(){
+        documentColumnRepository.deleteAll();
+        documentDocumentRepository.deleteAll();
+        documentGraphRepository.deleteAll();
+        LOG.info("All documents removed");
+        //TODO Publish the events
+    }
+
+    public Item deleteItem(String uri){
         // column
         itemColumnRepository.delete(BasicMapId.id(ResourceUtils.URI,uri));
         // document
@@ -814,10 +934,20 @@ public class UDM {
         itemGraphRepository.delete(item);
 
         //Publish the event
-        eventBus.post(Event.from(ResourceUtils.map(item,Item.class)), RoutingKey.of(Resource.Type.ITEM, Resource.State.DELETED));
+        Item resource = ResourceUtils.map(item,Item.class);
+        eventBus.post(Event.from(resource), RoutingKey.of(Resource.Type.ITEM, Resource.State.DELETED));
+        return resource;
     }
 
-    public void deletePart(String uri){
+    public void deleteItems(){
+        itemColumnRepository.deleteAll();
+        itemDocumentRepository.deleteAll();
+        itemGraphRepository.deleteAll();
+        LOG.info("All items removed");
+        //TODO Publish the events
+    }
+
+    public Part deletePart(String uri){
         // column
         partColumnRepository.delete(BasicMapId.id(ResourceUtils.URI,uri));
         // document
@@ -827,10 +957,20 @@ public class UDM {
         partGraphRepository.delete(part);
 
         //Publish the event
-        eventBus.post(Event.from(ResourceUtils.map(part,Part.class)), RoutingKey.of(Resource.Type.PART, Resource.State.DELETED));
+        Part resource = ResourceUtils.map(part,Part.class);
+        eventBus.post(Event.from(resource), RoutingKey.of(Resource.Type.PART, Resource.State.DELETED));
+        return resource;
     }
 
-    public void deleteWord(String uri){
+    public void deleteParts(){
+        partColumnRepository.deleteAll();
+        partDocumentRepository.deleteAll();
+        partGraphRepository.deleteAll();
+        LOG.info("All parts removed");
+        //TODO Publish the events
+    }
+
+    public Word deleteWord(String uri){
         // column
         wordColumnRepository.delete(BasicMapId.id(ResourceUtils.URI,uri));
         // document
@@ -840,10 +980,20 @@ public class UDM {
         wordGraphRepository.delete(word);
 
         //Publish the event
-        eventBus.post(Event.from(ResourceUtils.map(word,Word.class)), RoutingKey.of(Resource.Type.WORD, Resource.State.DELETED));
+        Word resource = ResourceUtils.map(word,Word.class);
+        eventBus.post(Event.from(resource), RoutingKey.of(Resource.Type.WORD, Resource.State.DELETED));
+        return resource;
     }
 
-    public void deleteTopic(String uri){
+    public void deleteWords(){
+        wordColumnRepository.deleteAll();
+        wordDocumentRepository.deleteAll();
+        wordGraphRepository.deleteAll();
+        LOG.info("All words removed");
+        //TODO Publish the events
+    }
+
+    public Topic deleteTopic(String uri){
         // column
         topicColumnRepository.delete(BasicMapId.id(ResourceUtils.URI,uri));
         // document
@@ -853,10 +1003,20 @@ public class UDM {
         topicGraphRepository.deleteAndDetach(uri);
 
         //Publish the event
-        eventBus.post(Event.from(ResourceUtils.map(topic,Topic.class)), RoutingKey.of(Resource.Type.TOPIC, Resource.State.DELETED));
+        Topic resource = ResourceUtils.map(topic,Topic.class);
+        eventBus.post(Event.from(resource), RoutingKey.of(Resource.Type.TOPIC, Resource.State.DELETED));
+        return resource;
     }
 
-    public void deleteRelation(String uri){
+    public void deleteTopics(){
+        topicColumnRepository.deleteAll();
+        topicDocumentRepository.deleteAll();
+        topicGraphRepository.deleteAll();
+        LOG.info("All topics removed");
+        //TODO Publish the events
+    }
+
+    public Relation deleteRelation(String uri){
         // column
         relationColumnRepository.delete(BasicMapId.id(ResourceUtils.URI,uri));
         // document
@@ -867,9 +1027,17 @@ public class UDM {
         Relation relation = new Relation();
         relation.setUri(uri);
         eventBus.post(Event.from(relation), RoutingKey.of(Resource.Type.RELATION, Resource.State.DELETED));
+        return relation;
     }
 
-    public void deleteAnalysis(String uri){
+    public void deleteRelations(){
+        relationColumnRepository.deleteAll();
+        relationDocumentRepository.deleteAll();
+        LOG.info("All relations removed");
+        //TODO Publish the events
+    }
+
+    public Analysis deleteAnalysis(String uri){
         // column
         analysisColumnRepository.delete(BasicMapId.id(ResourceUtils.URI,uri));
         // document
@@ -880,6 +1048,16 @@ public class UDM {
         Analysis analysis = new Analysis();
         analysis.setUri(uri);
         eventBus.post(Event.from(analysis), RoutingKey.of(Resource.Type.ANALYSIS, Resource.State.DELETED));
+        return analysis;
+    }
+
+    public void deleteAnalyses(){
+        // column
+        analysisColumnRepository.deleteAll();
+        // document
+        analysisDocumentRepository.deleteAll();
+        LOG.info("All analyses removed");
+        //TODO Publish the events
     }
 
     public void deleteSimilarsInDomain(String uri){

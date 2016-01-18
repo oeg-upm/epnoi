@@ -57,6 +57,7 @@ public class FileRouteMaker implements RouteMaker{
                 setProperty(Record.PUBLICATION_FORMAT,         new ConstantExpression("pdf")). //TODO get from file extension
                 setProperty(Record.PUBLICATION_URL_LOCAL,      new SimpleExpression("${header.CamelFileAbsolutePath}")).
                 setProperty(Record.PUBLICATION_REFERENCE_URL,  new SimpleExpression("${header.CamelFileAbsolutePath}")).
+                setProperty(Record.PUBLICATION_URI,            new SimpleExpression("${header.CamelFileAbsolutePath}")).
                 to(CommonRouteBuilder.URI_RO_BUILD);
     }
 }

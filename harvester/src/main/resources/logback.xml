@@ -5,7 +5,7 @@
         <file>../logs/harvester.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rollover daily -->
-            <fileNamePattern>harvester-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>../logs/harvester-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <!-- or whenever the file size reaches 100MB -->
@@ -15,6 +15,7 @@
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [HARVESTER] [%thread] %-5level %logger{35} - %msg%n</pattern>
         </encoder>
+        <param name="Append" value="false" />
     </appender>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">

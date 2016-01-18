@@ -1,5 +1,10 @@
 package org.epnoi.storage;
 
+import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.util.URIUtil;
+import org.apache.http.client.utils.URIUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +15,8 @@ import java.util.UUID;
  */
 @Component
 public class URIGenerator {
+
+    private static final Logger LOG = LoggerFactory.getLogger(URIGenerator.class);
 
     private static final String BASE = "http://epnoi.org/";
 
@@ -63,6 +70,14 @@ public class URIGenerator {
             uri = new StringBuilder(BASE).append("words/").append(UUID.randomUUID().toString()).toString();
         } while (udm.existWord(uri));
         return uri;
+    }
+
+    public String fromWord(String value) {
+        try{
+            return new StringBuilder(BASE).append("words/").append(URIUtil.encodeQuery(value.toLowerCase())).toString();
+        }catch (URIException e){
+            throw new RuntimeException(e);
+        }
     }
 
     public String newAnalysis(){

@@ -20,6 +20,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -79,16 +80,18 @@ public class UDMTest {
         udm.saveSource(source);
         LOG.info("source saved!");
 
-        Source source2 = udm.readSource(source.getUri());
-        Assert.assertEquals(source.getUri(),source2.getUri());
-        Assert.assertEquals(source.getName(),source2.getName());
+        Optional<Source> source2 = udm.readSource(source.getUri());
+        Assert.assertTrue(source2.isPresent());
+        Assert.assertEquals(source.getUri(),source2.get().getUri());
+        Assert.assertEquals(source.getName(),source2.get().getName());
 
         LOG.info("Deleting source: " + source);
         udm.deleteSource(source.getUri());
         LOG.info("source deleted!");
 
-        Source source3 = udm.readSource(source.getUri());
-        Assert.assertNotEquals(source,source2);
+        Optional<Source> source3 = udm.readSource(source.getUri());
+        Assert.assertTrue(source3.isPresent());
+        Assert.assertNotEquals(source,source3.get());
 
         Assert.assertEquals(1, counter.get());
 

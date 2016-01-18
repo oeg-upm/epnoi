@@ -1,5 +1,6 @@
 package org.epnoi.harvester.routes.processor;
 
+import arq.tokens;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import org.apache.camel.Exchange;
@@ -7,6 +8,7 @@ import org.apache.camel.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.epnoi.harvester.mining.TextMiner;
 import org.epnoi.harvester.mining.annotation.AnnotatedDocument;
+import org.epnoi.harvester.mining.parser.Token;
 import org.epnoi.harvester.model.MetaInformation;
 import org.epnoi.model.Record;
 import org.epnoi.storage.TimeGenerator;
@@ -15,12 +17,16 @@ import org.epnoi.storage.URIGenerator;
 import org.epnoi.storage.model.Document;
 import org.epnoi.storage.model.Item;
 import org.epnoi.storage.model.Part;
+import org.epnoi.storage.model.Word;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -73,6 +79,7 @@ public class ResourceBuilder implements Processor {
             String path             = exchange.getProperty(Record.PUBLICATION_URL_LOCAL,String.class).replace("."+metaInformation.getPubFormat(), "."+metaInformation.getFormat());
             AnnotatedDocument annotatedDocument = textMiner.annotate(path);
             String rawContent       = annotatedDocument.getContent();
+//            Map<String, Integer> tokens   = textMiner.parse(rawContent).stream().filter(token -> token.isValid()).collect(Collectors.toConcurrentMap(w -> w.getLemma(), w -> 1, Integer::sum));
 
             // Update Metainfo if empty
             updateMetainfoFromAnnotatedDoc(metaInformation,annotatedDocument);
@@ -80,32 +87,55 @@ public class ResourceBuilder implements Processor {
             // Document
             Document document = createAndSaveDocument(metaInformation,rawContent,sourceUri,domainUri);
 
+            // Words
+            // TODO
+//            List<Word> words = tokens.keySet().stream().map(token -> createAndSaveWord(token)).collect(Collectors.toList());
+
             // Item
             Item item = createAndSaveItem(metaInformation,rawContent,document.getUri());
+            // Mentions from Item
+            // TODO
+//            words.stream().forEach(word -> udm.relateWordToItem(word.getUri(),item.getUri(),tokens.get(word.getLemma()).longValue()));
 
             // Part:: Abstract
             Part abstractPart = createAndSavePart("abstract", annotatedDocument.getAbstractContent(), item.getUri());
+            // Mentions from Part
+            //TODO
 
             // Part:: Approach
             Part approachPart = createAndSavePart("approach", annotatedDocument.getApproachContent(), item.getUri());
+            // Mentions from Part
+            //TODO
 
             // Part:: Background
             Part backgroundPart = createAndSavePart("background", annotatedDocument.getBackgroundContent(), item.getUri());
+            // Mentions from Part
+            //TODO
 
             // Part:: Challenge
             Part challenge = createAndSavePart("challenge", annotatedDocument.getChallengeContent(), item.getUri());
+            // Mentions from Part
+            //TODO
 
             // Part:: Outcome
             Part outcome = createAndSavePart("outcome", annotatedDocument.getOutcomeContent(), item.getUri());
+            // Mentions from Part
+            //TODO
 
             // Part:: FutureWork
             Part futureWork = createAndSavePart("futureWork", annotatedDocument.getFutureWorkContent(), item.getUri());
+            // Mentions from Part
+            //TODO
 
             // Part:: Summary by Centroid
             Part summCentroid = createAndSavePart("summaryCentroid", annotatedDocument.getSummaryByCentroidContent(25), item.getUri());
+            // Mentions from Part
+            //TODO
 
             // Part:: Summary by Title Similarity
             Part summTitle = createAndSavePart("summaryTitle", annotatedDocument.getSummaryByTitleSimContent(25), item.getUri());
+            // Mentions from Part
+            //TODO
 
             // Relate Document to Domain
             udm.relateDocumentToDomain(document.getUri(), domainUri, document.getCreationTime());
@@ -130,14 +160,28 @@ public class ResourceBuilder implements Processor {
         // -> Update Published from parser if empty
         if (Strings.isNullOrEmpty(metaInformation.getPublished())){
             metaInformation.setPublished(annotatedDocument.getYear());
-            LOG.warn("Published date from annotated document: " + metaInformation.getPublished());
+            LOG.info("Published date from annotated document: " + metaInformation.getPublished());
         }
         // -> Update Authors from parser if empty
         if (Strings.isNullOrEmpty(metaInformation.getCreators())){
             metaInformation.setCreators(annotatedDocument.getAuthors().stream().map(author -> author.getFullName()).collect(Collectors.joining(";")));
-            LOG.warn("Authors from annotated document: " + metaInformation.getCreators());
+            LOG.info("Authors from annotated document: " + metaInformation.getCreators());
         }
 
+    }
+
+    private Word createAndSaveWord(String value){
+        Optional<String> uri = udm.findWordByLemma(value);
+        Word word = new Word();
+        word.setLemma(value);
+        if (uri.isPresent()){
+            word.setUri(uri.get());
+        }else{
+            word.setUri(uriGenerator.fromWord(value));
+            word.setCreationTime(timeGenerator.getNowAsISO());
+            udm.saveWord(word);
+        }
+        return word;
     }
 
     private Document createAndSaveDocument(MetaInformation metaInformation, String rawContent, String sourceUri, String domainUri){

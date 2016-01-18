@@ -65,6 +65,7 @@ public class TopicModeler extends ModelingTask {
                     findDocumentsByDomain(
                             domain.getUri()).stream().
                             map(uri -> helper.getUdm().readDocument(uri)).
+                            filter(res -> res.isPresent()).map(res -> res.get()).
                             map(document -> helper.getRegularResourceBuilder().from(document.getUri(), document.getTitle(), document.getAuthoredOn(), helper.getAuthorBuilder().composeFromMetadata(document.getAuthoredBy()), document.getTokens())).
                             collect(Collectors.toList());
                 break;
@@ -72,6 +73,7 @@ public class TopicModeler extends ModelingTask {
             case ITEM: regularResources = helper.getUdm().
                     findItemsByDomain(domain.getUri()).stream().
                             map(uri -> helper.getUdm().readItem(uri)).
+                            filter(res -> res.isPresent()).map(res -> res.get()).
                             map(item -> helper.getRegularResourceBuilder().from(item.getUri(), item.getTitle(), item.getAuthoredOn(), helper.getAuthorBuilder().composeFromMetadata(item.getAuthoredBy()), item.getTokens())).
                             collect(Collectors.toList());
                 break;
@@ -79,6 +81,7 @@ public class TopicModeler extends ModelingTask {
             case PART: regularResources = helper.getUdm().
                     findPartsByDomain(domain.getUri()).stream().
                             map(uri -> helper.getUdm().readPart(uri)).
+                            filter(res -> res.isPresent()).map(res -> res.get()).
                     // TODO Improve metainformation of Part
                             map(part -> helper.getRegularResourceBuilder().from(part.getUri(), part.getSense(), part.getCreationTime(), new ArrayList<User>(), part.getTokens())).
                             collect(Collectors.toList());

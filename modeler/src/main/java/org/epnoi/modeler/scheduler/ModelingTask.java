@@ -37,7 +37,7 @@ public class ModelingTask implements Runnable{
 
     @Override
     public void run() {
-        helper.getModelBuilder().execute(new WordEmbeddingModeler(domain,helper));
         helper.getModelBuilder().execute(new TopicModeler(domain,helper));
+        helper.getModelBuilder().execute(new WordEmbeddingModeler(domain,helper));
     }
 }
