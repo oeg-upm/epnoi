@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+curl -X DELETE "http://zavijava.dia.fi.upm.es:8080/api/rest/domains"
+curl -X DELETE "http://zavijava.dia.fi.upm.es:8080/api/rest/sources"
+curl -X DELETE "http://zavijava.dia.fi.upm.es:8080/api/rest/documents"
+curl -X DELETE "http://zavijava.dia.fi.upm.es:8080/api/rest/items"
+curl -X DELETE "http://zavijava.dia.fi.upm.es:8080/api/rest/parts"
+curl -X DELETE "http://zavijava.dia.fi.upm.es:8080/api/rest/words"
+curl -X DELETE "http://zavijava.dia.fi.upm.es:8080/api/rest/topics"
+curl -X DELETE "http://zavijava.dia.fi.upm.es:8080/api/rest/analyses"
+curl -X DELETE "http://zavijava.dia.fi.upm.es:8080/api/rest/relations"

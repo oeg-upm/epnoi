@@ -33,6 +33,7 @@ public class DocumentSimilarityTask implements Runnable {
 
     @Override
     public void run() {
+        helper.getUdm().deleteSimilarsBetweenDocumentsInDomain(analysis.getDomain());
         List<String> documents = helper.getUdm().findDocumentsByDomain(analysis.getDomain());
         recursiveSimilarityCalculus(documents.get(0),documents.subList(1,documents.size()));
     }

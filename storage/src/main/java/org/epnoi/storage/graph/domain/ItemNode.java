@@ -33,7 +33,7 @@ public class ItemNode extends Item {
     @Relationship(type = "SIMILAR_TO", direction="UNDIRECTED")
     private Set<SimilarItem> items = new HashSet<>();
 
-    @Relationship(type = "DEALS", direction="OUTGOING")
+    @Relationship(type = "DEALS_WITH", direction="OUTGOING")
     private Set<TopicDealtByItem> topics =  new HashSet<>();
 
     @Relationship(type = "MENTIONS", direction="OUTGOING")

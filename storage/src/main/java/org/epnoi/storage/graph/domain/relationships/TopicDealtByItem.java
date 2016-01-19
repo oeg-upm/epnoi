@@ -9,7 +9,7 @@ import org.neo4j.ogm.annotation.*;
 /**
  * Created by cbadenes on 22/12/15.
  */
-@RelationshipEntity(type="DEALS")
+@RelationshipEntity(type="DEALS_WITH")
 @Data
 @EqualsAndHashCode(exclude={"id"})
 public class TopicDealtByItem {

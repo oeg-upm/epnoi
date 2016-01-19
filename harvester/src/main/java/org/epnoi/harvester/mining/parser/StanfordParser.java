@@ -122,9 +122,9 @@ public class StanfordParser {
             // Iterate over all tokens in a sentence
             for (CoreLabel coreLabel: sentence.get(CoreAnnotations.TokensAnnotation.class)) {
                 Token token = new Token();
-                token.setPos(coreLabel.get(CoreAnnotations.PartOfSpeechAnnotation.class));
-                token.setLemma(coreLabel.get(CoreAnnotations.LemmaAnnotation.class));
-                token.setWord(coreLabel.get(CoreAnnotations.TextAnnotation.class));
+                token.setPos(coreLabel.get(CoreAnnotations.PartOfSpeechAnnotation.class).toLowerCase());
+                token.setLemma(coreLabel.get(CoreAnnotations.LemmaAnnotation.class).toLowerCase());
+                token.setWord(coreLabel.get(CoreAnnotations.TextAnnotation.class).toLowerCase());
                 token.setStopWord(coreLabel.get(StopWordAnnotatorWrapper.class).first);
                 tokens.add(token);
             }

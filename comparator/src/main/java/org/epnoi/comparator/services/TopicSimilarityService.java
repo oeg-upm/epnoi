@@ -37,12 +37,22 @@ public class TopicSimilarityService {
     public void calculate(Analysis analysis){
         LOG.info("Ready to calculate semantic similarity based on Topic from Analysis: " + analysis);
 
-        // Documents
-        executor.execute(new DocumentSimilarityTask(analysis,helper));
-        // Items
-        executor.execute(new ItemSimilarityTask(analysis,helper));
-        // Parts
-        executor.execute(new PartSimilarityTask(analysis,helper));
+        switch(analysis.getDescription().toLowerCase()){
+            case "document":
+                LOG.info("by documents");
+                executor.execute(new DocumentSimilarityTask(analysis,helper));
+                break;
+            case "item":
+                LOG.info("by items");
+                executor.execute(new ItemSimilarityTask(analysis,helper));
+                break;
+            case "part":
+                LOG.info("by parts");
+                executor.execute(new PartSimilarityTask(analysis,helper));
+                break;
+
+        }
+        LOG.info("Semantic similarity based on topic calculated successfully");
     }
 
 

@@ -36,15 +36,12 @@ public class TopicModeler extends ModelingTask {
             helper.getUdm().findTopicsByDomain(domain.getUri()).stream().forEach(topic -> helper.getUdm().deleteTopic(topic));
 
             // Documents
-            helper.getUdm().deleteSimilarsBetweenDocumentsInDomain(domain.getUri());
             buildModelfor(Resource.Type.DOCUMENT);
 
             // Items
-            helper.getUdm().deleteSimilarsBetweenItemsInDomain(domain.getUri());
             buildModelfor(Resource.Type.ITEM);
 
             // Parts
-            helper.getUdm().deleteSimilarsBetweenPartsInDomain(domain.getUri());
             buildModelfor(Resource.Type.PART);
         } catch (RuntimeException e){
             LOG.warn(e.getMessage(),e);
@@ -92,7 +89,7 @@ public class TopicModeler extends ModelingTask {
             throw new RuntimeException("No " + resourceType.name() + "s found in domain: " + domain.getUri());
 
         // Create the analysis
-        Analysis analysis = newAnalysis("Topic-Model","Evolutionary Algorithm along with LDA",resourceType.name());
+        Analysis analysis = newAnalysis("Topic-Model","LDA with Evolutionary Algorithm parameterization",resourceType.name());
 
         // Persist Topic and Relations
         TopicModel model = helper.getTopicModelBuilder().build(analysis.getUri(), regularResources);
@@ -147,7 +144,7 @@ public class TopicModeler extends ModelingTask {
         for (String resourceURI: resourceURIs){
 
             for (TopicDistribution topicDistribution: model.getResources().get(resourceURI)){
-                // Relate resource (Item) to Topic
+                // Relate resource  to Topic
                 String topicURI = topicTable.get(topicDistribution.getTopic());
                 switch(resourceType){
                     case DOCUMENT: helper.getUdm().relateTopicToDocument(topicURI,resourceURI,topicDistribution.getWeight());

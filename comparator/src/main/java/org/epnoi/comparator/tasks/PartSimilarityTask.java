@@ -33,6 +33,7 @@ public class PartSimilarityTask implements Runnable {
 
     @Override
     public void run() {
+        helper.getUdm().deleteSimilarsBetweenPartsInDomain(analysis.getDomain());
         List<String> parts = helper.getUdm().findPartsByDomain(analysis.getDomain());
         recursiveSimilarityCalculus(parts.get(0),parts.subList(1,parts.size()));
     }
