@@ -7,6 +7,7 @@ import org.epnoi.storage.graph.domain.relationships.TopicDealtByItem;
 import org.epnoi.storage.graph.domain.relationships.WordMentionedByItem;
 import org.epnoi.storage.graph.domain.relationships.SimilarItem;
 import org.epnoi.storage.model.Item;
+import org.epnoi.storage.model.Resource;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -22,7 +23,7 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode(of={"uri"})
 @ToString(of={"uri"})
-public class ItemNode extends Item {
+public class ItemNode extends Resource {
 
     @GraphId
     private Long id;

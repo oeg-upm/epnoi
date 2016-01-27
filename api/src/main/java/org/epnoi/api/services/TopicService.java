@@ -1,5 +1,6 @@
 package org.epnoi.api.services;
 
+import org.epnoi.storage.model.Resource;
 import org.epnoi.storage.model.Topic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,10 @@ import java.util.Optional;
 public class TopicService extends AbstractCRUDService<Topic> {
 
     private static final Logger LOG = LoggerFactory.getLogger(TopicService.class);
+
+    public TopicService() {
+        super(Resource.Type.TOPIC);
+    }
 
 
     @Override
@@ -33,8 +38,8 @@ public class TopicService extends AbstractCRUDService<Topic> {
     }
 
     @Override
-    protected Topic delete(String uri) {
-        return udm.deleteTopic(uri);
+    protected void delete(String uri) {
+        udm.deleteTopic(uri);
     }
 
     @Override

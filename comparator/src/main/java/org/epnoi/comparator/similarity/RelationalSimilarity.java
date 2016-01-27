@@ -13,6 +13,8 @@ public class RelationalSimilarity {
 
     public static Double between(List<Relationship> relationships1,List<Relationship> relationships2){
 
+        if (relationships1.isEmpty() || relationships2.isEmpty()) return 0.0;
+
         Comparator<Relationship> byUri = (e1, e2) ->e1.getUri().compareTo(e2.getUri());
 
         double[] weights1 = relationships1.stream().sorted(byUri).mapToDouble(x -> x.getWeight()).toArray();

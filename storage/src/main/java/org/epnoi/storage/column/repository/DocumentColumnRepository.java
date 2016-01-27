@@ -13,6 +13,9 @@ public interface DocumentColumnRepository extends BaseColumnRepository<DocumentC
     @Query("select * from documents where title = ?0")
     Iterable<DocumentColumn> findByTitle(String title);
 
+    @Query("select * from documents where retrievedFrom = ?0")
+    Iterable<DocumentColumn> findByRetrievedFrom(String url);
+
     @Query("select * from documents where format = ?0")
     Iterable<DocumentColumn> findByFormat(String format);
 

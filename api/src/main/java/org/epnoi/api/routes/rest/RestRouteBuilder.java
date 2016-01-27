@@ -2,6 +2,7 @@ package org.epnoi.api.routes.rest;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
+import org.epnoi.api.model.SourceI;
 import org.epnoi.storage.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,92 +25,84 @@ public class RestRouteBuilder extends RouteBuilder {
 
         restConfiguration()
                 .component("servlet")
+                .scheme("http")
                 .bindingMode(RestBindingMode.json_xml)
+                .skipBindingOnErrorCode(true)
+                .jsonDataFormat("json-jackson")
+                .xmlDataFormat("jaxb")
+                .enableCORS(false)
+                .componentProperty("minThreads","1")
+                .componentProperty("maxThreads","10")
+                .componentProperty("maxConnectionsPerHost","-1")
+                .componentProperty("maxTotalConnections","-1")
                 .dataFormatProperty("prettyPrint", "true")
                 .dataFormatProperty("json.in.disableFeatures", "FAIL_ON_UNKNOWN_PROPERTIES,ADJUST_DATES_TO_CONTEXT_TIME_ZONE")
+//                .dataFormatProperty("json.out.disableFeatures", "WRITE_NULL_MAP_VALUES")
                 .dataFormatProperty("xml.out.mustBeJAXBElement", "false")
-                .contextPath("api/rest")
+                .contextPath("api/0.1")
                 .port(port);
 
-        crudOf("sources","source",Source.class);
-        crudOf("domains","domain",Domain.class);
-        rudOf("documents","document",Document.class);
-        rudOf("items","item",Item.class);
-        rudOf("parts","part",Part.class);
-        crudOf("words","word",Word.class);
-        crudOf("topics","topic",Topic.class);
-        crudOf("analyses","analysis",Analysis.class);
-        crudOf("relations","relation",Relation.class);
+        createReadUpdateDeleteOf("sources","source",SourceI.class,Source.class);
+        readDeleteOf("domains","domain",Domain.class);
+        readDeleteOf("documents","document",Document.class);
+        readDeleteOf("items","item",Item.class);
+        readDeleteOf("parts","part",Part.class);
+        readDeleteOf("words","word",Word.class);
+        readDeleteOf("topics","topic",Topic.class);
+//        readDeleteOf("analyses","analysis",Analysis.class);
+//        createReadUpdateDeleteOf("relations","relation",Relation.class);
 //        crdOf("searches","search", Search.class);
 //        crdOf("explorations","exploration", Exploration.class);
     }
 
-    private void crudOf(String domain, String label, Class resource){
-        rest("/"+domain).description("rest service for "+label+" management")
-                .consumes("application/json").produces("application/json")
+    private void createReadUpdateDeleteOf(String domain, String label, Class facade, Class resource){
 
-                .post().description("Add a new "+label).type(resource).outType(resource)
-                .to("bean:"+label+"Service?method=create")
+          rest("/"+domain).description("rest service for "+label+" management")
+//                  .setBindingMode(RestBindingMode.auto)
+//                  .consumes("application/json").produces("application/json")
+
+                .post().description("Add a new "+label).type(facade).outType(resource)
+                .produces("application/json").to("bean:"+label+"Service?method=create")
 
                 .get("/").description("List all existing "+domain).outTypeList(String.class)
-                .to("bean:"+label+"Service?method=list")
+                .produces("application/json").to("bean:"+label+"Service?method=list")
 
-                .get("/{uri}").description("Find a "+label+" by uri").outType(resource)
+                .get("/{id}").description("Find a "+label+" by id").outType(resource)
 //                .param().name("id").type(path).description("The id of the user to get").dataType("int").endParam()
-                .to("bean:"+label+"Service?method=get(${header.uri})")
+                .produces("application/json").to("bean:"+label+"Service?method=get(${header.id})")
 
-                .delete("/").description("Remove all existing "+domain).outType(resource)
-                .to("bean:"+label+"Service?method=removeAll()")
+                .delete("/").description("Remove all existing "+domain)
+                .produces("application/json").to("bean:"+label+"Service?method=removeAll()")
 
-                .delete("/{uri}").description("Remove an existing "+label).outType(resource)
-                .to("bean:"+label+"Service?method=remove(${header.uri})")
+                .delete("/{id}").description("Remove an existing "+label)
+                .produces("application/json").to("bean:"+label+"Service?method=remove(${header.id})")
 
-                .put("/{uri}").description("Update an existing "+label).type(resource).outType(resource)
-                .to("bean:"+label+"Service?method=update");
+                .put("/{id}").description("Update an existing "+label).type(facade).outType(resource)
+                .produces("application/json").to("bean:"+label+"Service?method=update");
     }
 
     //TODO remove this method. Chain-of-resposibility pattern
-    private void rudOf(String domain, String label, Class resource){
+    private void readDeleteOf(String domain, String label, Class resource){
+
         rest("/"+domain).description("rest service for "+label+" management")
-                .consumes("application/json").produces("application/json")
+                //.consumes("application/json").produces("application/json")
 
                 .get("/").description("List all existing "+domain).outTypeList(String.class)
-                .to("bean:"+label+"Service?method=list")
+                .produces("application/json").to("bean:"+label+"Service?method=list")
 
-                .get("/{uri}").description("Find a "+label+" by uri").outType(resource)
+                .get("/{id}").description("Find a "+label+" by id").outType(resource)
 //                .param().name("id").type(path).description("The id of the user to get").dataType("int").endParam()
-                .to("bean:"+label+"Service?method=get(${header.uri})")
+                .produces("application/json").to("bean:"+label+"Service?method=get(${header.id})")
 
                 .delete("/").description("Remove all existing "+domain).outType(resource)
-                .to("bean:"+label+"Service?method=removeAll()")
+                .produces("application/json").to("bean:"+label+"Service?method=removeAll()")
 
-                .delete("/{uri}").description("Remove an existing "+label).outType(resource)
-                .to("bean:"+label+"Service?method=remove(${header.uri})")
+                .delete("/{id}").description("Remove an existing "+label).outType(resource)
+                .produces("application/json").to("bean:"+label+"Service?method=remove(${header.id})");
 
-                .put("/{uri}").description("Update an existing "+label).type(resource).outType(resource)
-                .to("bean:"+label+"Service?method=update");
-    }
+//                .put("/{uri}").description("Update an existing "+label).type(resource).outType(resource)
+//                .to("bean:"+label+"Service?method=update");
 
-    //TODO remove this method. Chain-of-resposibility pattern
-    private void crdOf(String domain, String label, Class resource){
-        rest("/"+domain).description("rest service for "+label+" management")
-                .consumes("application/json").produces("application/json")
-
-                .post().description("Add a new "+label).type(resource).outType(resource)
-                .to("bean:"+label+"Service?method=create")
-
-                .get("/").description("List all existing "+domain).outTypeList(String.class)
-                .to("bean:"+label+"Service?method=list")
-
-                .get("/{uri}").description("Find a "+label+" by uri").outType(resource)
-//                .param().name("id").type(path).description("The id of the user to get").dataType("int").endParam()
-                .to("bean:"+label+"Service?method=get(${header.uri})")
-
-                .delete("/").description("Remove all existing "+domain).outType(resource)
-                .to("bean:"+label+"Service?method=removeAll()")
-
-                .delete("/{uri}").description("Remove an existing "+label).outType(resource)
-                .to("bean:"+label+"Service?method=remove(${header.uri})");
     }
 
 }

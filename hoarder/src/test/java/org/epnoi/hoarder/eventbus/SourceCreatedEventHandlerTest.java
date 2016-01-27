@@ -6,9 +6,9 @@ import org.apache.camel.Route;
 import org.epnoi.hoarder.Config;
 import org.epnoi.model.Event;
 import org.epnoi.model.Resource;
-import org.epnoi.model.Source;
 import org.epnoi.model.modules.EventBus;
 import org.epnoi.model.modules.RoutingKey;
+import org.epnoi.storage.model.Source;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -28,7 +28,7 @@ import java.util.List;
 @Category(IntegrationTest.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = Config.class)
-@TestPropertySource(properties = { "epnoi.eventbus.uri = localhost", "epnoi.hoarder.storage.path = hoarder/target/storage" })
+@TestPropertySource(properties = { "epnoi.eventbus.uri = localhost", "epnoi.hoarder.storage.path = target/storage" })
 public class SourceCreatedEventHandlerTest {
 
     private static final Logger logger = LoggerFactory.getLogger(SourceCreatedEventHandlerTest.class);
@@ -47,7 +47,7 @@ public class SourceCreatedEventHandlerTest {
         // List of OAI-PMH Repositories: http://www.opendoar.org/new1interfacelist.php?block=oai-pmh
 
         Source source = new Source();
-        source.setUri("/sources/oaipmh");
+        source.setName("oaipmh-bournemouth");
         // UCM
         // source.setUrl("oaipmh://eprints.ucm.es/cgi/oai2");
 
@@ -58,7 +58,7 @@ public class SourceCreatedEventHandlerTest {
 //        source.setUrl("oaipmh://dspace.mit.edu/oai/request");
 
         // Bournemouth University
-        source.setUrl("oaipmh://eprints.bournemouth.ac.uk/cgi/oai2?from=2015-01-01T00:00:00Z");
+        source.setUrl("oaipmh://eprints.bournemouth.ac.uk/cgi/oai2?from=2016-01-01T00:00:00Z");
 
         logger.info("trying to send a 'source.created' event: " + source);
         this.eventBus.post(Event.from(source), RoutingKey.of(Resource.Type.SOURCE, Resource.State.CREATED));
@@ -100,7 +100,7 @@ public class SourceCreatedEventHandlerTest {
         Assert.assertEquals("Number of routes", initialRoutes.size() + 1, modifiedRoutes.size());
 
 
-        long newroute = modifiedRoutes.stream().filter(route -> route.getConsumer().getEndpoint().getEndpointUri().contains(source.name())).count();
+        long newroute = modifiedRoutes.stream().filter(route -> route.getConsumer().getEndpoint().getEndpointUri().contains(source.getName())).count();
 
         Assert.assertEquals("New Route",1L,newroute);
 

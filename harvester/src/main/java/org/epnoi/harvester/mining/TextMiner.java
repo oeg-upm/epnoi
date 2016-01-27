@@ -6,11 +6,15 @@ import org.epnoi.harvester.mining.annotation.AnnotatedDocument;
 import org.epnoi.harvester.mining.annotation.UpfAnnotator;
 import org.epnoi.harvester.mining.parser.StanfordParser;
 import org.epnoi.harvester.mining.parser.Token;
+import org.joda.time.Interval;
+import org.joda.time.Period;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +36,12 @@ public class TextMiner {
 
     public AnnotatedDocument annotate(String documentPath){
         try {
-            return annotator.annotate(documentPath);
+            LOG.info("Annotating document: " + documentPath);
+            Long start = System.currentTimeMillis();
+            AnnotatedDocument document = annotator.annotate(documentPath);
+            Period period = new Interval(start, System.currentTimeMillis()).toPeriod();
+            LOG.info("Time annotating document: " + period.getMinutes() + " minutes, " + period.getSeconds() + " seconds");
+            return document;
         } catch (DRIexception drIexception) {
             throw new RuntimeException(drIexception);
         }

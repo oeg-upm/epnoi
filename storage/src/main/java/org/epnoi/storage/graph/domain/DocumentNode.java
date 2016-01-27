@@ -7,6 +7,7 @@ import org.epnoi.storage.graph.domain.relationships.ItemBundledByDocument;
 import org.epnoi.storage.graph.domain.relationships.TopicDealtByDocument;
 import org.epnoi.storage.graph.domain.relationships.SimilarDocument;
 import org.epnoi.storage.model.Document;
+import org.epnoi.storage.model.Resource;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -22,7 +23,7 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode(of={"uri"})
 @ToString(of={"uri"})
-public class DocumentNode extends Document {
+public class DocumentNode extends Resource {
 
     @GraphId
     private Long id;

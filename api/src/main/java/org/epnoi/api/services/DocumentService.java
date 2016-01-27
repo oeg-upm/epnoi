@@ -1,6 +1,7 @@
 package org.epnoi.api.services;
 
 import org.epnoi.storage.model.Document;
+import org.epnoi.storage.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,10 @@ import java.util.Optional;
 public class DocumentService extends AbstractCRUDService<Document> {
 
     private static final Logger LOG = LoggerFactory.getLogger(DocumentService.class);
+
+    public DocumentService() {
+        super(Resource.Type.DOCUMENT);
+    }
 
 
     @Override
@@ -33,8 +38,8 @@ public class DocumentService extends AbstractCRUDService<Document> {
     }
 
     @Override
-    protected Document delete(String uri) {
-        return udm.deleteDocument(uri);
+    protected void delete(String uri) {
+        udm.deleteDocument(uri);
     }
 
     @Override

@@ -28,7 +28,7 @@ public class RouteDefinitionFactory {
         routeMakers.stream().forEach(routeMaker -> LOG.info("Route Maker registered: " + routeMaker));
     }
 
-    public RouteDefinition newRoute(Source source){
+    public RouteDefinition newRoute(Source source,Domain domain){
 
         String protocol = source.getProtocol().toLowerCase();
 
@@ -40,7 +40,7 @@ public class RouteDefinitionFactory {
             LOG.warn("More than one builder for handling '" + protocol + "' sources: " + handlers);
         }
 
-        return handlers.get(0).build(source);
+        return handlers.get(0).build(source,domain);
     }
 
 }

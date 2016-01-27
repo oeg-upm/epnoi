@@ -1,6 +1,7 @@
 package org.epnoi.api.services;
 
 import org.epnoi.storage.model.Item;
+import org.epnoi.storage.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,10 @@ import java.util.Optional;
 public class ItemService extends AbstractCRUDService<Item> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ItemService.class);
+
+    public ItemService() {
+        super(Resource.Type.ITEM);
+    }
 
 
     @Override
@@ -33,8 +38,8 @@ public class ItemService extends AbstractCRUDService<Item> {
     }
 
     @Override
-    protected Item delete(String uri) {
-        return udm.deleteItem(uri);
+    protected void delete(String uri) {
+        udm.deleteItem(uri);
     }
 
     @Override

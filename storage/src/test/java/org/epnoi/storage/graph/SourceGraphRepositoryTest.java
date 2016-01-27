@@ -23,11 +23,6 @@ public class SourceGraphRepositoryTest extends BaseGraphRepositoryTest<SourceNod
         SourceNode node = new SourceNode();
         node.setUri("sources/72ce5395-6268-439a-947e-802229e7f022");
         node.setCreationTime("2015-12-21T16:18:59Z");
-        node.setName("test");
-        node.setDescription("for testing purposes");
-        node.setUrl("http://epnoi.org");
-        node.setProtocol("oaipmh");
-        node.setDomain("domains/72ce5395-6268-439a-947e-802229e7f022");
         return node;
     }
 }

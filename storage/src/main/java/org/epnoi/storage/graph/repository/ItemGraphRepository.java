@@ -24,10 +24,10 @@ public interface ItemGraphRepository extends BaseGraphRepository<ItemNode> {
     @Query("match (part{uri:{0}})-[:DESCRIBES]->(item) return item")
     Iterable<ItemNode> findByPart(String uri);
 
-    @Query("match (item{uri:{0}})-[d:DEALS_WITH]->(topic)-[e:EMERGES_IN{analysis:{1}}]->(domain) return d")
-    Iterable<TopicDealtByItem> dealsInAnalysis(String item, String analysis);
+    @Query("match (item{uri:{0}})-[d:DEALS_WITH]->(topic)-[e:EMERGES_IN]->(domain{uri:{1}}) return d")
+    Iterable<TopicDealtByItem> dealsInDomain(String item, String domain);
 
-    @Query("match (in:Item)-[s{domain:{0}}]->(out:Item) delete s")
+    @Query("match (in:Item)-[s{domain:{0}}]-(out:Item) delete s")
     void deleteSimilarRelationsInDomain(String uri);
 
 }

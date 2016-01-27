@@ -6,13 +6,11 @@ import org.apache.commons.httpclient.util.URIUtil;
 import org.epnoi.storage.TimeGenerator;
 import org.epnoi.storage.UDM;
 import org.epnoi.storage.URIGenerator;
-import org.epnoi.storage.model.Domain;
 import org.epnoi.storage.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +23,8 @@ public abstract class  AbstractCRUDService<T extends Resource> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractCRUDService.class);
 
+    private final Resource.Type type;
+
     @Autowired
     protected UDM udm;
 
@@ -34,11 +34,16 @@ public abstract class  AbstractCRUDService<T extends Resource> {
     @Autowired
     TimeGenerator timeGenerator;
 
+    public AbstractCRUDService(Resource.Type type){
+        this.type = type;
+    }
+
+
     protected abstract T save(T resource);
 
     protected abstract Optional<T> read(String uri);
 
-    protected abstract T delete(String uri);
+    protected abstract void delete(String uri);
 
     protected abstract void deleteAll();
 
@@ -62,31 +67,23 @@ public abstract class  AbstractCRUDService<T extends Resource> {
         return save(resource);
     }
 
-    public T update(String uri,T resource){
-        try {
-            String decodedUri = URIUtil.decode(uri);
-            LOG.debug("updating by uri: " + decodedUri);
-            Optional<T> result = read(decodedUri);
-            if (!result.isPresent()){
-                throw new RuntimeException("Resource does not exist with uri: " + decodedUri);
-            }
-            T original = result.get();
-            BeanUtils.copyProperties(resource,original);
-            return save(original);
-        } catch (URIException e) {
-            throw new RuntimeException(e);
+    public T update(String id,T resource){
+        String uri = uriGenerator.from(type,id);
+        LOG.debug("updating by uri: " + uri);
+        Optional<T> result = read(uri);
+        if (!result.isPresent()){
+            throw new RuntimeException("Resource does not exist with uri: " + uri);
         }
+        T original = result.get();
+        BeanUtils.copyProperties(resource,original);
+        return save(original);
     }
 
 
-    public T remove(String uri){
-        try {
-            String decodedUri = URIUtil.decode(uri);
-            LOG.debug("removing by uri: " + decodedUri);
-            return delete(decodedUri);
-        } catch (URIException e) {
-            throw new RuntimeException(e);
-        }
+    public void remove(String id){
+        String uri = uriGenerator.from(type,id);
+        LOG.debug("removing by uri: " + uri);
+        delete(uri);
     }
 
     public void removeAll(){
@@ -98,17 +95,13 @@ public abstract class  AbstractCRUDService<T extends Resource> {
     }
 
 
-    public T get(String uri){
-        try {
-            String decodedUri = URIUtil.decode(uri);
-            LOG.debug("getting by uri: " + decodedUri);
-            Optional<T> result = read(decodedUri);
-            if (!result.isPresent())
-                return null; //TODO Handle empty result
-            return result.get();
-        } catch (URIException e) {
-            throw new RuntimeException(e);
-        }
+    public T get(String id){
+        String uri = uriGenerator.from(type,id);
+        LOG.debug("getting by uri: " + uri);
+        Optional<T> result = read(uri);
+        if (!result.isPresent())
+            return null; //TODO Handle empty result
+        return result.get();
     }
 
 

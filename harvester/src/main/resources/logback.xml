@@ -13,20 +13,22 @@
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [HARVESTER] [%thread] %-5level %logger{35} - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [HARVESTER] [%.7thread] %-5level %logger{35} - %msg%n</pattern>
         </encoder>
         <param name="Append" value="false" />
     </appender>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [HARVESTER] [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [HARVESTER] [%.7thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n</pattern>
         </encoder>
     </appender>
 
     <logger name="org.epnoi" level="INFO"/>
 
     <logger name="es.upm" level="INFO"/>
+
+    <logger name="edu.upf.taln.dri" level="INFO"/>
 
     <root level="ERROR">
         <appender-ref ref="STDOUT" />

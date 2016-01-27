@@ -18,7 +18,7 @@ public class WordSimilarityService {
 
 
     public void calculate(Analysis analysis){
-        LOG.info("Ready to calculate vector similarity based on W2V from Analysis: " + analysis);
+        LOG.debug("Ready to calculate vector similarity based on W2V from Analysis: " + analysis);
 
 
     }

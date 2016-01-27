@@ -24,16 +24,15 @@ public class WordGraphRepositoryTest extends BaseGraphRepositoryTest<WordNode> {
         WordNode node = new WordNode();
         node.setUri("words/72ce5395-6268-439a-947e-802229e7f022");
         node.setCreationTime("2015-12-21T16:18:59Z");
-        node.setContent("molecular");
-        node.setLemma("molecula");
-        node.setStem("molecula");
-        node.setPos("NN");
-        node.setType("term");
         return node;
     }
 
     @Test
     public void deleteEmbeddedRelations(){
-        repository.deleteEmbeddingInDomain("asdasdads");
+
+        String domain = "http://epnoi.org/domains/d4a5f93d-fc90-453e-a2d5-7ca27dfb4e29";
+
+        repository.deleteEmbeddingInDomain(domain);
+        repository.deletePairingInDomain(domain);
     }
 }

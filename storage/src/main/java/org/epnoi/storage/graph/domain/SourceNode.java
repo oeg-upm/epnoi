@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.epnoi.storage.graph.domain.relationships.DocumentProvidedBySource;
+import org.epnoi.storage.graph.domain.relationships.DomainComposedBySource;
+import org.epnoi.storage.model.Resource;
 import org.epnoi.storage.model.Source;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
@@ -20,7 +22,7 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode(of={"uri"})
 @ToString(of={"uri"})
-public class SourceNode extends Source {
+public class SourceNode extends Resource {
 
     @GraphId
     private Long id;
@@ -29,11 +31,18 @@ public class SourceNode extends Source {
     private String uri;
 
 
+    @Relationship(type = "COMPOSES", direction="OUTGOING")
+    private Set<DomainComposedBySource> domains =  new HashSet<>();
+
     @Relationship(type = "PROVIDES", direction="OUTGOING")
     private Set<DocumentProvidedBySource> documents =  new HashSet<>();
 
     public void addDocumentProvidedBySource(DocumentProvidedBySource documentProvidedBySource){
         documents.add(documentProvidedBySource);
+    }
+
+    public void addDomainComposedBySource(DomainComposedBySource domainComoposedBySource){
+        domains.add(domainComoposedBySource);
     }
 
 

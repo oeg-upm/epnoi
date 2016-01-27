@@ -15,4 +15,6 @@ public class PartDocument extends Part {
 
     @Id
     private String uri;
+
+    private String domain;
 }

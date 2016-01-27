@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.epnoi.storage.graph.domain.relationships.*;
+import org.epnoi.storage.model.Resource;
 import org.epnoi.storage.model.Topic;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
@@ -20,7 +21,7 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode(of={"uri"})
 @ToString(of={"uri"})
-public class TopicNode extends Topic {
+public class TopicNode extends Resource {
 
     @GraphId
     private Long id;

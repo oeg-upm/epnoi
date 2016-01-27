@@ -84,7 +84,7 @@ public class AnnotatedDocument implements Serializable{
         try{
             return  this.document.extractHeader().getAuthorList().stream().map(AnnotatedAuthor::new).collect(Collectors.toList());
         } catch (InternalProcessingException e) {
-            LOG.error("Error getting year from: " + document, e);
+            LOG.error("Error getting authors from: " + document, e);
             throw new RuntimeException(e);
         }
     }

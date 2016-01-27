@@ -38,6 +38,13 @@ public class HarvestingTest {
     TimeGenerator timeGenerator;
 
     @Test
+    public void run() throws InterruptedException {
+        LOG.info("Sleepping...");
+        Thread.sleep(120000);
+        LOG.info("Wake Up!");
+    }
+
+    @Test
     public void simulate() throws InterruptedException {
 
         // Reset DDBDD
@@ -55,8 +62,9 @@ public class HarvestingTest {
         source.setCreationTime(timeGenerator.getNowAsISO());
 //        source.setUrl("file://sample");
         source.setUrl("file://sig2006");
-        source.setDomain(domain.getUri());
         udm.saveSource(source);
+
+        udm.relateDomainToSource(domain.getUri(),source.getUri(),timeGenerator.getNowAsISO());
 
 //        LOG.info("sleep..");
 //        Thread.sleep(300000);
@@ -80,9 +88,9 @@ public class HarvestingTest {
         source.setUri(uriGenerator.newSource());
         source.setCreationTime(timeGenerator.getNowAsISO());
         source.setUrl("file://sample");
-        source.setDomain(domain.getUri());
         udm.saveSource(source);
 
+        udm.relateDomainToSource(domain.getUri(),source.getUri(),timeGenerator.getNowAsISO());
 
         // Document 1
         Document document1 = new Document();

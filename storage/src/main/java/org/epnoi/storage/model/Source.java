@@ -20,8 +20,6 @@ public class Source extends Resource {
 
     private String protocol = "";
 
-    private String domain = "";
-
     public String getProtocol(){
         if (Strings.isNullOrEmpty(protocol)){
             return StringUtils.substringBefore(url,":");
@@ -36,7 +34,7 @@ public class Source extends Resource {
         return name;
     }
 
-    public String getServer(){
+    public String extractServer(){
         return StringUtils.substringBefore(url, "?");
     }
 }

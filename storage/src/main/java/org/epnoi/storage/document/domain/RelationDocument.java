@@ -15,4 +15,6 @@ public class RelationDocument extends Relation {
 
     @Id
     private String uri;
+
+    private String domain;
 }

@@ -61,7 +61,7 @@ public class PartSimilarityTask implements Runnable {
     }
 
     private List<Relationship> getDistributionOf(String uri){
-        List<Relationship> distribution = distributions.getOrDefault(uri, helper.getUdm().findDealsByPartAndAnalysis(uri, analysis.getUri()));
+        List<Relationship> distribution = distributions.getOrDefault(uri, helper.getUdm().findDealsByPartAndDomain(uri, analysis.getDomain()));
         distributions.put(uri,distribution);
         return distribution;
     }

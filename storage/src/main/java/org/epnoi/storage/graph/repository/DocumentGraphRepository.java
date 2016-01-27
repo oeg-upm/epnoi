@@ -18,10 +18,10 @@ public interface DocumentGraphRepository extends BaseGraphRepository<DocumentNod
     @Query("match (document)<-[:CONTAINS]-(domain{uri:{0}}) return document")
     Iterable<DocumentNode> findByDomain(String uri);
 
-    @Query("match (document{uri:{0}})-[d:DEALS_WITH]->(topic)-[e:EMERGES_IN{analysis:{1}}]->(domain) return d")
-    Iterable<TopicDealtByDocument> dealsInAnalysis(String document, String analysis);
+    @Query("match (document{uri:{0}})-[d:DEALS_WITH]->(topic)-[e:EMERGES_IN]->(domain{uri:{1}}) return d")
+    Iterable<TopicDealtByDocument> dealsInDomain(String document, String domain);
 
-    @Query("match (in:Document)-[s{domain:{0}}]->(out:Document) delete s")
+    @Query("match (in:Document)-[s{domain:{0}}]-(out:Document) delete s")
     void deleteSimilarRelationsInDomain(String uri);
 
 }

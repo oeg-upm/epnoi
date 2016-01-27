@@ -19,8 +19,6 @@ public class WordEmbeddingModeler extends ModelingTask {
 
     private static final Logger LOG = LoggerFactory.getLogger(WordEmbeddingModeler.class);
 
-    private static final String ANALYSIS_TYPE       = "topic-model";
-
     public WordEmbeddingModeler(Domain domain, ModelingHelper modelingHelper) {
         super(domain, modelingHelper);
     }
@@ -49,7 +47,7 @@ public class WordEmbeddingModeler extends ModelingTask {
             helper.getUdm().deleteEmbeddingWordsInDomain(domain.getUri());
 
             // Create the analysis
-            Analysis analysis = newAnalysis("Word-Embedding","W2V",Resource.Type.DOCUMENT.name());
+            Analysis analysis = newAnalysis("Word-Embedding","W2V",Resource.Type.WORD.name());
 
             // Build W2V Model
             W2VModel model = helper.getWordEmbeddingBuilder().build(analysis.getUri(), regularResources);
@@ -58,7 +56,7 @@ public class WordEmbeddingModeler extends ModelingTask {
             //TODO Improve using Spark.parallel
             // First Create
             // TODO use all words of the vocabulary instead of only the existing ones
-            List<Word> words = helper.getUdm().findWords().stream().map(uri -> helper.getUdm().readWord(uri)).filter(res -> res.isPresent()).map(res -> res.get()).collect(Collectors.toList());
+            List<Word> words = helper.getUdm().findWordsByDomain(domain.getUri()).stream().map(uri -> helper.getUdm().readWord(uri)).filter(res -> res.isPresent()).map(res -> res.get()).collect(Collectors.toList());
             //List<Word> words = model.getVocabulary().stream().map(word -> findOrCreateWord(word)).collect(Collectors.toList());
             // Then relate
             words.stream().forEach(word -> relateWord(word,model));
@@ -85,6 +83,7 @@ public class WordEmbeddingModeler extends ModelingTask {
             if (wordUri.isPresent()){
                 helper.getUdm().relateWordToWord(word.getUri(),wordUri.get(),wordDistribution.getWeight(),domain.getUri());
             }
+            // TODO Create word when not exist
         }
 
     }
@@ -92,7 +91,9 @@ public class WordEmbeddingModeler extends ModelingTask {
 
     private Word findOrCreateWord(String word){
         Word wordData = new Word();
+        wordData.setContent(word);
         wordData.setLemma(word);
+        wordData.setType("term");
 
         Optional<String> result = helper.getUdm().findWordByLemma(word);
         if (!result.isPresent()){

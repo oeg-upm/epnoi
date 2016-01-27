@@ -15,4 +15,6 @@ public class TopicDocument extends Topic {
 
     @Id
     private String uri;
+
+    private String domain;
 }

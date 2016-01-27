@@ -1,5 +1,6 @@
 package org.epnoi.api.services;
 
+import org.epnoi.storage.model.Resource;
 import org.epnoi.storage.model.Word;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,11 @@ public class WordService extends AbstractCRUDService<Word> {
 
     private static final Logger LOG = LoggerFactory.getLogger(WordService.class);
 
-    
+    public WordService() {
+        super(Resource.Type.WORD);
+    }
+
+
     @Override
     protected Word save(Word resource) {
         udm.saveWord(resource);
@@ -29,8 +34,8 @@ public class WordService extends AbstractCRUDService<Word> {
     }
 
     @Override
-    protected Word delete(String uri) {
-        return udm.deleteWord(uri);
+    protected void delete(String uri) {
+        udm.deleteWord(uri);
     }
 
     @Override

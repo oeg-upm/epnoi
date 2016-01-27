@@ -27,7 +27,6 @@ public class SourceColumnRepositoryTest extends BaseColumnRepositoryTest<SourceC
         column.setDescription("for testing purposes");
         column.setUrl("http://epnoi.org");
         column.setProtocol("oaipmh");
-        column.setDomain("domains/72ce5395-6268-439a-947e-802229e7f022");
         return column;
     }
 }

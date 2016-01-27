@@ -69,7 +69,7 @@ public class ResourceBuilder implements Processor {
             // Source URI
             String sourceUri        = exchange.getProperty(Record.SOURCE_URI,String.class);
 
-            LOG.info("Processing resource from source: " + sourceUri + " and domain: " + domainUri);
+            LOG.info("Processing resource: " + exchange + " from source: " + sourceUri + " and domain: " + domainUri);
 
             // Metainformation
             MetaInformation metaInformation = new MetaInformation(exchange);
@@ -83,6 +83,14 @@ public class ResourceBuilder implements Processor {
 
             // Update Metainfo if empty
             updateMetainfoFromAnnotatedDoc(metaInformation,annotatedDocument);
+
+            // Check by title if exist in ddbb
+            List<String> docs = udm.findDocumentsByTitle(metaInformation.getTitle());
+
+            if (docs != null && !docs.isEmpty()){
+                LOG.warn("Document titled: '"+metaInformation.getTitle()+"' exists in ddbb with uri: " + docs);
+                return;
+            }
 
             // Document
             Document document = createAndSaveDocument(metaInformation,rawContent,sourceUri,domainUri);
@@ -137,8 +145,8 @@ public class ResourceBuilder implements Processor {
             // Mentions from Part
             //TODO
 
-            // Relate Document to Domain
-            udm.relateDocumentToDomain(document.getUri(), domainUri, document.getCreationTime());
+            // Relate it to Domain
+            udm.relateDocumentToDomain(document.getUri(), domainUri, document.getCreationTime());  
 
             // Convert to json
             String json = mapper.writeValueAsString(document);
@@ -154,12 +162,14 @@ public class ResourceBuilder implements Processor {
     private void updateMetainfoFromAnnotatedDoc(MetaInformation metaInformation, AnnotatedDocument annotatedDocument){
         // -> Update Title from parser if empty
         if (Strings.isNullOrEmpty(metaInformation.getTitle())){
-            metaInformation.setTitle(annotatedDocument.getTitle());
+            String retrievedTitle = annotatedDocument.getTitle();
+            metaInformation.setTitle(Strings.isNullOrEmpty(retrievedTitle)? "unknown" : retrievedTitle);
             LOG.info("Title from annotated document: " + metaInformation.getTitle());
         }
         // -> Update Published from parser if empty
         if (Strings.isNullOrEmpty(metaInformation.getPublished())){
-            metaInformation.setPublished(annotatedDocument.getYear());
+            String retrievedDate = annotatedDocument.getYear();
+            metaInformation.setPublished(Strings.isNullOrEmpty(retrievedDate)? "unknown" : retrievedDate);
             LOG.info("Published date from annotated document: " + metaInformation.getPublished());
         }
         // -> Update Authors from parser if empty
@@ -173,7 +183,10 @@ public class ResourceBuilder implements Processor {
     private Word createAndSaveWord(String value){
         Optional<String> uri = udm.findWordByLemma(value);
         Word word = new Word();
+        word.setContent(value);
+        word.setStem(value);
         word.setLemma(value);
+        word.setType("term");
         if (uri.isPresent()){
             word.setUri(uri.get());
         }else{

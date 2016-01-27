@@ -4,6 +4,8 @@ import com.google.common.base.Strings;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.SpringCamelContext;
 import org.epnoi.harvester.routes.RouteDefinitionFactory;
+import org.epnoi.storage.TimeGenerator;
+import org.epnoi.storage.model.ResourceUtils;
 import org.epnoi.storage.model.Source;
 import org.epnoi.storage.UDM;
 import org.epnoi.storage.URIGenerator;
@@ -13,7 +15,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by cbadenes on 01/12/15.
@@ -35,33 +39,59 @@ public class SourceService {
     @Autowired
     URIGenerator uriGenerator;
 
+    @Autowired
+    TimeGenerator timeGenerator;
+
     public SourceService(){
 
     }
 
+    // TODO
+    @PostConstruct
+    public void setup(){
+        LOG.info("Restoring sources from ddbb..");
+        udm.findSources().stream().map(uri -> udm.readSource(uri)).filter(res -> res.isPresent()).map(res -> res.get()).forEach(source -> {
+            try {
+                List<String> res = udm.findDomainBySource(source.getUri());
+                if (res != null && !res.isEmpty()){
+                    Optional<Domain> domain = udm.readDomain(res.get(0));
+                    if (domain.isPresent()) addRoute(source,domain.get());
+                }
+            } catch (Exception e) {
+                LOG.error("Error initializing source from ddbb:" + source, e);
+            }
+        });
+        LOG.info("All sources were restored from ddbb.");
+    }
+
     public Source create(Source source) throws Exception {
 
-        // TODO check if route exists in database, then return
-        if (Strings.isNullOrEmpty(source.getDomain())){
+        List<String> domains = udm.findDomainBySource(source.getUri());
+
+        Domain domain;
+        if (domains == null || domains.isEmpty()){
             LOG.info("creating a new domain associated to source: " + source);
-            Domain domain = new Domain();
+            domain = new Domain();
             domain.setUri(uriGenerator.newDomain());
             domain.setName(source.getName());
             domain.setDescription("attached to source: " + source.getUri());
             udm.saveDomain(domain);
-            LOG.info("Domain: " + domain + " created attached to source: " + source);
-            source.setDomain(domain.getUri());
-            // TODO update Source in DDBB
+            LOG.info("Domain: " + domain + " attached to source: " + source);
+
+            udm.relateDomainToSource(domain.getUri(),source.getUri(),timeGenerator.getNowAsISO());
+        }else{
+            domain = ResourceUtils.map(udm.readDomain(domains.get(0)).get(),Domain.class);
         }
 
+        addRoute(source,domain);
+        return source;
+    }
+
+    private void addRoute(Source source, Domain domain) throws Exception {
         // Create a new route for harvesting this source
-        RouteDefinition route = routeDefinitionFactory.newRoute(source);
-        // TODO Save route in ddbb
-        // Add route to camel-context
+        RouteDefinition route = routeDefinitionFactory.newRoute(source,domain);
         LOG.info("adding route to harvest: " + route);
         camelContext.addRouteDefinition(route);
-
-        return source;
     }
 
     public Source update(String uri,Source source){

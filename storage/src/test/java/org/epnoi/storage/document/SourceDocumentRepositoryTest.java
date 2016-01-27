@@ -27,7 +27,6 @@ public class SourceDocumentRepositoryTest extends BaseDocumentRepositoryTest<Sou
         document.setDescription("for testing purposes");
         document.setUrl("http://epnoi.org");
         document.setProtocol("oaipmh");
-        document.setDomain("domains/72ce5395-6268-439a-947e-802229e7f022");
         return document;
     }
 }

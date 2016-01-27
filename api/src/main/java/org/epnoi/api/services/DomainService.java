@@ -1,6 +1,7 @@
 package org.epnoi.api.services;
 
 import org.epnoi.storage.model.Domain;
+import org.epnoi.storage.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,10 @@ public class DomainService extends AbstractCRUDService<Domain> {
 
     private static final Logger LOG = LoggerFactory.getLogger(DomainService.class);
 
+    public DomainService() {
+        super(Resource.Type.DOMAIN);
+    }
+
 
     @Override
     protected Domain save(Domain resource) {
@@ -29,8 +34,8 @@ public class DomainService extends AbstractCRUDService<Domain> {
     }
 
     @Override
-    protected Domain delete(String uri) {
-        return udm.deleteDomain(uri);
+    protected void delete(String uri) {
+         udm.deleteDomain(uri);
     }
 
     @Override

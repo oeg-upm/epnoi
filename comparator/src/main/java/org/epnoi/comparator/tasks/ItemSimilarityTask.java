@@ -61,7 +61,7 @@ public class ItemSimilarityTask implements Runnable {
     }
 
     private List<Relationship> getDistributionOf(String uri){
-        List<Relationship> distribution = distributions.getOrDefault(uri, helper.getUdm().findDealsByItemAndAnalysis(uri, analysis.getUri()));
+        List<Relationship> distribution = distributions.getOrDefault(uri, helper.getUdm().findDealsByItemAndDomain(uri, analysis.getDomain()));
         distributions.put(uri,distribution);
         return distribution;
     }

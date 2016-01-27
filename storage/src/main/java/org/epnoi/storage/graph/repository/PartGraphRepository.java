@@ -21,10 +21,10 @@ public interface PartGraphRepository extends BaseGraphRepository<PartNode> {
     @Query("match (part)-[:DESCRIBES]->(item{uri:{0}}) return part")
     Iterable<PartNode> findByItem(String uri);
 
-    @Query("match (part{uri:{0}})-[d:DEALS_WITH]->(topic)-[e:EMERGES_IN{analysis:{1}}]->(domain) return d")
-    Iterable<TopicDealtByPart> dealsInAnalysis(String part, String analysis);
+    @Query("match (part{uri:{0}})-[d:DEALS_WITH]->(topic)-[e:EMERGES_IN]->(domain{uri:{1}}) return d")
+    Iterable<TopicDealtByPart> dealsInDomain(String part, String domain);
 
-    @Query("match (in:Part)-[s{domain:{0}}]->(out:Part) delete s")
+    @Query("match (in:Part)-[s{domain:{0}}]-(out:Part) delete s")
     void deleteSimilarRelationsInDomain(String uri);
 
 }

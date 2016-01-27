@@ -2,7 +2,7 @@ package org.epnoi.storage;
 
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
-import org.apache.http.client.utils.URIUtils;
+import org.epnoi.storage.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,18 @@ public class URIGenerator {
 
     @Autowired
     UDM udm;
+
+    public String from(Resource.Type resource, String id){
+        return new StringBuilder(BASE).append(resource.key()).append("s/").append(id).toString();
+    }
+
+    public String newFor(Resource.Type resource){
+        String uri;
+        do {
+            uri = new StringBuilder(BASE).append(resource.key()).append("s/").append(UUID.randomUUID().toString()).toString();
+        } while (udm.existSource(uri));
+        return uri;
+    }
 
     public String newSource(){
         String uri;

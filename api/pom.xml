@@ -64,6 +64,51 @@
                 </configuration>
             </plugin>
 
+                <!-- docker image -->
+            <!--<plugin>-->
+                <!--<groupId>org.jolokia</groupId>-->
+                <!--<artifactId>docker-maven-plugin</artifactId>-->
+                <!--<version>0.11.5</version>-->
+                <!--<configuration>-->
+                    <!--<images>-->
+                        <!--<image>-->
+                            <!--<alias>user</alias>-->
+                            <!--<name>arungupta/javaee7-docker-maven</name>-->
+                            <!--<build>-->
+                                <!--<from>arungupta/wildfly:8.2</from>-->
+                                <!--<assembly>-->
+                                    <!--<descriptor>assembly.xml</descriptor>-->
+                                    <!--<basedir>/</basedir>-->
+                                <!--</assembly>-->
+                                <!--<ports>-->
+                                    <!--<port>8080</port>-->
+                                <!--</ports>-->
+                            <!--</build>-->
+                            <!--<run>-->
+                                <!--<ports>-->
+                                    <!--<port>8080:8080</port>-->
+                                <!--</ports>-->
+                            <!--</run>-->
+                        <!--</image>-->
+                    <!--</images>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>docker:build</id>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>build</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                    <!--<execution>-->
+                        <!--<id>docker:start</id>-->
+                        <!--<phase>install</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>start</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
 
         </plugins>
     </build>
@@ -123,6 +168,14 @@
         </dependency>
 
         <!-- Apache Camel HTTP component -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-restlet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet.jee</groupId>
+            <artifactId>org.restlet.ext.spring</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-http</artifactId>

@@ -61,7 +61,7 @@ public class DocumentSimilarityTask implements Runnable {
     }
 
     private List<Relationship> getDistributionOf(String uri){
-        List<Relationship> distribution = distributions.getOrDefault(uri, helper.getUdm().findDealsByDocumentAndAnalysis(uri, analysis.getUri()));
+        List<Relationship> distribution = distributions.getOrDefault(uri, helper.getUdm().findDealsByDocumentInDomain(uri, analysis.getDomain()));
         distributions.put(uri,distribution);
         return distribution;
     }

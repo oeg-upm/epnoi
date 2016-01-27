@@ -1,6 +1,7 @@
 package org.epnoi.api.services;
 
 import org.epnoi.storage.model.Part;
+import org.epnoi.storage.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,10 @@ import java.util.Optional;
 public class PartService extends AbstractCRUDService<Part> {
 
     private static final Logger LOG = LoggerFactory.getLogger(PartService.class);
+
+    public PartService() {
+        super(Resource.Type.PART);
+    }
 
 
     @Override
@@ -33,8 +38,8 @@ public class PartService extends AbstractCRUDService<Part> {
     }
 
     @Override
-    protected Part delete(String uri) {
-        return udm.deletePart(uri);
+    protected void delete(String uri) {
+        udm.deletePart(uri);
     }
 
     @Override

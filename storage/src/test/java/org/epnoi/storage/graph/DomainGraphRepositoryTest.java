@@ -23,8 +23,6 @@ public class DomainGraphRepositoryTest extends BaseGraphRepositoryTest<DomainNod
         DomainNode node = new DomainNode();
         node.setUri("domains/72ce5395-6268-439a-947e-802229e7f022");
         node.setCreationTime("2015-12-21T16:18:59Z");
-        node.setDescription("for testing purposes");
-        node.setName("test");
         return node;
     }
 }

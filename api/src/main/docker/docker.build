@@ -1,0 +1,1 @@
+docker build -t cbadenes/epnoi-api:0.1 .

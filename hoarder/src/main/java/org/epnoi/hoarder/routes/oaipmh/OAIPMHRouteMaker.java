@@ -6,6 +6,7 @@ import org.epnoi.storage.model.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,6 +20,9 @@ public class OAIPMHRouteMaker implements RouteMaker {
     @Autowired
     OAIPMHRouteBuilder routeBuilder;
 
+    @Value("${epnoi.hoarder.oaipmh.delay}")
+    Long delay;
+
     @Override
     public boolean accept(String protocol) {
         return protocol.equalsIgnoreCase("oaipmh");
@@ -29,10 +33,10 @@ public class OAIPMHRouteMaker implements RouteMaker {
 
         String separator = (source.getUrl().contains("?"))? "&" : "?";
 
-        String uri = new StringBuilder(source.getUrl()).append(separator).append("initialDelay=1000&delay=60000").toString();
+        String uri = new StringBuilder(source.getUrl()).append(separator).append("initialDelay=1000&delay="+delay).toString();
 
         String sourceName   = source.getName();
-        String sourceUrl    = source.getServer(); //"oa.upm.es/perl/oai2"
+        String sourceUrl    = source.extractServer(); //"oa.upm.es/perl/oai2"
 
         return new OAIPMHRoute(uri,sourceName,sourceUrl,routeBuilder.getNs()).definition();
     }

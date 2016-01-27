@@ -11,5 +11,5 @@ public interface RouteMaker {
 
     boolean accept(String protocol);
 
-    RouteDefinition build(Source source);
+    RouteDefinition build(Source source,Domain domain);
 }

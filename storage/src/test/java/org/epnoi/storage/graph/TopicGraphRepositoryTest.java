@@ -28,8 +28,6 @@ public class TopicGraphRepositoryTest extends BaseGraphRepositoryTest<TopicNode>
         TopicNode node = new TopicNode();
         node.setUri("topics/72ce5395-6268-439a-947e-802229e7f022");
         node.setCreationTime("2015-12-21T16:18:59Z");
-        node.setContent("molecular color graphic rendering");
-        node.setAnalysis("analysis/72ce5395-6268-439a-947e-802229e7f022");
         return node;
     }
 

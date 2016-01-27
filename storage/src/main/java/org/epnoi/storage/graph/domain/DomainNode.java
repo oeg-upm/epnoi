@@ -6,6 +6,7 @@ import lombok.ToString;
 import org.epnoi.storage.graph.domain.relationships.ContainedDocument;
 import org.epnoi.storage.graph.domain.relationships.SimilarDomain;
 import org.epnoi.storage.model.Domain;
+import org.epnoi.storage.model.Resource;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -21,7 +22,7 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode(of={"uri"})
 @ToString(of={"uri"})
-public class DomainNode extends Domain {
+public class DomainNode extends Resource {
 
     @GraphId
     private Long id;

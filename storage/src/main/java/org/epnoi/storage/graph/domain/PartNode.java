@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.epnoi.storage.graph.domain.relationships.*;
 import org.epnoi.storage.model.Part;
+import org.epnoi.storage.model.Resource;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -20,13 +21,15 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode(of={"uri"})
 @ToString(of={"uri"})
-public class PartNode extends Part {
+public class PartNode extends Resource {
 
     @GraphId
     private Long id;
 
     @Index(unique = true)
     private String uri;
+
+    private String sense;
 
     @Relationship(type = "SIMILAR_TO", direction="UNDIRECTED")
     private Set<SimilarPart> parts = new HashSet<>();

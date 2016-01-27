@@ -2,6 +2,7 @@ package org.epnoi.harvester.mining.annotation;
 
 import edu.upf.taln.dri.lib.Factory;
 import edu.upf.taln.dri.lib.exception.DRIexception;
+import edu.upf.taln.dri.lib.model.Document;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,22 +39,26 @@ public class UpfAnnotator {
     }
 
     public AnnotatedDocument annotate(String documentPath) throws DRIexception {
-        LOG.info("Ready to parse: " + documentPath);
-
         String extension = FilenameUtils.getExtension(documentPath.toString()).toLowerCase();
+        Document document;
         switch(extension){
             case "pdf":
-                LOG.info("parsing PDF document: " + documentPath);
-                return new AnnotatedDocument(Factory.getPDFloader().parsePDF(documentPath));
+                LOG.info("parsing document as PDF document: " + documentPath);
+                document = Factory.getPDFloader().parsePDF(documentPath);
+                break;
             case "xml":
             case "htm":
             case "html":
-                LOG.info("parsing XML document: " + documentPath);
-                return new AnnotatedDocument(Factory.createNewDocument(documentPath));
+                LOG.info("parsing document as structured document: " + documentPath);
+                document = Factory.createNewDocument(documentPath);
+                break;
             default:
-                LOG.info("parsing document: " + documentPath);
-                return new AnnotatedDocument(Factory.getPlainTextLoader().parsePlainText(new File(documentPath)));
+                LOG.info("parsing document as plain text document: " + documentPath);
+                document = Factory.getPlainTextLoader().parsePlainText(new File(documentPath));
+                break;
         }
+        if (document == null) throw new RuntimeException("Text Mining Library can not parse document: " + documentPath);
+        return new AnnotatedDocument(document);
     }
 
 }

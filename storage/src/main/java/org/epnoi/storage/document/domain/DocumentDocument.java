@@ -13,4 +13,6 @@ public class DocumentDocument extends org.epnoi.storage.model.Document{
 
     @Id
     private String uri;
+
+    private String domain;
 }

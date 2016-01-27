@@ -1,6 +1,7 @@
 package org.epnoi.api.services;
 
 import org.epnoi.storage.model.Relation;
+import org.epnoi.storage.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,10 @@ public class RelationService extends AbstractCRUDService<Relation> {
 
     private static final Logger LOG = LoggerFactory.getLogger(RelationService.class);
 
+    public RelationService() {
+        super(Resource.Type.RELATION);
+    }
+
     @Override
     protected Relation save(Relation resource) {
         udm.saveRelation(resource);
@@ -28,8 +33,8 @@ public class RelationService extends AbstractCRUDService<Relation> {
     }
 
     @Override
-    protected Relation delete(String uri) {
-        return udm.deleteRelation(uri);
+    protected void delete(String uri) {
+        udm.deleteRelation(uri);
     }
 
     @Override

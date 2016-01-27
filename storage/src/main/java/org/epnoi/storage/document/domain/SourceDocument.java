@@ -14,4 +14,6 @@ public class SourceDocument extends Source{
 
     @Id
     private String uri;
+
+    private String domain;
 }

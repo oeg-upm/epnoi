@@ -23,6 +23,9 @@ public class CommonRouteBuilder extends RouteBuilder {
 
     public static final String URI_RO_BUILD        = "direct:common.ro.build";
 
+    //TODO parallelize by seda
+    // public static final String URI_RO_BUILD        = "seda:common.ro.build";
+
     @Autowired
     ErrorHandler errorHandler;
 
@@ -46,7 +49,7 @@ public class CommonRouteBuilder extends RouteBuilder {
 
         from(URI_RO_BUILD).
                 process(resourceBuilder).
-                log(LoggingLevel.INFO,LOG,"File Read: '${header.CamelFileName}'");
+                log(LoggingLevel.INFO,LOG,"File harvested: '${header.CamelFileName}'");
 //                to("file:"+outdir+"?fileName=${header.FileName}"); // TODO Create a file
 
     }

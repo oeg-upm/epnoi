@@ -1,0 +1,245 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.epnoi:epnoi-api:war:0.1-SNAPSHOT
+[WARNING] 'dependencyManagement.dependencies.dependency.(groupId:artifactId:type:classifier)' must be unique: org.apache.camel:camel-restlet:jar -> duplicate declaration of version ${camel.version} @ org.epnoi:epnoi:0.1-SNAPSHOT, /Users/cbadenes/Projects/epnoi/pom.xml, line 874, column 25
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building epnoi api 0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+Downloading: https://raw.github.com/epnoi/external-libs/mvn-repo/org/epnoi/epnoi-storage/0.1-SNAPSHOT/maven-metadata.xml
+Downloading: https://raw.github.com/cbadenes/test-utils/mvn-repo/org/epnoi/epnoi-storage/0.1-SNAPSHOT/maven-metadata.xml
+Downloading: https://raw.github.com/cbadenes/test-utils/mvn-repo/org/epnoi/epnoi/0.1-SNAPSHOT/maven-metadata.xml
+Downloading: https://raw.github.com/epnoi/external-libs/mvn-repo/org/epnoi/epnoi/0.1-SNAPSHOT/maven-metadata.xml
+Downloading: https://raw.github.com/epnoi/external-libs/mvn-repo/org/epnoi/epnoi-eventbus/0.1-SNAPSHOT/maven-metadata.xml
+Downloading: https://raw.github.com/cbadenes/test-utils/mvn-repo/org/epnoi/epnoi-eventbus/0.1-SNAPSHOT/maven-metadata.xml
+Downloading: https://raw.github.com/epnoi/external-libs/mvn-repo/org/epnoi/epnoi-model/0.1-SNAPSHOT/maven-metadata.xml
+Downloading: https://raw.github.com/cbadenes/test-utils/mvn-repo/org/epnoi/epnoi-model/0.1-SNAPSHOT/maven-metadata.xml
+Downloading: https://raw.github.com/cbadenes/test-utils/mvn-repo/org/epnoi/epnoi-core/0.1-SNAPSHOT/maven-metadata.xml
+Downloading: https://raw.github.com/epnoi/external-libs/mvn-repo/org/epnoi/epnoi-core/0.1-SNAPSHOT/maven-metadata.xml
+Downloading: https://raw.github.com/cbadenes/test-utils/mvn-repo/org/epnoi/epnoi-nlp/0.1-SNAPSHOT/maven-metadata.xml
+Downloading: https://raw.github.com/epnoi/external-libs/mvn-repo/org/epnoi/epnoi-nlp/0.1-SNAPSHOT/maven-metadata.xml
+Downloading: https://raw.github.com/cbadenes/test-utils/mvn-repo/org/epnoi/epnoi-sources/0.1-SNAPSHOT/maven-metadata.xml
+Downloading: https://raw.github.com/epnoi/external-libs/mvn-repo/org/epnoi/epnoi-sources/0.1-SNAPSHOT/maven-metadata.xml
+Downloading: https://raw.github.com/cbadenes/test-utils/mvn-repo/org/epnoi/epnoi-knowledgebase/0.1-SNAPSHOT/maven-metadata.xml
+Downloading: https://raw.github.com/epnoi/external-libs/mvn-repo/org/epnoi/epnoi-knowledgebase/0.1-SNAPSHOT/maven-metadata.xml
+Downloading: https://raw.github.com/cbadenes/test-utils/mvn-repo/org/epnoi/epnoi-wrappers/0.1-SNAPSHOT/maven-metadata.xml
+Downloading: https://raw.github.com/epnoi/external-libs/mvn-repo/org/epnoi/epnoi-wrappers/0.1-SNAPSHOT/maven-metadata.xml
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ epnoi-api ---
+[INFO] org.epnoi:epnoi-api:war:0.1-SNAPSHOT
+[INFO] +- org.epnoi:epnoi-storage:jar:0.1-SNAPSHOT:compile
+[INFO] |  +- org.epnoi:epnoi-eventbus:jar:0.1-SNAPSHOT:compile
+[INFO] |  |  \- com.rabbitmq:amqp-client:jar:3.5.6:compile
+[INFO] |  +- org.apache.jena:apache-jena-libs:pom:2.10.1:compile
+[INFO] |  |  +- org.apache.jena:jena-tdb:jar:0.10.1:compile
+[INFO] |  |  |  +- org.apache.jena:jena-arq:jar:2.10.1:compile
+[INFO] |  |  |  \- org.apache.jena:jena-core:jar:2.10.1:compile
+[INFO] |  |  |     +- org.apache.jena:jena-iri:jar:0.9.6:compile
+[INFO] |  |  |     \- xerces:xercesImpl:jar:2.11.0:compile
+[INFO] |  |  \- log4j:log4j:jar:1.2.17:compile
+[INFO] |  +- org.hectorclient:hector-core:jar:1.1-3:compile
+[INFO] |  |  +- commons-pool:commons-pool:jar:1.5.3:compile
+[INFO] |  |  +- org.apache.cassandra:cassandra-thrift:jar:1.1.10:compile
+[INFO] |  |  +- com.github.stephenc.eaio-uuid:uuid:jar:3.2.0:compile
+[INFO] |  |  +- com.ecyrd.speed4j:speed4j:jar:0.9:compile
+[INFO] |  |  \- com.yammer.metrics:metrics-core:jar:2.2.0:compile
+[INFO] |  +- org.mapdb:mapdb:jar:1.0.7:compile
+[INFO] |  +- org.apache.solr:solr-solrj:jar:5.4.0:compile
+[INFO] |  |  +- commons-io:commons-io:jar:2.4:compile
+[INFO] |  |  +- org.apache.httpcomponents:httpcore:jar:4.4:compile
+[INFO] |  |  +- org.apache.httpcomponents:httpmime:jar:4.4:compile
+[INFO] |  |  +- org.apache.zookeeper:zookeeper:jar:3.4.6:compile
+[INFO] |  |  +- org.codehaus.woodstox:stax2-api:jar:3.1.4:compile
+[INFO] |  |  +- org.codehaus.woodstox:woodstox-core-asl:jar:4.4.1:compile
+[INFO] |  |  +- org.noggit:noggit:jar:0.6:compile
+[INFO] |  |  \- org.slf4j:jcl-over-slf4j:jar:1.7.7:compile
+[INFO] |  +- jena-virtuoso:jena-virtuoso:jar:1.0:compile
+[INFO] |  +- virtuoso-jdbc3:virtuoso-jdbc3:jar:1.0:compile
+[INFO] |  +- virtuoso-jdbc4:virtuoso-jdbc4:jar:1.0:compile
+[INFO] |  +- commons-httpclient:commons-httpclient:jar:3.1:compile
+[INFO] |  +- org.springframework.data:spring-data-cassandra:jar:1.3.2.RELEASE:compile
+[INFO] |  |  +- org.springframework.data:spring-cql:jar:1.3.2.RELEASE:compile
+[INFO] |  |  +- org.springframework.data:spring-data-commons:jar:1.11.2.RELEASE:compile
+[INFO] |  |  \- com.datastax.cassandra:cassandra-driver-dse:jar:2.1.5:compile
+[INFO] |  |     \- com.datastax.cassandra:cassandra-driver-core:jar:2.1.5:compile
+[INFO] |  |        +- io.netty:netty:jar:3.9.0.Final:compile
+[INFO] |  |        \- com.codahale.metrics:metrics-core:jar:3.0.2:compile
+[INFO] |  +- org.xerial.snappy:snappy-java:jar:1.1.2:compile
+[INFO] |  +- net.jpountz.lz4:lz4:jar:1.3.0:compile
+[INFO] |  +- org.springframework.data:spring-data-elasticsearch:jar:1.3.2.RELEASE:compile
+[INFO] |  |  +- commons-collections:commons-collections:jar:3.2.1:compile
+[INFO] |  |  +- joda-time:joda-time:jar:2.8.2:compile
+[INFO] |  |  +- org.elasticsearch:elasticsearch:jar:1.5.2:compile
+[INFO] |  |  |  +- org.apache.lucene:lucene-queries:jar:4.10.4:compile
+[INFO] |  |  |  +- org.apache.lucene:lucene-memory:jar:4.10.4:compile
+[INFO] |  |  |  +- org.apache.lucene:lucene-highlighter:jar:4.10.4:compile
+[INFO] |  |  |  +- org.apache.lucene:lucene-queryparser:jar:4.10.4:compile
+[INFO] |  |  |  +- org.apache.lucene:lucene-sandbox:jar:4.10.4:compile
+[INFO] |  |  |  +- org.apache.lucene:lucene-suggest:jar:4.10.4:compile
+[INFO] |  |  |  +- org.apache.lucene:lucene-misc:jar:4.10.4:compile
+[INFO] |  |  |  +- org.apache.lucene:lucene-join:jar:4.10.4:compile
+[INFO] |  |  |  +- org.apache.lucene:lucene-grouping:jar:4.10.4:compile
+[INFO] |  |  |  +- org.apache.lucene:lucene-spatial:jar:4.10.4:compile
+[INFO] |  |  |  |  \- com.spatial4j:spatial4j:jar:0.4.1:compile
+[INFO] |  |  |  +- org.antlr:antlr-runtime:jar:3.5:compile
+[INFO] |  |  |  +- org.ow2.asm:asm:jar:4.1:compile
+[INFO] |  |  |  \- org.ow2.asm:asm-commons:jar:4.1:compile
+[INFO] |  |  \- com.fasterxml.jackson.core:jackson-core:jar:2.6.4:compile
+[INFO] |  +- org.springframework.data:spring-data-neo4j:jar:4.0.0.RELEASE:compile
+[INFO] |  |  \- org.neo4j:neo4j-ogm:jar:1.1.5-BETA:compile
+[INFO] |  +- org.apache.httpcomponents:httpclient:jar:4.4:compile
+[INFO] |  \- commons-beanutils:commons-beanutils:jar:1.9.2:compile
+[INFO] +- org.epnoi:epnoi-core:jar:0.1-SNAPSHOT:compile
+[INFO] |  +- org.epnoi:epnoi-model:jar:0.1-SNAPSHOT:compile
+[INFO] |  |  +- org.codehaus.jackson:jackson-core-asl:jar:1.9.11:compile
+[INFO] |  |  +- uk.ac.gate:gate-core:jar:8.1:compile
+[INFO] |  |  |  +- uk.ac.gate:gate-asm:jar:5.0.3:compile
+[INFO] |  |  |  +- uk.ac.gate:gate-compiler-jdt:jar:4.3.2-P20140317-1600:compile
+[INFO] |  |  |  +- org.jdom:jdom:jar:1.1.3:compile
+[INFO] |  |  |  +- net.sourceforge.nekohtml:nekohtml:jar:1.9.14:compile
+[INFO] |  |  |  +- org.apache.tika:tika-parsers:jar:1.7:runtime
+[INFO] |  |  |  |  +- org.apache.tika:tika-core:jar:1.7:runtime
+[INFO] |  |  |  |  +- org.apache.james:apache-mime4j-dom:jar:0.7.2:runtime
+[INFO] |  |  |  |  +- org.apache.commons:commons-compress:jar:1.8.1:compile
+[INFO] |  |  |  |  +- org.apache.pdfbox:pdfbox:jar:1.8.9:runtime
+[INFO] |  |  |  |  |  +- org.apache.pdfbox:fontbox:jar:1.8.9:runtime
+[INFO] |  |  |  |  |  \- org.apache.pdfbox:jempbox:jar:1.8.9:runtime
+[INFO] |  |  |  |  +- org.bouncycastle:bcmail-jdk15:jar:1.45:runtime
+[INFO] |  |  |  |  +- org.bouncycastle:bcprov-jdk15:jar:1.45:runtime
+[INFO] |  |  |  |  +- org.apache.poi:poi:jar:3.11:runtime
+[INFO] |  |  |  |  +- org.apache.poi:poi-scratchpad:jar:3.11:runtime
+[INFO] |  |  |  |  \- org.apache.poi:poi-ooxml:jar:3.11:runtime
+[INFO] |  |  |  |     \- org.apache.poi:poi-ooxml-schemas:jar:3.11:runtime
+[INFO] |  |  |  |        \- org.apache.xmlbeans:xmlbeans:jar:2.6.0:runtime
+[INFO] |  |  |  +- org.codehaus.woodstox:woodstox-core-lgpl:jar:4.2.0:compile
+[INFO] |  |  |  +- org.apache.ivy:ivy:jar:2.3.0:compile
+[INFO] |  |  |  +- org.apache.ant:ant:jar:1.9.3:compile
+[INFO] |  |  |  |  \- org.apache.ant:ant-launcher:jar:1.9.3:compile
+[INFO] |  |  |  +- com.thoughtworks.xstream:xstream:jar:1.4.7:compile
+[INFO] |  |  |  +- xpp3:xpp3:jar:1.1.4c:runtime
+[INFO] |  |  |  +- jaxen:jaxen:jar:1.1.6:runtime
+[INFO] |  |  |  +- gnu.getopt:java-getopt:jar:1.0.13:compile
+[INFO] |  |  |  +- org.xhtmlrenderer:flying-saucer-core:jar:9.0.4:compile
+[INFO] |  |  |  \- xmlunit:xmlunit:jar:1.5:compile
+[INFO] |  |  \- org.apache.thrift:libthrift:jar:0.9.2:compile
+[INFO] |  +- org.epnoi:epnoi-nlp:jar:0.1-SNAPSHOT:compile
+[INFO] |  |  +- uk.com.robust-it:cloning:jar:1.9.1:compile
+[INFO] |  |  |  \- org.objenesis:objenesis:jar:2.1:compile
+[INFO] |  |  +- org.apache.commons:commons-pool2:jar:2.4.1:compile
+[INFO] |  |  \- org.jgrapht:jgrapht-core:jar:0.9.0:compile
+[INFO] |  +- org.epnoi:epnoi-sources:jar:0.1-SNAPSHOT:compile
+[INFO] |  +- org.epnoi:epnoi-knowledgebase:jar:0.1-SNAPSHOT:compile
+[INFO] |  |  +- org.wikidata.wdtk:wdtk-dumpfiles:jar:0.4.0:compile
+[INFO] |  |  |  +- org.wikidata.wdtk:wdtk-datamodel:jar:0.4.0:compile
+[INFO] |  |  |  +- org.wikidata.wdtk:wdtk-util:jar:0.4.0:compile
+[INFO] |  |  |  +- org.wikidata.wdtk:wdtk-storage:jar:0.4.0:compile
+[INFO] |  |  |  \- org.apache.commons:commons-lang3:jar:3.3.2:compile
+[INFO] |  |  +- org.apache.lucene:lucene-core:jar:4.10.4:compile
+[INFO] |  |  +- org.apache.lucene:lucene-analyzers-common:jar:4.10.4:compile
+[INFO] |  |  \- edu.mit:jwi:jar:2.2.3:compile
+[INFO] |  +- org.epnoi:epnoi-wrappers:jar:0.1-SNAPSHOT:compile
+[INFO] |  +- javax.annotation:jsr250-api:jar:1.0:compile
+[INFO] |  +- com.sun.xml.bind:jaxb-impl:jar:2.2.11:compile
+[INFO] |  +- com.sun.xml.bind:jaxb-core:jar:2.2.11:compile
+[INFO] |  \- xml-apis:xml-apis:jar:1.3.04:compile
+[INFO] +- org.springframework:spring-web:jar:4.1.9.RELEASE:compile
+[INFO] |  +- org.springframework:spring-aop:jar:4.1.9.RELEASE:compile
+[INFO] |  |  \- aopalliance:aopalliance:jar:1.0:compile
+[INFO] |  +- org.springframework:spring-beans:jar:4.1.9.RELEASE:compile
+[INFO] |  +- org.springframework:spring-context:jar:4.1.9.RELEASE:compile
+[INFO] |  \- org.springframework:spring-core:jar:4.1.9.RELEASE:compile
+[INFO] +- ch.qos.logback:logback-classic:jar:1.1.3:compile
+[INFO] |  \- org.slf4j:slf4j-api:jar:1.7.7:compile
+[INFO] +- ch.qos.logback:logback-core:jar:1.1.3:compile
+[INFO] +- org.apache.camel:camel-core:jar:2.15.2:compile
+[INFO] +- org.apache.camel:camel-spring:jar:2.15.2:compile
+[INFO] |  \- org.springframework:spring-tx:jar:4.1.6.RELEASE:compile
+[INFO] +- org.apache.camel:camel-groovy:jar:2.15.2:compile
+[INFO] |  \- org.codehaus.groovy:groovy-all:jar:2.4.3:compile
+[INFO] +- org.apache.camel:camel-script:jar:2.15.2:compile
+[INFO] +- org.apache.camel:camel-saxon:jar:2.15.2:compile
+[INFO] |  \- net.sf.saxon:Saxon-HE:jar:9.5.1-5:compile
+[INFO] +- org.apache.camel:camel-restlet:jar:2.15.2:compile
+[INFO] |  +- org.restlet.jee:org.restlet:jar:2.2.3:compile
+[INFO] |  \- org.restlet.jee:org.restlet.ext.httpclient:jar:2.2.3:compile
+[INFO] |     +- net.jcip:jcip-annotations:jar:1.0:compile
+[INFO] |     \- org.apache.james:apache-mime4j-core:jar:0.7.2:compile
+[INFO] +- org.restlet.jee:org.restlet.ext.spring:jar:2.3.5:compile
+[INFO] |  +- cglib:cglib-nodep:jar:2.2:compile
+[INFO] |  +- commons-logging:commons-logging:jar:1.1.3:compile
+[INFO] |  +- org.springframework:spring-expression:jar:4.1.9.RELEASE:compile
+[INFO] |  +- org.springframework:spring-webmvc:jar:4.1.9.RELEASE:compile
+[INFO] |  \- org.restlet.jee:org.restlet.ext.servlet:jar:2.3.5:compile
+[INFO] +- org.apache.camel:camel-http:jar:2.15.2:compile
+[INFO] |  +- org.apache.geronimo.specs:geronimo-servlet_3.0_spec:jar:1.0:compile
+[INFO] |  \- commons-codec:commons-codec:jar:1.10:compile
+[INFO] +- org.apache.camel:camel-servlet:jar:2.15.2:compile
+[INFO] +- org.apache.camel:camel-metrics:jar:2.15.2:compile
+[INFO] |  +- io.dropwizard.metrics:metrics-core:jar:3.1.1:compile
+[INFO] |  +- io.dropwizard.metrics:metrics-json:jar:3.1.1:compile
+[INFO] |  \- com.fasterxml.jackson.core:jackson-databind:jar:2.4.4:compile
+[INFO] |     \- com.fasterxml.jackson.core:jackson-annotations:jar:2.4.0:compile
+[INFO] +- org.apache.camel:camel-stream:jar:2.15.2:compile
+[INFO] +- org.apache.camel:camel-swagger:jar:2.15.2:compile
+[INFO] |  +- com.wordnik:swagger-annotations:jar:1.3.12:compile
+[INFO] |  +- org.scala-lang:scala-library:jar:2.11.2:compile
+[INFO] |  +- com.wordnik:swagger-jaxrs_2.10:jar:1.3.12:compile
+[INFO] |  |  +- com.wordnik:swagger-core_2.10:jar:1.3.12:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.module:jackson-module-scala_2.10:jar:2.4.1:compile
+[INFO] |  |  |  |  +- org.scala-lang:scala-reflect:jar:2.11.2:compile
+[INFO] |  |  |  |  +- com.thoughtworks.paranamer:paranamer:jar:2.6:compile
+[INFO] |  |  |  |  \- com.google.code.findbugs:jsr305:jar:2.0.1:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.module:jackson-module-jsonSchema:jar:2.4.1:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:jar:2.4.1:compile
+[INFO] |  |  |  |  \- com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:jar:2.4.1:compile
+[INFO] |  |  |  +- org.json4s:json4s-ext_2.10:jar:3.2.11:compile
+[INFO] |  |  |  |  \- org.joda:joda-convert:jar:1.6:compile
+[INFO] |  |  |  +- org.json4s:json4s-native_2.10:jar:3.2.11:compile
+[INFO] |  |  |  |  \- org.json4s:json4s-core_2.10:jar:3.2.11:compile
+[INFO] |  |  |  |     +- org.json4s:json4s-ast_2.10:jar:3.2.11:compile
+[INFO] |  |  |  |     \- org.scala-lang:scalap:jar:2.11.2:compile
+[INFO] |  |  |  |        \- org.scala-lang:scala-compiler:jar:2.11.2:compile
+[INFO] |  |  |  |           +- org.scala-lang.modules:scala-xml_2.11:jar:1.0.2:compile
+[INFO] |  |  |  |           \- org.scala-lang.modules:scala-parser-combinators_2.11:jar:1.0.2:compile
+[INFO] |  |  |  \- org.json4s:json4s-jackson_2.10:jar:3.2.11:compile
+[INFO] |  |  +- javax.ws.rs:jsr311-api:jar:1.1.1:compile
+[INFO] |  |  \- org.reflections:reflections:jar:0.9.9:compile
+[INFO] |  |     +- org.javassist:javassist:jar:3.18.2-GA:compile
+[INFO] |  |     \- com.google.code.findbugs:annotations:jar:2.0.1:compile
+[INFO] |  \- com.wordnik:swagger-servlet_2.10:jar:1.3.12:compile
+[INFO] +- org.apache.camel:camel-jackson:jar:2.15.2:compile
+[INFO] |  \- com.fasterxml.jackson.module:jackson-module-jaxb-annotations:jar:2.4.3:compile
+[INFO] +- org.apache.camel:camel-jaxb:jar:2.15.2:compile
+[INFO] +- com.google.guava:guava:jar:18.0:compile
+[INFO] +- commons-lang:commons-lang:jar:2.6:compile
+[INFO] +- org.apache.camel:camel-test:jar:2.15.2:test
+[INFO] +- org.eclipse.jetty:jetty-server:jar:8.1.9.v20130131:test
+[INFO] |  +- org.eclipse.jetty.orbit:javax.servlet:jar:3.0.0.v201112011016:test
+[INFO] |  +- org.eclipse.jetty:jetty-continuation:jar:8.1.9.v20130131:test
+[INFO] |  \- org.eclipse.jetty:jetty-http:jar:8.1.9.v20130131:test
+[INFO] |     \- org.eclipse.jetty:jetty-io:jar:8.1.9.v20130131:test
+[INFO] +- org.eclipse.jetty:jetty-servlets:jar:8.1.9.v20130131:test
+[INFO] |  +- org.eclipse.jetty:jetty-client:jar:8.1.9.v20130131:test
+[INFO] |  \- org.eclipse.jetty:jetty-util:jar:8.1.9.v20130131:test
+[INFO] +- org.eclipse.jetty:jetty-webapp:jar:8.1.9.v20130131:test
+[INFO] |  +- org.eclipse.jetty:jetty-xml:jar:8.1.9.v20130131:test
+[INFO] |  \- org.eclipse.jetty:jetty-servlet:jar:8.1.9.v20130131:test
+[INFO] |     \- org.eclipse.jetty:jetty-security:jar:8.1.9.v20130131:test
+[INFO] +- org.projectlombok:lombok:jar:1.16.4:provided
+[INFO] +- junit:junit:jar:4.12:test
+[INFO] |  \- org.hamcrest:hamcrest-core:jar:1.3:test
+[INFO] +- org.mockito:mockito-all:jar:1.9.5:test
+[INFO] +- es.cbadenes.lab:test-utils:jar:1.0.0:test
+[INFO] \- org.springframework:spring-test:jar:4.1.9.RELEASE:test
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 10.743 s
+[INFO] Finished at: 2016-01-22T14:59:04+01:00
+[INFO] Final Memory: 26M/336M
+[INFO] ------------------------------------------------------------------------

@@ -19,8 +19,6 @@ public class TopicModeler extends ModelingTask {
 
     private static final Logger LOG = LoggerFactory.getLogger(TopicModeler.class);
 
-    private static final String ANALYSIS_TYPE       = "topic-model";
-
     public TopicModeler(Domain domain, ModelingHelper modelingHelper) {
         super(domain, modelingHelper);
     }
@@ -28,76 +26,77 @@ public class TopicModeler extends ModelingTask {
 
     @Override
     public void run() {
-        try{
-            //TODO Use of factory to avoid this explicit flow!
-            LOG.info("ready to create a new topic model for domain: " + domain);
+        //TODO Use of factory to avoid this explicit flow!
+        LOG.info("ready to create a new topic model for domain: " + domain);
 
-            // Delete previous Topics
-            helper.getUdm().findTopicsByDomain(domain.getUri()).stream().forEach(topic -> helper.getUdm().deleteTopic(topic));
+        // Delete previous Topics
+        helper.getUdm().findTopicsByDomain(domain.getUri()).stream().forEach(topic -> helper.getUdm().deleteTopic(topic));
 
-            // Documents
-            buildModelfor(Resource.Type.DOCUMENT);
+        // Documents
+        buildModelfor(Resource.Type.DOCUMENT);
 
-            // Items
-            buildModelfor(Resource.Type.ITEM);
+        // Items
+        buildModelfor(Resource.Type.ITEM);
 
-            // Parts
-            buildModelfor(Resource.Type.PART);
-        } catch (RuntimeException e){
-            LOG.warn(e.getMessage(),e);
-        } catch (Exception e){
-            LOG.warn(e.getMessage(),e);
-        }
+        // Parts
+        buildModelfor(Resource.Type.PART);
+
     }
 
 
     private void buildModelfor(Resource.Type resourceType){
-        LOG.info("Building a topic model for " + resourceType.name() + " of domain: " + domain);
+        try{
+            LOG.info("Building a topic model for " + resourceType.name() + "s in domain: " + domain.getUri());
 
-        List<RegularResource> regularResources = new ArrayList<>();
+            List<RegularResource> regularResources = new ArrayList<>();
 
-        switch(resourceType){
-            //TODO Optimize using Spark.parallel
-            case DOCUMENT: regularResources = helper.getUdm().
-                    findDocumentsByDomain(
-                            domain.getUri()).stream().
-                            map(uri -> helper.getUdm().readDocument(uri)).
-                            filter(res -> res.isPresent()).map(res -> res.get()).
-                            map(document -> helper.getRegularResourceBuilder().from(document.getUri(), document.getTitle(), document.getAuthoredOn(), helper.getAuthorBuilder().composeFromMetadata(document.getAuthoredBy()), document.getTokens())).
-                            collect(Collectors.toList());
-                break;
-            //TODO Optimize using Spark.parallel
-            case ITEM: regularResources = helper.getUdm().
-                    findItemsByDomain(domain.getUri()).stream().
-                            map(uri -> helper.getUdm().readItem(uri)).
-                            filter(res -> res.isPresent()).map(res -> res.get()).
-                            map(item -> helper.getRegularResourceBuilder().from(item.getUri(), item.getTitle(), item.getAuthoredOn(), helper.getAuthorBuilder().composeFromMetadata(item.getAuthoredBy()), item.getTokens())).
-                            collect(Collectors.toList());
-                break;
-            //TODO Optimize using Spark.parallel
-            case PART: regularResources = helper.getUdm().
-                    findPartsByDomain(domain.getUri()).stream().
-                            map(uri -> helper.getUdm().readPart(uri)).
-                            filter(res -> res.isPresent()).map(res -> res.get()).
-                    // TODO Improve metainformation of Part
-                            map(part -> helper.getRegularResourceBuilder().from(part.getUri(), part.getSense(), part.getCreationTime(), new ArrayList<User>(), part.getTokens())).
-                            collect(Collectors.toList());
-                break;
+            switch(resourceType){
+                //TODO Optimize using Spark.parallel
+                case DOCUMENT: regularResources = helper.getUdm().
+                        findDocumentsByDomain(
+                                domain.getUri()).stream().
+                        map(uri -> helper.getUdm().readDocument(uri)).
+                        filter(res -> res.isPresent()).map(res -> res.get()).
+                        map(document -> helper.getRegularResourceBuilder().from(document.getUri(), document.getTitle(), document.getAuthoredOn(), helper.getAuthorBuilder().composeFromMetadata(document.getAuthoredBy()), document.getTokens())).
+                        collect(Collectors.toList());
+                    break;
+                //TODO Optimize using Spark.parallel
+                case ITEM: regularResources = helper.getUdm().
+                        findItemsByDomain(domain.getUri()).stream().
+                        map(uri -> helper.getUdm().readItem(uri)).
+                        filter(res -> res.isPresent()).map(res -> res.get()).
+                        map(item -> helper.getRegularResourceBuilder().from(item.getUri(), item.getTitle(), item.getAuthoredOn(), helper.getAuthorBuilder().composeFromMetadata(item.getAuthoredBy()), item.getTokens())).
+                        collect(Collectors.toList());
+                    break;
+                //TODO Optimize using Spark.parallel
+                case PART: regularResources = helper.getUdm().
+                        findPartsByDomain(domain.getUri()).stream().
+                        map(uri -> helper.getUdm().readPart(uri)).
+                        filter(res -> res.isPresent()).map(res -> res.get()).
+                        // TODO Improve metainformation of Part
+                                map(part -> helper.getRegularResourceBuilder().from(part.getUri(), part.getSense(), part.getCreationTime(), new ArrayList<User>(), part.getTokens())).
+                                collect(Collectors.toList());
+                    break;
+            }
+
+            if ((regularResources == null) || (regularResources.isEmpty()))
+                throw new RuntimeException("No " + resourceType.name() + "s found in domain: " + domain.getUri());
+
+            // Create the analysis
+            Analysis analysis = newAnalysis("Topic-Model","LDA with Evolutionary Algorithm parameterization",resourceType.name());
+
+            // Persist Topic and Relations
+            TopicModel model = helper.getTopicModelBuilder().build(analysis.getUri(), regularResources);
+            persistModel(analysis,model,resourceType);
+
+            // Save the analysis
+            analysis.setConfiguration(model.getConfiguration().toString());
+            helper.getUdm().saveAnalysis(analysis);
+        } catch (RuntimeException e){
+            LOG.warn(e.getMessage(),e);
+        } catch (Exception e){
+            LOG.error(e.getMessage(),e);
         }
-
-        if ((regularResources == null) || (regularResources.isEmpty()))
-            throw new RuntimeException("No " + resourceType.name() + "s found in domain: " + domain.getUri());
-
-        // Create the analysis
-        Analysis analysis = newAnalysis("Topic-Model","LDA with Evolutionary Algorithm parameterization",resourceType.name());
-
-        // Persist Topic and Relations
-        TopicModel model = helper.getTopicModelBuilder().build(analysis.getUri(), regularResources);
-        persistModel(analysis,model,resourceType);
-
-        // Save the analysis
-        analysis.setConfiguration(model.getConfiguration().toString());
-        helper.getUdm().saveAnalysis(analysis);
     }
 
     private void persistModel(Analysis analysis, TopicModel model, Resource.Type resourceType){
@@ -129,7 +128,10 @@ public class TopicModeler extends ModelingTask {
                     // Create Word
                     Word word = new Word();
                     word.setUri(wordURI);
+                    word.setCreationTime(helper.getTimeGenerator().getNowAsISO());
+                    word.setContent(wordDistribution.getWord());
                     word.setLemma(wordDistribution.getWord());
+                    word.setType("term");
                     helper.getUdm().saveWord(word);
 
                 }

@@ -15,4 +15,6 @@ public class ItemDocument extends Item{
 
     @Id
     private String uri;
+
+    private String domain;
 }

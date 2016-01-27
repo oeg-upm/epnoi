@@ -1,6 +1,7 @@
 package org.epnoi.api.services;
 
 import org.epnoi.storage.model.Analysis;
+import org.epnoi.storage.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,10 @@ public class AnalysisService extends AbstractCRUDService<Analysis> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AnalysisService.class);
 
+    public AnalysisService() {
+        super(Resource.Type.ANALYSIS);
+    }
+
     @Override
     protected Analysis save(Analysis resource) {
         udm.saveAnalysis(resource);
@@ -28,8 +33,8 @@ public class AnalysisService extends AbstractCRUDService<Analysis> {
     }
 
     @Override
-    protected Analysis delete(String uri) {
-        return udm.deleteAnalysis(uri);
+    protected void delete(String uri) {
+        udm.deleteAnalysis(uri);
     }
 
     @Override
