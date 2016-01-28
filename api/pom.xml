@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.epnoi</groupId>
         <artifactId>epnoi</artifactId>
-        <version>0.1-SNAPSHOT</version>
+        <version>${current.version}</version>
     </parent>
 
     <artifactId>epnoi-api</artifactId>

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.epnoi</groupId>
     <artifactId>epnoi</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>${current.version}</version>
     <packaging>pom</packaging>
     <name>epnoi</name>
     <description>Explore multiple heterogeneous non-structured information sources</description>
@@ -22,7 +22,7 @@
     </licenses>
     <inceptionYear>2015</inceptionYear>
     <scm>
-        <url>https://github.com/fitash/epnoi/wiki</url>
+        <url>https://github.com/oeg-upm/epnoi/wiki</url>
     </scm>
     <developers>
         <developer>
@@ -40,6 +40,7 @@
         <maven>3.0.0</maven>
     </prerequisites>
     <properties>
+        <current.version>0.1</current.version>
 
         <!-- Project Details -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -152,7 +153,6 @@
         <module>knowledgebase</module>
         <module>app</module>
         <module>vms</module>
-        <module>watcher</module>
         <module>eventbus</module>
     </modules>
 
