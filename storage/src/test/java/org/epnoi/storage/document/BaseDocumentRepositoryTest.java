@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @Category(IntegrationTest.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = DocumentConfig.class)
-@TestPropertySource(properties = { "epnoi.elasticsearch.contactpoints = zavijava.dia.fi.upm.es", "epnoi.elasticsearch.port = 5021" })
+@TestPropertySource(properties = { "epnoi.elasticsearch.contactpoints = drinventor.dia.fi.upm.es", "epnoi.elasticsearch.port = 5021" })
 public abstract class BaseDocumentRepositoryTest<T extends Resource> {
 
     public abstract BaseDocumentRepository<T> getRepository();

@@ -40,6 +40,7 @@
         <maven>3.0.0</maven>
     </prerequisites>
     <properties>
+        <!-- Project Version -->
         <current.version>0.2-SNAPSHOT</current.version>
 
         <!-- Project Details -->
