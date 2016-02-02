@@ -20,7 +20,7 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
     </licenses>
-    <inceptionYear>2015</inceptionYear>
+    <inceptionYear>2016</inceptionYear>
     <scm>
         <url>https://github.com/oeg-upm/epnoi/wiki</url>
     </scm>
@@ -40,7 +40,7 @@
         <maven>3.0.0</maven>
     </prerequisites>
     <properties>
-        <current.version>0.1</current.version>
+        <current.version>0.2-SNAPSHOT</current.version>
 
         <!-- Project Details -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
