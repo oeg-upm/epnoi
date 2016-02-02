@@ -1,15 +1,14 @@
 package org.epnoi.harvester.services;
 
-import com.google.common.base.Strings;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.SpringCamelContext;
 import org.epnoi.harvester.routes.RouteDefinitionFactory;
 import org.epnoi.storage.TimeGenerator;
-import org.epnoi.storage.model.ResourceUtils;
-import org.epnoi.storage.model.Source;
 import org.epnoi.storage.UDM;
 import org.epnoi.storage.URIGenerator;
 import org.epnoi.storage.model.Domain;
+import org.epnoi.storage.model.ResourceUtils;
+import org.epnoi.storage.model.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

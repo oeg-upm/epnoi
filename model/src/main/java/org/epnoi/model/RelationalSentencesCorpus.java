@@ -3,7 +3,7 @@ package org.epnoi.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RelationalSentencesCorpus implements Resource {
+public class RelationalSentencesCorpus extends Resource {
 
 	private String uri;
 	private String description;

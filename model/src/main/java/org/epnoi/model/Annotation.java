@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-public class Annotation implements Resource {
+public class Annotation extends Resource {
 	private String uri;
 	private PAVProperties pavProperties;
 	private String hasTopic;

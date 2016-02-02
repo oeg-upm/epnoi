@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-public class Domain implements Resource {
+public class Domain extends Resource {
 
 	private String uri;
 
@@ -17,7 +17,6 @@ public class Domain implements Resource {
 
 	// -------------------------------------------------------------------------------------------
 	
-	@Override
 	public String getUri() {
 		return this.uri;
 	}
@@ -36,7 +35,6 @@ public class Domain implements Resource {
 
 	// -------------------------------------------------------------------------------------------
 	
-	@Override
 	public void setUri(String uri) {
 		this.uri = uri;
 	}

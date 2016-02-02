@@ -1,15 +1,12 @@
 package org.epnoi.modeler;
 
 import es.cbadenes.lab.test.IntegrationTest;
-import org.epnoi.model.*;
+import org.epnoi.model.Event;
 import org.epnoi.model.modules.EventBus;
 import org.epnoi.model.modules.RoutingKey;
-import org.epnoi.storage.TimeGenerator;
 import org.epnoi.storage.UDM;
-import org.epnoi.storage.URIGenerator;
-import org.epnoi.storage.model.*;
 import org.epnoi.storage.model.Domain;
-import org.epnoi.storage.model.Resource;
+import org.epnoi.storage.model.Topic;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;

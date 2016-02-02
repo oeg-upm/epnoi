@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-public class File implements Resource{
+public class File extends Resource {
 	Long id;
 	String uri;
 	String resource;

@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class WikidataView implements Resource {
+public class WikidataView extends Resource {
 	private String uri;
 	private Map<String, Set<String>> labelsDictionary;
 	private Map<String, Set<String>> labelsReverseDictionary;

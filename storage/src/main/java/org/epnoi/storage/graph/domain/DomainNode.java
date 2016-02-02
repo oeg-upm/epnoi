@@ -5,10 +5,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.epnoi.storage.graph.domain.relationships.ContainedDocument;
 import org.epnoi.storage.graph.domain.relationships.SimilarDomain;
-import org.epnoi.storage.model.Domain;
-import org.epnoi.storage.model.Resource;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
@@ -20,15 +16,9 @@ import java.util.Set;
  */
 @NodeEntity(label = "Domain")
 @Data
-@EqualsAndHashCode(of={"uri"})
-@ToString(of={"uri"})
-public class DomainNode extends Resource {
-
-    @GraphId
-    private Long id;
-
-    @Index(unique = true)
-    private String uri;
+@EqualsAndHashCode(of={"uri"}, callSuper = true )
+@ToString(of={"uri"}, callSuper = true)
+public class DomainNode extends Node {
 
     @Relationship(type = "SIMILAR_TO", direction="UNDIRECTED")
     private Set<SimilarDomain> domains = new HashSet<>();

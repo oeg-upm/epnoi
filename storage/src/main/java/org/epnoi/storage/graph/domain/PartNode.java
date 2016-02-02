@@ -3,11 +3,10 @@ package org.epnoi.storage.graph.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.epnoi.storage.graph.domain.relationships.*;
-import org.epnoi.storage.model.Part;
-import org.epnoi.storage.model.Resource;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
+import org.epnoi.storage.graph.domain.relationships.ItemDescribedByPart;
+import org.epnoi.storage.graph.domain.relationships.SimilarPart;
+import org.epnoi.storage.graph.domain.relationships.TopicDealtByPart;
+import org.epnoi.storage.graph.domain.relationships.WordMentionedByPart;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
@@ -19,15 +18,9 @@ import java.util.Set;
  */
 @NodeEntity(label = "Part")
 @Data
-@EqualsAndHashCode(of={"uri"})
-@ToString(of={"uri"})
-public class PartNode extends Resource {
-
-    @GraphId
-    private Long id;
-
-    @Index(unique = true)
-    private String uri;
+@EqualsAndHashCode(of={"uri"}, callSuper = true)
+@ToString(of={"uri"}, callSuper = true)
+public class PartNode extends Node {
 
     private String sense;
 

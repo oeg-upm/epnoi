@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import lombok.Data;
 import lombok.ToString;
 import org.apache.commons.lang.StringUtils;
+import org.epnoi.model.Resource;
 
 /**
  * Created by cbadenes on 22/12/15.

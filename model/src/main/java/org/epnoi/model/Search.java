@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 
 @XmlRootElement
-public class Search implements Resource {
+public class Search extends Resource {
 
 	private String uri;
 	private String title;

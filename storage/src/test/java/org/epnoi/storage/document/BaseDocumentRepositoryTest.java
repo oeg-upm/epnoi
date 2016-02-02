@@ -1,8 +1,8 @@
 package org.epnoi.storage.document;
 
 import es.cbadenes.lab.test.IntegrationTest;
+import org.epnoi.model.Resource;
 import org.epnoi.storage.document.repository.BaseDocumentRepository;
-import org.epnoi.storage.model.Resource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;

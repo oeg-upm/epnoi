@@ -3,11 +3,8 @@ package org.epnoi.storage.graph.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.epnoi.storage.graph.domain.relationships.*;
-import org.epnoi.storage.model.Resource;
-import org.epnoi.storage.model.Topic;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
+import org.epnoi.storage.graph.domain.relationships.DomainInTopic;
+import org.epnoi.storage.graph.domain.relationships.WordMentionedByTopic;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
@@ -19,15 +16,9 @@ import java.util.Set;
  */
 @NodeEntity(label = "Topic")
 @Data
-@EqualsAndHashCode(of={"uri"})
-@ToString(of={"uri"})
-public class TopicNode extends Resource {
-
-    @GraphId
-    private Long id;
-
-    @Index(unique = true)
-    private String uri;
+@EqualsAndHashCode(of={"uri"}, callSuper = true)
+@ToString(of={"uri"}, callSuper = true)
+public class TopicNode extends Node {
 
     @Relationship(type = "EMERGES_IN", direction="OUTGOING")
     private Set<DomainInTopic> domains = new HashSet<>();

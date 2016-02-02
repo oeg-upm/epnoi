@@ -2,7 +2,7 @@ package org.epnoi.storage;
 
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
-import org.epnoi.storage.model.Resource;
+import org.epnoi.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

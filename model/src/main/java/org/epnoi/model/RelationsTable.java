@@ -4,7 +4,7 @@ import java.util.*;
 
 
 
-public class RelationsTable implements Resource {
+public class RelationsTable extends Resource {
 
 	private String uri;
 	private Map<String, Relation> relations;

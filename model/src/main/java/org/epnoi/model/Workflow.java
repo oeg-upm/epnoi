@@ -2,7 +2,7 @@ package org.epnoi.model;
 
 import java.util.ArrayList;
 
-public class Workflow implements Resource{
+public class Workflow extends Resource {
 
 	Long id;
 	String uri;

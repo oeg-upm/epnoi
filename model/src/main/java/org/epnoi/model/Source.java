@@ -4,7 +4,7 @@ import lombok.Data;
 import org.apache.commons.lang.StringUtils;
 
 @Data
-public class Source implements Resource {
+public class Source extends Resource {
 
 	private String uri;
 

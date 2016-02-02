@@ -2,7 +2,7 @@ package org.epnoi.model;
 
 import java.util.ArrayList;
 
-public class Pack implements Resource{
+public class Pack extends Resource {
 	Long id;
 	String uri;
 	String resource;

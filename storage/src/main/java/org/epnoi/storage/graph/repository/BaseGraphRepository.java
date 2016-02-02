@@ -1,6 +1,6 @@
 package org.epnoi.storage.graph.repository;
 
-import org.epnoi.storage.model.Resource;
+import org.epnoi.model.Resource;
 import org.springframework.data.neo4j.repository.GraphRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 

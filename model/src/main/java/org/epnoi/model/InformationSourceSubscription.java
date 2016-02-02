@@ -3,7 +3,7 @@ package org.epnoi.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InformationSourceSubscription implements Resource {
+public class InformationSourceSubscription extends Resource {
 
 	String uri;
 	String informationSource;

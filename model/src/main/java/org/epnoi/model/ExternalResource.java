@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-public class ExternalResource implements Resource {
+public class ExternalResource extends Resource {
 
 	private String uri;
 	private String description;

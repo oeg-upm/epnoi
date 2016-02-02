@@ -3,7 +3,7 @@ package org.epnoi.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Paper implements Resource {
+public class Paper extends Resource {
 	String uri;
 	List<String> authors;
 	String description;
@@ -18,7 +18,6 @@ public class Paper implements Resource {
 	
 	// -------------------------------------------------------------------------------------------------------------
 
-	@Override
 	public String getUri() {
 
 		return this.uri;
@@ -26,7 +25,6 @@ public class Paper implements Resource {
 
 	// -------------------------------------------------------------------------------------------------------------
 
-	@Override
 	public void setUri(String uri) {
 		this.uri = uri;
 	}

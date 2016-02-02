@@ -1,12 +1,10 @@
 package org.epnoi.api.services;
 
 import com.google.common.base.Strings;
-import org.apache.commons.httpclient.URIException;
-import org.apache.commons.httpclient.util.URIUtil;
+import org.epnoi.model.Resource;
 import org.epnoi.storage.TimeGenerator;
 import org.epnoi.storage.UDM;
 import org.epnoi.storage.URIGenerator;
-import org.epnoi.storage.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;

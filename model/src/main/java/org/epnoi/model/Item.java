@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-public class Item implements Resource {
+public class Item extends Resource {
 
 	private String title = "";
 	private String description = "";

@@ -19,7 +19,6 @@ import org.neo4j.ogm.session.result.ResultProcessingException;
 import org.neo4j.ogm.session.transaction.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.cassandra.repository.support.BasicMapId;
@@ -108,6 +107,16 @@ public class UDM {
     @Autowired
     AnalysisDocumentRepository analysisDocumentRepository;
 
+
+    @Autowired
+    ColumnRepository columnRepository;
+
+    @Autowired
+    DocumentRepository documentRepository;
+
+    @Autowired
+    GraphRepository graphRepository;
+
     @Value("${epnoi.neo4j.contactpoints}")
     String neo4jHost;
 
@@ -122,6 +131,30 @@ public class UDM {
     /******************************************************************************
      * Save
      ******************************************************************************/
+
+    public void save(Resource resource, Resource.Type type){
+        try{
+            session.clear();
+            Transaction transaction = session.beginTransaction();
+
+            LOG.debug("trying to save :" + resource);
+            // column
+            columnRepository.save(resource,type);
+            // document
+            documentRepository.save(resource,type);
+            // graph
+            Node node = graphRepository.save(resource, type);
+            LOG.info("Saved: " + node + " -> id:"+node.getId());
+
+            transaction.commit();
+
+            //Publish the event
+            eventBus.post(Event.from(resource), RoutingKey.of(type, Resource.State.CREATED));
+        }catch (Exception e){
+            LOG.error("Unexpected error while saving resource: "+resource,e);
+        }
+    }
+
 
     public void saveSource(Source source){
         try{
@@ -1150,7 +1183,7 @@ public class UDM {
         return emptyOrFirst(wordColumnRepository.findByType(type));
     }
 
-    private Optional<String> emptyOrFirst(Iterable<? extends org.epnoi.storage.model.Resource> resources){
+    private Optional<String> emptyOrFirst(Iterable<? extends Resource> resources){
         if (resources == null || !resources.iterator().hasNext()) return Optional.empty();
         return Optional.of(resources.iterator().next().getUri());
     }

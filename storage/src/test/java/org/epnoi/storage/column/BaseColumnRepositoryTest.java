@@ -1,8 +1,8 @@
 package org.epnoi.storage.column;
 
 import es.cbadenes.lab.test.IntegrationTest;
+import org.epnoi.model.Resource;
 import org.epnoi.storage.column.repository.BaseColumnRepository;
-import org.epnoi.storage.model.Resource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;

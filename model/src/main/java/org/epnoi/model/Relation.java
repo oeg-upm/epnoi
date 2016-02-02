@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Relation implements Resource {
+public class Relation extends Resource {
 	private String uri;
 	private String source;
 	private String target;

@@ -3,13 +3,9 @@ package org.epnoi.storage.graph.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.epnoi.storage.graph.domain.relationships.SimilarItem;
 import org.epnoi.storage.graph.domain.relationships.TopicDealtByItem;
 import org.epnoi.storage.graph.domain.relationships.WordMentionedByItem;
-import org.epnoi.storage.graph.domain.relationships.SimilarItem;
-import org.epnoi.storage.model.Item;
-import org.epnoi.storage.model.Resource;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
@@ -21,15 +17,9 @@ import java.util.Set;
  */
 @NodeEntity(label = "Item")
 @Data
-@EqualsAndHashCode(of={"uri"})
-@ToString(of={"uri"})
-public class ItemNode extends Resource {
-
-    @GraphId
-    private Long id;
-
-    @Index(unique = true)
-    private String uri;
+@EqualsAndHashCode(of={"uri"}, callSuper = true)
+@ToString(of={"uri"}, callSuper = true)
+public class ItemNode extends Node {
 
     @Relationship(type = "SIMILAR_TO", direction="UNDIRECTED")
     private Set<SimilarItem> items = new HashSet<>();

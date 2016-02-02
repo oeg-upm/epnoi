@@ -872,11 +872,6 @@
                 <artifactId>camel-servlet</artifactId>
                 <version>${camel.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-restlet</artifactId>
-                <version>${camel.version}</version>
-            </dependency>
 
             <!-- XML Serializer -->
             <dependency>

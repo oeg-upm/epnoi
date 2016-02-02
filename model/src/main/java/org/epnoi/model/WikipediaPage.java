@@ -14,7 +14,7 @@ import java.util.Map;
 
 
 
-public class WikipediaPage implements Resource {
+public class WikipediaPage extends Resource {
 	private String uri;
 	private String term;
 	private String termDefinition;

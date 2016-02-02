@@ -1,16 +1,19 @@
 package org.epnoi.model;
 
-import org.codehaus.jackson.annotate.JsonTypeInfo;
+import lombok.Data;
+import lombok.ToString;
 
 import java.io.Serializable;
 
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
-public interface Resource extends Serializable {
+@Data
+@ToString
+public class Resource implements Serializable{
 
-	String getUri();
-	void setUri(String uri);
+	String uri;
 
-	enum Type{
+	String creationTime;
+
+	public enum Type{
 		SOURCE("source"),
 		DOMAIN("domain"),
 		DOCUMENT("document"),
@@ -30,7 +33,7 @@ public interface Resource extends Serializable {
 
 	}
 
-	enum State {
+	public enum State {
 		CREATED("created"),
 		UPDATED("updated"),
 		DELETED("deleted"),

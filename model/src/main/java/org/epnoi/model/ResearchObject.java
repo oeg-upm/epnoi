@@ -3,7 +3,7 @@ package org.epnoi.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResearchObject implements Resource {
+public class ResearchObject extends Resource {
 
 	private DublinCoreMetadataElementsSet dcProperties;
 

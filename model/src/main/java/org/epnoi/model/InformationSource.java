@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-public class InformationSource implements Resource {
+public class InformationSource extends Resource {
 	String uri;
 	String URL;
 	String name;

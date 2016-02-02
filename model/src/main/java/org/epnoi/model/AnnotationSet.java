@@ -2,7 +2,7 @@ package org.epnoi.model;
 
 import java.util.List;
 
-public class AnnotationSet implements Resource {
+public class AnnotationSet extends Resource {
 	private String uri;
 	private PAVProperties pavProperties;
 	private List<String> items;

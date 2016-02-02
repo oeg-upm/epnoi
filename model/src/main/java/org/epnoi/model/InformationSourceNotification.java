@@ -3,7 +3,7 @@ package org.epnoi.model;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class InformationSourceNotification implements Resource {
+public class InformationSourceNotification extends Resource {
 	
 	private String uri;
 	private Resource resource;

@@ -2,7 +2,7 @@ package org.epnoi.model;
 
 import java.util.ArrayList;
 
-public class Group implements Resource {
+public class Group extends Resource {
 	boolean autoAccept;
 	String description;
 	Long id;

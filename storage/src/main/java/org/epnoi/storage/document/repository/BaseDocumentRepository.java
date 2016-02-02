@@ -1,7 +1,6 @@
 package org.epnoi.storage.document.repository;
 
-import org.epnoi.storage.model.Resource;
-import org.epnoi.storage.model.Source;
+import org.epnoi.model.Resource;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 

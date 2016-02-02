@@ -2,6 +2,7 @@ package org.epnoi.storage.graph.repository;
 
 import org.epnoi.storage.graph.domain.DocumentNode;
 import org.epnoi.storage.graph.domain.relationships.TopicDealtByDocument;
+import org.epnoi.storage.model.Document;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.stereotype.Repository;
 

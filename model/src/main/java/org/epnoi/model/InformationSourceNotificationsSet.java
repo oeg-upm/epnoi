@@ -5,7 +5,7 @@ import java.util.List;
 
 
 
-public class InformationSourceNotificationsSet implements Resource {
+public class InformationSourceNotificationsSet extends Resource {
 
 	private String uri;
 	private String timestamp;

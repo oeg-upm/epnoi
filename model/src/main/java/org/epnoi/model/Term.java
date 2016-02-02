@@ -2,7 +2,7 @@ package org.epnoi.model;
 
 import org.epnoi.model.commons.StringUtils;
 
-public class Term implements Resource {
+public class Term extends Resource {
 	private String uri;
 	private AnnotatedWord<TermMetadata> annotatedTerm;
 

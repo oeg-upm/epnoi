@@ -3,7 +3,7 @@ package org.epnoi.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Feed implements Resource{
+public class Feed extends Resource {
 
 	private String title;
 	private String link;
