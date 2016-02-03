@@ -1,7 +1,7 @@
 package org.epnoi.api.services;
 
-import org.epnoi.model.Resource;
-import org.epnoi.storage.model.Part;
+import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.Part;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

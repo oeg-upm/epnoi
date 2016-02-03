@@ -1,22 +1,23 @@
 package org.epnoi.storage;
 
 import org.epnoi.model.Event;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.*;
 import org.epnoi.model.modules.EventBus;
 import org.epnoi.model.modules.RoutingKey;
-import org.epnoi.storage.column.domain.*;
-import org.epnoi.storage.column.repository.*;
-import org.epnoi.storage.document.domain.*;
-import org.epnoi.storage.document.repository.*;
-import org.epnoi.storage.graph.domain.*;
-import org.epnoi.storage.graph.domain.relationships.*;
-import org.epnoi.storage.graph.repository.*;
-import org.epnoi.storage.model.*;
+import org.epnoi.storage.system.column.domain.*;
+import org.epnoi.storage.system.column.repository.*;
+import org.epnoi.storage.system.document.domain.*;
+import org.epnoi.storage.system.document.repository.*;
+import org.epnoi.storage.system.graph.domain.*;
+import org.epnoi.storage.system.graph.domain.relationships.*;
+import org.epnoi.storage.system.graph.repository.*;
+import org.epnoi.storage.session.UnifiedSession;
+import org.epnoi.storage.session.UnifiedTransaction;
 import org.neo4j.ogm.session.Neo4jSession;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
 import org.neo4j.ogm.session.result.ResultProcessingException;
-import org.neo4j.ogm.session.transaction.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,9 @@ public class UDM {
 
     @Autowired
     EventBus eventBus;
+
+    @Autowired
+    UnifiedSession unifiedSession;
 
     @Autowired
     SessionFactory sessionFactory;
@@ -98,11 +102,6 @@ public class UDM {
     TopicGraphRepository topicGraphRepository;
 
     @Autowired
-    RelationColumnRepository relationColumnRepository;
-    @Autowired
-    RelationDocumentRepository relationDocumentRepository;
-
-    @Autowired
     AnalysisColumnRepository analysisColumnRepository;
     @Autowired
     AnalysisDocumentRepository analysisDocumentRepository;
@@ -132,10 +131,12 @@ public class UDM {
      * Save
      ******************************************************************************/
 
+
+    // Compact Mode
     public void save(Resource resource, Resource.Type type){
         try{
-            session.clear();
-            Transaction transaction = session.beginTransaction();
+            unifiedSession.clean();
+            UnifiedTransaction transaction = unifiedSession.beginTransaction();
 
             LOG.debug("trying to save :" + resource);
             // column
@@ -143,11 +144,11 @@ public class UDM {
             // document
             documentRepository.save(resource,type);
             // graph
-            Node node = graphRepository.save(resource, type);
-            LOG.info("Saved: " + node + " -> id:"+node.getId());
+            graphRepository.save(resource, type);
 
             transaction.commit();
 
+            LOG.info("Resource Saved: " + resource);
             //Publish the event
             eventBus.post(Event.from(resource), RoutingKey.of(type, Resource.State.CREATED));
         }catch (Exception e){
@@ -168,7 +169,7 @@ public class UDM {
             SourceNode resource = sourceGraphRepository.save(ResourceUtils.map(source, SourceNode.class));
             LOG.info("Saved: " + source + " -> id:"+resource.getId());
             //Publish the event
-            eventBus.post(Event.from(source), RoutingKey.of(org.epnoi.model.Resource.Type.SOURCE, org.epnoi.model.Resource.State.CREATED));
+            eventBus.post(Event.from(source), RoutingKey.of(Resource.Type.SOURCE, Resource.State.CREATED));
         }catch (Exception e){
             LOG.error("Unexpected error during save resource: "+source,e);
         }
@@ -186,7 +187,7 @@ public class UDM {
             DomainNode resource = domainGraphRepository.save(ResourceUtils.map(domain, DomainNode.class));
             LOG.info("Saved:  " + domain+ " -> id:"+resource.getId());
             //Publish the event
-            eventBus.post(Event.from(domain), RoutingKey.of(org.epnoi.model.Resource.Type.DOMAIN, org.epnoi.model.Resource.State.CREATED));
+            eventBus.post(Event.from(domain), RoutingKey.of(Resource.Type.DOMAIN, Resource.State.CREATED));
         }catch (Exception e){
             LOG.error("Unexpected error during save resource: "+domain,e);
         }
@@ -301,22 +302,6 @@ public class UDM {
         }
     }
 
-    public void saveRelation(Relation relation){
-        try{
-            session.clear();
-            LOG.debug("trying to save :" + relation);
-            // column
-            relationColumnRepository.save(ResourceUtils.map(relation, RelationColumn.class));
-            // document
-            relationDocumentRepository.save(ResourceUtils.map(relation, RelationDocument.class));
-            LOG.info("Saved:  " + relation);
-            //Publish the event
-            eventBus.post(Event.from(relation), RoutingKey.of(Resource.Type.RELATION, Resource.State.CREATED));
-        }catch (Exception e){
-            LOG.error("Unexpected error during save resource: "+relation,e);
-        }
-    }
-
     public void saveTopic(Topic topic, String domainURI, String analysisURI){
         try{
             session.clear();
@@ -368,6 +353,12 @@ public class UDM {
      * Exist
      ******************************************************************************/
 
+    // Compact Mode
+    public boolean exists(String uri, Resource.Type type){
+        return columnRepository.exists(uri,type);
+    }
+
+
     public boolean existSource(String uri){
         return sourceColumnRepository.exists(BasicMapId.id(ResourceUtils.URI,uri));
     }
@@ -396,10 +387,6 @@ public class UDM {
         return analysisColumnRepository.exists(BasicMapId.id(ResourceUtils.URI,uri));
     }
 
-    public boolean existRelation(String uri){
-        return relationColumnRepository.exists(BasicMapId.id(ResourceUtils.URI,uri));
-    }
-
     public boolean existTopic(String uri){
         return topicColumnRepository.exists(BasicMapId.id(ResourceUtils.URI,uri));
     }
@@ -407,6 +394,12 @@ public class UDM {
     /******************************************************************************
      * Read
      ******************************************************************************/
+
+    // Compact Mode
+    public Optional<Resource> read(String uri, Resource.Type type){
+        return columnRepository.read(uri,type);
+    }
+
 
     public Optional<Source> readSource(String uri){
         SourceColumn result = sourceColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI, uri));
@@ -444,12 +437,6 @@ public class UDM {
         return Optional.of(ResourceUtils.map(result, Word.class));
     }
 
-    public Optional<Relation> readRelation(String uri){
-        RelationColumn result = relationColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI, uri));
-        if (result == null) return Optional.empty();
-        return Optional.of(ResourceUtils.map(result, Relation.class));
-    }
-
     public Optional<Topic> readTopic(String uri){
         TopicColumn result = topicColumnRepository.findOne(BasicMapId.id(ResourceUtils.URI, uri));
         if (result == null) return Optional.empty();
@@ -466,6 +453,40 @@ public class UDM {
      * Relate
      ******************************************************************************/
     // TODO review relations:: relation.ID to avoid duplicates
+
+    // Compact Mode
+    public void relate(String uri1, String uri2, Relation.Type type, Relation.Properties properties){
+        try{
+            unifiedSession.clean();
+            UnifiedTransaction transaction = unifiedSession.beginTransaction();
+            Resource resource = graphRepository.relate(uri1,uri2,type,properties);
+            transaction.commit();
+
+            //Publish the event
+            eventBus.post(Event.from(ResourceUtils.map(resource,type.getStart().classOf())), RoutingKey.of(type.getStart(), Resource.State.UPDATED));
+        }catch (ResultProcessingException e){
+            LOG.warn("Creating relation between:["+uri1+"-"+uri2+"]",e.getMessage());
+        }catch (Exception e){
+            LOG.error("Unexpected error during relation " + type + " between '"+uri1 +"' and '"+uri2+"'",e);
+        }
+    }
+
+    // Compact Mode
+    public void unrelate(String uri1, String uri2, Relation.Type type){
+        try{
+            unifiedSession.clean();
+            UnifiedTransaction transaction = unifiedSession.beginTransaction();
+            Resource resource = graphRepository.unrelate(uri1,uri2,type);
+            transaction.commit();
+
+            //Publish the event
+            eventBus.post(Event.from(ResourceUtils.map(resource,type.getStart().classOf())), RoutingKey.of(type.getStart(), Resource.State.UPDATED));
+        }catch (ResultProcessingException e){
+            LOG.warn("Removing relation between:["+uri1+"-"+uri2+"]",e.getMessage());
+        }catch (Exception e){
+            LOG.error("Unexpected error during removing relation " +type+" between '"+uri1 +"' and '"+uri2+"'",e);
+        }
+    }
 
     public void relateDocumentToSource(String documentURI, String sourceURI, String date){
         LOG.debug("Trying to relate document: " + documentURI + " to source: " + sourceURI + " in: " + date);
@@ -953,6 +974,45 @@ public class UDM {
      * Find
      ******************************************************************************/
 
+    // Compact Mode
+    public List<String> findAll(Resource.Type type){
+        LOG.debug("Finding " + type.name() + "s");
+        List<String> uris = new ArrayList<>();
+        try{
+            unifiedSession.clean();
+            UnifiedTransaction transaction = unifiedSession.beginTransaction();
+
+            columnRepository.findAll(type).forEach(x -> uris.add(x.getUri()));
+            transaction.commit();
+            LOG.info(type.name() + "s: " + uris);
+
+        }catch (ResultProcessingException e){
+            LOG.warn("getting all " + type,e.getMessage());
+        }catch (Exception e){
+            LOG.error("Unexpected error while getting all " + type,e);
+        }
+        return uris;
+    }
+
+    // Compact Mode
+    public List<String> findByDomain(Resource.Type type,String uri){
+        LOG.debug("Finding " + type.name() + "s");
+        List<String> uris = new ArrayList<>();
+        try{
+            unifiedSession.clean();
+            UnifiedTransaction transaction = unifiedSession.beginTransaction();
+            graphRepository.findByDomain(type, uri).forEach(x -> uris.add(x.getUri()));
+            transaction.commit();
+            LOG.info("In domain: " + uri + " found: ["+type.name() + "]: " + uris);
+        }catch (ResultProcessingException e){
+            LOG.warn("getting all " + type,e.getMessage());
+        }catch (Exception e){
+            LOG.error("Unexpected error while getting all " + type,e);
+        }
+        return uris;
+    }
+
+
     public List<String> findSources(){
         session.clear();
         LOG.debug("Finding sources");
@@ -1034,14 +1094,6 @@ public class UDM {
         return uris;
     }
 
-    public List<String> findRelations(){
-        session.clear();
-        LOG.debug("Finding relations");
-        List<String> uris = new ArrayList<>();
-        relationColumnRepository.findAll().forEach(x -> uris.add(x.getUri()));
-        LOG.info("Relations: " + uris);
-        return uris;
-    }
 
     public List<String> findDocumentsByDomain(String uri){
         session.clear();
@@ -1191,6 +1243,52 @@ public class UDM {
     /******************************************************************************
      * Delete
      ******************************************************************************/
+
+    // Compact Mode
+    public void delete(String uri, Resource.Type type){
+        try{
+            unifiedSession.clean();
+            UnifiedTransaction transaction = unifiedSession.beginTransaction();
+
+            columnRepository.delete(uri,type);
+            documentRepository.delete(uri,type);
+            graphRepository.delete(uri,type);
+
+            transaction.commit();
+
+            LOG.info("Deleted: "+type.name()+"[" + uri+"]");
+
+            //Publish the event
+            Resource resource = new Resource();
+            resource.setUri(uri);
+            eventBus.post(Event.from(resource), RoutingKey.of(type, Resource.State.DELETED));
+
+        }catch (Exception e){
+            LOG.error("Unexpected error during delete of '"+uri,e);
+        }
+    }
+
+    // Compact Mode
+    public void deleteAll(Resource.Type type){
+        try{
+            unifiedSession.clean();
+            UnifiedTransaction transaction = unifiedSession.beginTransaction();
+
+            columnRepository.deleteAll(type);
+            documentRepository.deleteAll(type);
+            graphRepository.deleteAll(type);
+
+            transaction.commit();
+
+            LOG.info("Deleted All: "+type.name());
+
+            //Publish the event
+            // TODO
+        }catch (Exception e){
+            LOG.error("Unexpected error during delete all '"+type,e);
+        }
+    }
+
 
     public void deleteSource(String uri){
         try{
@@ -1437,37 +1535,6 @@ public class UDM {
         }
     }
 
-    public void deleteRelation(String uri){
-        try{
-            session.clear();
-            // column
-            relationColumnRepository.delete(BasicMapId.id(ResourceUtils.URI,uri));
-            // document
-            relationDocumentRepository.delete(uri);
-            // graph : TODO remove relationships between WORD nodes
-
-            //Publish the event
-            Relation relation = new Relation();
-            relation.setUri(uri);
-            eventBus.post(Event.from(relation), RoutingKey.of(Resource.Type.RELATION, Resource.State.DELETED));
-
-        }catch (Exception e){
-            LOG.error("Unexpected error during delete of '"+uri,e);
-        }
-    }
-
-    public void deleteRelations(){
-        try{
-            session.clear();
-            relationColumnRepository.deleteAll();
-            relationDocumentRepository.deleteAll();
-            LOG.info("All relations removed");
-            //TODO Publish the events
-        }catch (Exception e){
-            LOG.error("Unexpected error during delete of relations",e);
-        }
-    }
-
     public void deleteAnalysis(String uri){
         try{
             session.clear();
@@ -1594,9 +1661,6 @@ public class UDM {
             partColumnRepository.deleteAll();
             partDocumentRepository.deleteAll();
             partGraphRepository.deleteAll();
-
-            relationColumnRepository.deleteAll();
-            relationDocumentRepository.deleteAll();
 
             sourceColumnRepository.deleteAll();
             sourceDocumentRepository.deleteAll();

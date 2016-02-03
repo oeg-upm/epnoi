@@ -1,7 +1,7 @@
 package org.epnoi.model.modules;
 
 import lombok.Data;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 
 /**
  * Created by cbadenes on 26/11/15.

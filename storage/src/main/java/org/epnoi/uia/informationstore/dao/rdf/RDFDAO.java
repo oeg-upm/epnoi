@@ -7,7 +7,7 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.sparql.engine.binding.Binding;
 import org.epnoi.model.Context;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.parameterization.InformationStoreParameters;
 import org.epnoi.model.parameterization.VirtuosoInformationStoreParameters;
 import virtuoso.jena.driver.VirtGraph;

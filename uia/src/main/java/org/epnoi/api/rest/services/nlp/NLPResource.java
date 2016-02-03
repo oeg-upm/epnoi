@@ -5,7 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.modules.Core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

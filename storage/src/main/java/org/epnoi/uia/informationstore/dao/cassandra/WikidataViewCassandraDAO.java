@@ -5,6 +5,7 @@ import com.google.common.base.Splitter;
 import me.prettyprint.cassandra.service.ColumnSliceIterator;
 import me.prettyprint.hector.api.beans.HColumn;
 import org.epnoi.model.*;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.uia.informationstore.SelectorHelper;
 
 import java.util.*;

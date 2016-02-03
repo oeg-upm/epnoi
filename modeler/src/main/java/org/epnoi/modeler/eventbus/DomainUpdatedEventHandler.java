@@ -1,10 +1,10 @@
 package org.epnoi.modeler.eventbus;
 
 import org.epnoi.model.Event;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.modules.RoutingKey;
 import org.epnoi.modeler.services.ModelingService;
-import org.epnoi.storage.model.Domain;
+import org.epnoi.model.domain.Domain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

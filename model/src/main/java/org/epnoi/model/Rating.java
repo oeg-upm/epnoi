@@ -1,5 +1,7 @@
 package org.epnoi.model;
 
+import org.epnoi.model.domain.Resource;
+
 public class Rating extends Resource {
 	public static final String WORKFLOW_RATING ="WORKFLOW";
 	public static final String FILE_RATING ="FILE";

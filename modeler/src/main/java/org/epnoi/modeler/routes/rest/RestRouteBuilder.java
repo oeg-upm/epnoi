@@ -3,8 +3,8 @@ package org.epnoi.modeler.routes.rest;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.epnoi.model.Source;
-import org.epnoi.storage.model.Analysis;
-import org.epnoi.storage.model.Domain;
+import org.epnoi.model.domain.Analysis;
+import org.epnoi.model.domain.Domain;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

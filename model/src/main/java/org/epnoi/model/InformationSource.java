@@ -1,5 +1,7 @@
 package org.epnoi.model;
 
+import org.epnoi.model.domain.Resource;
+
 public class InformationSource extends Resource {
 	String uri;
 	String URL;

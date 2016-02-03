@@ -1,15 +1,13 @@
 package org.epnoi.uia.informationstore.dao.solr;
 
-import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrInputDocument;
 import org.epnoi.model.Context;
 import org.epnoi.model.Feed;
 import org.epnoi.model.Paper;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.commons.DateConverter;
 import org.epnoi.model.rdf.RDFHelper;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 public class PaperSOLRDAO extends SOLRDAO {

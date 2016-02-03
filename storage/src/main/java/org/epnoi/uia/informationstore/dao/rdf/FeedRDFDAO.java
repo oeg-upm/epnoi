@@ -10,7 +10,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import org.epnoi.model.Context;
 import org.epnoi.model.Feed;
 import org.epnoi.model.Item;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.commons.DateConverter;
 import org.epnoi.model.commons.StringUtils;
 import org.epnoi.model.parameterization.VirtuosoInformationStoreParameters;

@@ -2,13 +2,8 @@ package org.epnoi.harvester.routes.oaipmh;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.harvester.Config;
-import org.epnoi.model.Event;
-import org.epnoi.model.Resource;
 import org.epnoi.model.modules.EventBus;
-import org.epnoi.model.modules.RoutingKey;
 import org.epnoi.storage.UDM;
-import org.epnoi.storage.model.ResourceUtils;
-import org.epnoi.storage.model.Source;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;

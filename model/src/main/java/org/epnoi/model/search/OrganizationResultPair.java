@@ -1,6 +1,6 @@
 package org.epnoi.model.search;
 
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 
 public class OrganizationResultPair {
 	private Resource resource;

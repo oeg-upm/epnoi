@@ -1,6 +1,5 @@
 package org.epnoi.harvester.routes.processor;
 
-import arq.tokens;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import org.apache.camel.Exchange;
@@ -8,16 +7,15 @@ import org.apache.camel.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.epnoi.harvester.mining.TextMiner;
 import org.epnoi.harvester.mining.annotation.AnnotatedDocument;
-import org.epnoi.harvester.mining.parser.Token;
 import org.epnoi.harvester.model.MetaInformation;
 import org.epnoi.model.Record;
-import org.epnoi.storage.TimeGenerator;
+import org.epnoi.storage.generator.TimeGenerator;
 import org.epnoi.storage.UDM;
-import org.epnoi.storage.URIGenerator;
-import org.epnoi.storage.model.Document;
-import org.epnoi.storage.model.Item;
-import org.epnoi.storage.model.Part;
-import org.epnoi.storage.model.Word;
+import org.epnoi.storage.generator.URIGenerator;
+import org.epnoi.model.domain.Document;
+import org.epnoi.model.domain.Item;
+import org.epnoi.model.domain.Part;
+import org.epnoi.model.domain.Word;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 

@@ -5,8 +5,8 @@ import org.epnoi.comparator.similarity.SimilarityExecutor;
 import org.epnoi.comparator.tasks.DocumentSimilarityTask;
 import org.epnoi.comparator.tasks.ItemSimilarityTask;
 import org.epnoi.comparator.tasks.PartSimilarityTask;
-import org.epnoi.storage.model.Analysis;
-import org.epnoi.storage.model.Domain;
+import org.epnoi.model.domain.Analysis;
+import org.epnoi.model.domain.Domain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  * Created by cbadenes on 13/01/16.

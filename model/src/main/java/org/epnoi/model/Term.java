@@ -1,6 +1,7 @@
 package org.epnoi.model;
 
 import org.epnoi.model.commons.StringUtils;
+import org.epnoi.model.domain.Resource;
 
 public class Term extends Resource {
 	private String uri;

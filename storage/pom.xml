@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.epnoi</groupId>
 		<artifactId>epnoi</artifactId>
-		<version>${current.version}</version>
+		<version>0.2-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>epnoi-storage</artifactId>
@@ -92,10 +92,7 @@
 			<artifactId>httpclient</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
-		</dependency>
+
 
 	</dependencies>
 </project>

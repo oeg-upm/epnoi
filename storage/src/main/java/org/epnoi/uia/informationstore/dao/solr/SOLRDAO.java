@@ -1,8 +1,7 @@
 package org.epnoi.uia.informationstore.dao.solr;
 
-import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.epnoi.model.Context;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.parameterization.InformationStoreParameters;
 import org.epnoi.model.parameterization.SOLRInformationStoreParameters;
 

@@ -1,11 +1,13 @@
 package org.epnoi.modeler.models.word;
 
 import es.upm.oeg.epnoi.matching.metrics.domain.entity.RegularResource;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.Analysis;
+import org.epnoi.model.domain.Domain;
+import org.epnoi.model.domain.Word;
 import org.epnoi.modeler.scheduler.ModelingTask;
 import org.epnoi.modeler.helper.ModelingHelper;
 import org.epnoi.modeler.models.WordDistribution;
-import org.epnoi.storage.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

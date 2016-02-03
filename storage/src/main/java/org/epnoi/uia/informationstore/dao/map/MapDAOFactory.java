@@ -1,7 +1,7 @@
 package org.epnoi.uia.informationstore.dao.map;
 
 import org.epnoi.model.Paper;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.Selector;
 import org.epnoi.model.WikipediaPage;
 import org.epnoi.model.parameterization.InformationStoreParameters;

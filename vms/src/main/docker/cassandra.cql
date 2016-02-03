@@ -61,12 +61,6 @@ create table if not exists research.topics(uri text, creationTime text, content 
 create index on research.topics (creationTime);
 create index on research.topics (analysis);
 
-create table if not exists research.relations(uri text, creationTime text, type text, describes text, content text, analysis text, primary key (uri));
-create index on research.relations (creationTime);
-create index on research.relations (type);
-create index on research.relations (describes);
-create index on research.relations (analysis);
-
 create table if not exists research.analyses(uri text, creationTime text, type text, description text, configuration text, domain text, primary key (uri));
 create index on research.analyses (creationTime);
 create index on research.analyses (type);

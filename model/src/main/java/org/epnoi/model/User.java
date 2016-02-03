@@ -1,5 +1,7 @@
 package org.epnoi.model;
 
+import org.epnoi.model.domain.Resource;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 

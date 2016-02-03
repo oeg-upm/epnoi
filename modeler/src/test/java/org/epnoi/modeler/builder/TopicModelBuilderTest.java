@@ -2,15 +2,15 @@ package org.epnoi.modeler.builder;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import es.upm.oeg.epnoi.matching.metrics.domain.entity.RegularResource;
+import org.epnoi.model.domain.*;
 import org.epnoi.modeler.Config;
 import org.epnoi.modeler.models.topic.TopicData;
 import org.epnoi.modeler.models.topic.TopicDistribution;
 import org.epnoi.modeler.models.topic.TopicModel;
 import org.epnoi.modeler.models.WordDistribution;
-import org.epnoi.storage.TimeGenerator;
+import org.epnoi.storage.generator.TimeGenerator;
 import org.epnoi.storage.UDM;
-import org.epnoi.storage.URIGenerator;
-import org.epnoi.storage.model.*;
+import org.epnoi.storage.generator.URIGenerator;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;

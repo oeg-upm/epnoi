@@ -35,7 +35,7 @@ public class UIAServiceHandler extends ThriftServiceHandler implements UIAServic
         Resource resource = new Resource();
         try {
 
-            org.epnoi.model.Resource content = this.core.getInformationHandler().get(uri, type);
+            org.epnoi.model.domain.Resource content = this.core.getInformationHandler().get(uri, type);
 
             if (content != null) {
 

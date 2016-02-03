@@ -4,7 +4,7 @@ import org.epnoi.informationhandler.wrappers.Wrapper;
 import org.epnoi.informationhandler.wrappers.WrapperFactory;
 import org.epnoi.model.Content;
 import org.epnoi.model.Context;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.Selector;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 import org.epnoi.model.modules.*;

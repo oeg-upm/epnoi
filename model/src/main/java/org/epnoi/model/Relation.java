@@ -1,6 +1,7 @@
 package org.epnoi.model;
 
 import org.epnoi.model.commons.StringUtils;
+import org.epnoi.model.domain.Resource;
 
 import java.util.Collection;
 import java.util.HashMap;

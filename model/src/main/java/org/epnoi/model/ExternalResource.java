@@ -1,5 +1,7 @@
 package org.epnoi.model;
 
+import org.epnoi.model.domain.Resource;
+
 public class ExternalResource extends Resource {
 
 	private String uri;

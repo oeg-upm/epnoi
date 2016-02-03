@@ -18,7 +18,7 @@ import me.prettyprint.hector.api.mutation.Mutator;
 import me.prettyprint.hector.api.query.SliceQuery;
 import org.epnoi.model.Content;
 import org.epnoi.model.Context;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.Selector;
 
 import java.util.*;

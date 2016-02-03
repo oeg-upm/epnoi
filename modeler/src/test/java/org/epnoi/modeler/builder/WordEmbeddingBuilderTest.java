@@ -4,7 +4,7 @@ import es.cbadenes.lab.test.IntegrationTest;
 import es.upm.oeg.epnoi.matching.metrics.domain.entity.RegularResource;
 import org.epnoi.modeler.Config;
 import org.epnoi.modeler.models.word.W2VModel;
-import org.epnoi.storage.model.User;
+import org.epnoi.model.domain.User;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;

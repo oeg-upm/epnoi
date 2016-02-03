@@ -1,6 +1,7 @@
 package org.epnoi.uia.informationstore.dao.cassandra;
 
 import org.epnoi.model.*;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.parameterization.CassandraInformationStoreParameters;
 import org.epnoi.model.parameterization.InformationStoreParameters;
 import org.epnoi.model.rdf.FeedRDFHelper;

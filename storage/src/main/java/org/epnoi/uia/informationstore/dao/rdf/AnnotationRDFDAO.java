@@ -10,7 +10,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import org.epnoi.model.Annotation;
 import org.epnoi.model.Context;
 import org.epnoi.model.InformationSource;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.commons.StringUtils;
 import org.epnoi.model.rdf.AnnotationOntologyRDFHelper;
 import org.epnoi.model.rdf.AnnotationRDFHelper;

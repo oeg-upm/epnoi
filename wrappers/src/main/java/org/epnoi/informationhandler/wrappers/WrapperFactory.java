@@ -2,6 +2,7 @@ package org.epnoi.informationhandler.wrappers;
 
 import org.epnoi.informationhandler.wrappers.exception.WrapperNotFoundException;
 import org.epnoi.model.*;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.modules.Core;
 import org.epnoi.model.rdf.*;
 

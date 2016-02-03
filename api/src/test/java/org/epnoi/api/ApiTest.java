@@ -2,7 +2,7 @@ package org.epnoi.api;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.api.services.SourceService;
-import org.epnoi.storage.model.Source;
+import org.epnoi.model.domain.Source;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**

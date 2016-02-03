@@ -1,12 +1,12 @@
 package org.epnoi.harvester;
 
 import es.cbadenes.lab.test.IntegrationTest;
-import org.epnoi.storage.TimeGenerator;
+import org.epnoi.storage.generator.TimeGenerator;
 import org.epnoi.storage.UDM;
-import org.epnoi.storage.URIGenerator;
-import org.epnoi.storage.model.Document;
-import org.epnoi.storage.model.Domain;
-import org.epnoi.storage.model.Source;
+import org.epnoi.storage.generator.URIGenerator;
+import org.epnoi.model.domain.Document;
+import org.epnoi.model.domain.Domain;
+import org.epnoi.model.domain.Source;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;

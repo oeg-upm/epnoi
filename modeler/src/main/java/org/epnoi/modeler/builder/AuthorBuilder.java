@@ -1,9 +1,8 @@
 package org.epnoi.modeler.builder;
 
-import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang.StringUtils;
-import org.epnoi.storage.model.User;
+import org.epnoi.model.domain.User;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

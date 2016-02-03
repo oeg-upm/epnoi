@@ -20,7 +20,7 @@ public class UIAServiceClient extends ThriftClient {
     }
 
 
-    public org.epnoi.model.Resource getResource(String uri, String type) {
+    public org.epnoi.model.domain.Resource getResource(String uri, String type) {
         try {
 
 
@@ -28,7 +28,7 @@ public class UIAServiceClient extends ThriftClient {
 
             //  Resource content = client.getResource("http://en.wikipedia.org/wiki/Ammon", RDFHelper.WIKIPEDIA_PAGE_CLASS);
             Resource content = client.getResource(uri, type);
-            return ((org.epnoi.model.Resource) SerializationUtils.deserialize(content.getResource()));
+            return ((org.epnoi.model.domain.Resource) SerializationUtils.deserialize(content.getResource()));
         } catch (TException e) {
             e.printStackTrace();
         }
@@ -39,7 +39,7 @@ public class UIAServiceClient extends ThriftClient {
         System.out.println("-->");
 
         UIAServiceClient uiaService = new UIAServiceClient();
-        org.epnoi.model.Resource resource = null;
+        org.epnoi.model.domain.Resource resource = null;
         try {
             uiaService.init("localhost", 8585);
             System.out.println("It has been properly initialized!");

@@ -12,7 +12,7 @@ import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.query.QueryResult;
 import org.epnoi.model.Content;
 import org.epnoi.model.Context;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.Selector;
 import org.epnoi.uia.informationstore.SelectorHelper;
 

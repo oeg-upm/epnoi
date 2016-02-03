@@ -1,5 +1,7 @@
 package org.epnoi.model;
 
+import org.epnoi.model.domain.Resource;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement

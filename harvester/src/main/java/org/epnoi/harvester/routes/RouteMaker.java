@@ -1,8 +1,8 @@
 package org.epnoi.harvester.routes;
 
 import org.apache.camel.model.RouteDefinition;
-import org.epnoi.storage.model.Source;
-import org.epnoi.storage.model.Domain;
+import org.epnoi.model.domain.Source;
+import org.epnoi.model.domain.Domain;
 
 /**
  * Created by cbadenes on 01/12/15.

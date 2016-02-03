@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import me.prettyprint.cassandra.service.ColumnSliceIterator;
 import me.prettyprint.hector.api.beans.HColumn;
 import org.epnoi.model.*;
+import org.epnoi.model.domain.Resource;
 
 import java.util.ArrayList;
 

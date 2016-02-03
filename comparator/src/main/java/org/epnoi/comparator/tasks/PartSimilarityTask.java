@@ -2,8 +2,8 @@ package org.epnoi.comparator.tasks;
 
 import org.epnoi.comparator.helper.ComparatorHelper;
 import org.epnoi.comparator.similarity.RelationalSimilarity;
-import org.epnoi.storage.model.Analysis;
-import org.epnoi.storage.model.Relationship;
+import org.epnoi.model.domain.Analysis;
+import org.epnoi.model.domain.Relationship;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

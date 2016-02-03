@@ -2,7 +2,7 @@ package org.epnoi.modeler.services;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.modeler.Config;
-import org.epnoi.storage.model.Domain;
+import org.epnoi.model.domain.Domain;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;

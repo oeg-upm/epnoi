@@ -2,7 +2,7 @@ package org.epnoi.api.rest.services.uia;
 
 
 import io.swagger.annotations.*;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.modules.Core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

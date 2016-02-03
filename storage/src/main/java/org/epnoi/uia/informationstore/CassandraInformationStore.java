@@ -2,7 +2,7 @@ package org.epnoi.uia.informationstore;
 
 import org.epnoi.model.Content;
 import org.epnoi.model.Context;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.Selector;
 import org.epnoi.model.modules.InformationStore;
 import org.epnoi.model.parameterization.InformationStoreParameters;

@@ -3,6 +3,7 @@ package org.epnoi.uia.informationstore.dao.cassandra;
 import me.prettyprint.cassandra.service.ColumnSliceIterator;
 import me.prettyprint.hector.api.beans.HColumn;
 import org.epnoi.model.*;
+import org.epnoi.model.domain.Resource;
 
 public class FeedCassandraDAO extends CassandraDAO {
 

@@ -2,10 +2,10 @@ package org.epnoi.comparator;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.model.Event;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.modules.EventBus;
 import org.epnoi.model.modules.RoutingKey;
-import org.epnoi.storage.model.Analysis;
+import org.epnoi.model.domain.Analysis;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;

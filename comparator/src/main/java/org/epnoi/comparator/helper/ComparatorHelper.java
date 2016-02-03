@@ -1,9 +1,9 @@
 package org.epnoi.comparator.helper;
 
 import lombok.Data;
-import org.epnoi.storage.TimeGenerator;
+import org.epnoi.storage.generator.TimeGenerator;
 import org.epnoi.storage.UDM;
-import org.epnoi.storage.URIGenerator;
+import org.epnoi.storage.generator.URIGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

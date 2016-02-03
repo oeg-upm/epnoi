@@ -9,7 +9,7 @@ import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import org.epnoi.model.Context;
 import org.epnoi.model.InformationSource;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.User;
 import org.epnoi.model.rdf.UserRDFHelper;
 import virtuoso.jena.driver.VirtuosoQueryExecution;

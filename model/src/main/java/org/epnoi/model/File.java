@@ -1,5 +1,7 @@
 package org.epnoi.model;
 
+import org.epnoi.model.domain.Resource;
+
 public class File extends Resource {
 	Long id;
 	String uri;

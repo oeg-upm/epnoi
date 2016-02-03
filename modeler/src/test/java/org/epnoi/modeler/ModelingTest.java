@@ -2,11 +2,12 @@ package org.epnoi.modeler;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.model.Event;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.modules.EventBus;
 import org.epnoi.model.modules.RoutingKey;
 import org.epnoi.storage.UDM;
-import org.epnoi.storage.model.Domain;
-import org.epnoi.storage.model.Topic;
+import org.epnoi.model.domain.Domain;
+import org.epnoi.model.domain.Topic;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -40,7 +41,7 @@ public class ModelingTest {
         domain.setUri("http://epnoi.org/domains/1f02ae0b-7d96-42c6-a944-25a3050bf1e2");
         domain.setName("test-domain");
 
-        eventBus.post(Event.from(domain), RoutingKey.of(org.epnoi.model.Resource.Type.DOMAIN, org.epnoi.model.Resource.State.UPDATED));
+        eventBus.post(Event.from(domain), RoutingKey.of(Resource.Type.DOMAIN, Resource.State.UPDATED));
 
         LOG.info("Sleeping..");
         Thread.sleep(300000);

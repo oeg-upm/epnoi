@@ -2,8 +2,8 @@ package org.epnoi.harvester.eventbus;
 
 import org.epnoi.harvester.services.SourceService;
 import org.epnoi.model.Event;
-import org.epnoi.model.Resource;
-import org.epnoi.storage.model.Source;
+import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.Source;
 import org.epnoi.model.modules.RoutingKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

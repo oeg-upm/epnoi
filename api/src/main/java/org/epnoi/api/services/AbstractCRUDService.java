@@ -1,10 +1,10 @@
 package org.epnoi.api.services;
 
 import com.google.common.base.Strings;
-import org.epnoi.model.Resource;
-import org.epnoi.storage.TimeGenerator;
+import org.epnoi.model.domain.Resource;
+import org.epnoi.storage.generator.TimeGenerator;
 import org.epnoi.storage.UDM;
-import org.epnoi.storage.URIGenerator;
+import org.epnoi.storage.generator.URIGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;

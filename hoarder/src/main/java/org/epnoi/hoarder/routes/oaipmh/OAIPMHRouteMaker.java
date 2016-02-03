@@ -2,7 +2,7 @@ package org.epnoi.hoarder.routes.oaipmh;
 
 import org.apache.camel.model.RouteDefinition;
 import org.epnoi.hoarder.routes.RouteMaker;
-import org.epnoi.storage.model.Source;
+import org.epnoi.model.domain.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

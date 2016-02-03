@@ -1,17 +1,15 @@
 package org.epnoi.uia.informationstore.dao.solr;
 
-import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrInputDocument;
 import org.epnoi.model.Context;
 import org.epnoi.model.Feed;
 import org.epnoi.model.Item;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.parameterization.SOLRInformationStoreParameters;
 import org.epnoi.model.rdf.FeedRDFHelper;
 import org.epnoi.model.search.SearchContext;
 import org.epnoi.model.search.SelectExpression;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 

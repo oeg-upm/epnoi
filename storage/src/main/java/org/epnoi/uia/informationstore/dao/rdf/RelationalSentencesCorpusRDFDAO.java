@@ -6,7 +6,7 @@ import com.hp.hpl.jena.graph.Triple;
 import org.epnoi.model.Context;
 import org.epnoi.model.InformationSource;
 import org.epnoi.model.RelationalSentencesCorpus;
-import org.epnoi.model.Resource;
+import org.epnoi.model.domain.Resource;
 import org.epnoi.model.rdf.RDFHelper;
 import virtuoso.jena.driver.VirtuosoUpdateFactory;
 import virtuoso.jena.driver.VirtuosoUpdateRequest;

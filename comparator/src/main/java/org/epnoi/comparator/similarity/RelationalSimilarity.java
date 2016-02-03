@@ -1,7 +1,7 @@
 package org.epnoi.comparator.similarity;
 
 import es.upm.oeg.epnoi.matching.metrics.similarity.JensenShannonSimilarity;
-import org.epnoi.storage.model.Relationship;
+import org.epnoi.model.domain.Relationship;
 
 import java.util.Comparator;
 import java.util.List;

@@ -1,7 +1,7 @@
 package org.epnoi.modeler.scheduler;
 
 import org.epnoi.modeler.helper.ModelingHelper;
-import org.epnoi.storage.model.Domain;
+import org.epnoi.model.domain.Domain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
