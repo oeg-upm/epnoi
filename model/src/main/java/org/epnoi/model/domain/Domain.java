@@ -12,8 +12,10 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "uri", callSuper = true)
 public class Domain extends Resource {
 
+    public static final String NAME="name";
     private String name;
 
+    public static final String DESCRIPTION="description";
     private String description;
 
 }

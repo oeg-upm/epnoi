@@ -12,13 +12,18 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "uri", callSuper = true)
 public class Word extends Resource {
 
+    public static final String CONTENT="content";
     private String content;
 
+    public static final String LEMMA="lemma";
     private String lemma;
 
+    public static final String STEM="stem";
     private String stem;
 
+    public static final String POS="pos";
     private String pos;
 
+    public static final String TYPE="type";
     private String type;
 }

@@ -8,8 +8,10 @@ import lombok.Data;
 @Data
 public class Relationship {
 
+    public static final String URI="uri";
     String uri;
 
+    public static final String WEIGHT="weight";
     Double weight;
 
     public Relationship(String uri, Double weight){

@@ -1,14 +1,18 @@
 package org.epnoi.storage.system.column.repository;
 
+import org.apache.commons.lang.WordUtils;
 import org.epnoi.model.domain.Resource;
 import org.epnoi.storage.system.Repository;
 import org.epnoi.model.domain.ResourceUtils;
+import org.epnoi.storage.system.document.repository.BaseDocumentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.cassandra.repository.support.BasicMapId;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -63,6 +67,32 @@ public class ColumnRepository implements Repository{
         }
     }
 
+    @Override
+    public Iterable<Resource> findBy(Resource.Type resultType, String field, String value) {
+        return find("findBy",resultType,field,value);
+    }
+
+    @Override
+    public Iterable<Resource> findIn(Resource.Type resultType, Resource.Type referenceType, String referenceURI) {
+        return find("findBy",resultType,referenceType.key(),referenceURI);
+    }
+
+    private Iterable<Resource> find(String prefix, Resource.Type result,String reference,String value) {
+        try{
+            BaseColumnRepository repository = factory.repositoryOf(result);
+
+            String methodName = prefix+ WordUtils.capitalize(reference.toLowerCase());
+            Method method = repository.getClass().getMethod(methodName, String.class);
+            Iterable<Resource> resources = (Iterable<Resource>) method.invoke(repository, value);
+            return resources;
+        }catch (RuntimeException e){
+            LOG.warn(e.getMessage());
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            LOG.warn("No such method to find: " + e.getMessage());
+        }
+        return Collections.EMPTY_LIST;
+    }
+
     public void delete(String uri, Resource.Type type){
         try{
             factory.repositoryOf(type).delete(BasicMapId.id(ResourceUtils.URI, uri));
@@ -75,7 +105,7 @@ public class ColumnRepository implements Repository{
     public void deleteAll(Resource.Type type){
         try{
             factory.repositoryOf(type).deleteAll();
-            LOG.debug(type.name() + "s deleted");
+            LOG.debug("All " + type.name() + "s have been deleted");
         }catch (RuntimeException e){
             LOG.warn(e.getMessage());
         }

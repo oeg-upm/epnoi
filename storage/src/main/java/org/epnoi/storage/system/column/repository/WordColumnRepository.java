@@ -10,6 +10,12 @@ public interface WordColumnRepository extends BaseColumnRepository<WordColumn> {
 
     //Future Version of Spring-Data-Cassandra will implements native queries
 
+    @Query("select * from words where uri = ?0")
+    Iterable<WordColumn> findByUri(String uri);
+
+    @Query("select * from words where creationTime = ?0")
+    Iterable<WordColumn> findByCreationTime(String creationTime);
+
     @Query("select * from words where content = ?0")
     Iterable<WordColumn> findByContent(String content);
 

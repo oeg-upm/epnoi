@@ -2,9 +2,10 @@ package org.epnoi.storage.system.graph;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.model.domain.*;
+import org.epnoi.storage.system.column.repository.ColumnRepository;
+import org.epnoi.storage.system.graph.repository.DocumentGraphRepository;
 import org.epnoi.storage.system.graph.repository.DomainGraphRepository;
 import org.epnoi.storage.system.graph.repository.GraphRepository;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -14,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.Optional;
 
 /**
  * Created by cbadenes on 03/02/16.
@@ -31,33 +30,52 @@ public class UnifiedGraphRelationalRepositoryTest {
     private static final Logger LOG = LoggerFactory.getLogger(UnifiedGraphRelationalRepositoryTest.class);
 
     @Autowired
-    GraphRepository repository;
-
-    @Autowired
-    DomainGraphRepository domainGraphRepository;
+    GraphRepository graphRepository;
 
     @Test
     public void sourceProvidesDocument(){
 
-        repository.deleteAll(Resource.Type.SOURCE);
-        repository.deleteAll(Resource.Type.DOCUMENT);
+        graphRepository.deleteAll(Resource.Type.SOURCE);
+        graphRepository.deleteAll(Resource.Type.DOCUMENT);
 
         Source source = new Source();
         source.setUri("sources/01");
-        repository.save(source,Resource.Type.SOURCE);
+        graphRepository.save(source,Resource.Type.SOURCE);
 
         Document document = new Document();
         document.setUri("documents/01");
-        repository.save(document,Resource.Type.DOCUMENT);
+        graphRepository.save(document,Resource.Type.DOCUMENT);
 
         Relation.Properties properties = new Relation.Properties();
         properties.setDate("2017");
-        repository.relate(source.getUri(),document.getUri(),Relation.Type.SOURCE_PROVIDES_DOCUMENT,properties);
+        graphRepository.relate(source.getUri(),document.getUri(),Relation.Type.SOURCE_PROVIDES_DOCUMENT,properties);
 
-        repository.unrelate(source.getUri(),document.getUri(),Relation.Type.SOURCE_PROVIDES_DOCUMENT);
+        graphRepository.unrelate(source.getUri(),document.getUri(),Relation.Type.SOURCE_PROVIDES_DOCUMENT);
 
 
     }
 
+    @Test
+    public void findIn(){
+
+        graphRepository.deleteAll(Resource.Type.SOURCE);
+        graphRepository.deleteAll(Resource.Type.DOCUMENT);
+
+        Source source = new Source();
+        source.setUri("sources/01");
+        graphRepository.save(source,Resource.Type.SOURCE);
+
+        Document document = new Document();
+        document.setUri("documents/01");
+        graphRepository.save(document,Resource.Type.DOCUMENT);
+
+        Relation.Properties properties = new Relation.Properties();
+        properties.setDate("2017");
+        graphRepository.relate(source.getUri(),document.getUri(),Relation.Type.SOURCE_PROVIDES_DOCUMENT,properties);
+
+        Iterable<Resource> result = graphRepository.findIn(Resource.Type.DOCUMENT,Resource.Type.SOURCE,source.getUri());
+        System.out.println("Documents: " + result);
+
+    }
 
 }

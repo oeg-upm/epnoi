@@ -14,12 +14,16 @@ import org.apache.commons.lang.StringUtils;
 @EqualsAndHashCode(of = "uri", callSuper = true)
 public class Source extends Resource {
 
+    public static final String NAME="name";
     private String name = "";
 
+    public static final String DESCRIPTION="description";
     private String description = "";
 
+    public static final String URL="url";
     private String url = "";
 
+    public static final String PROTOCOL="protocol";
     private String protocol = "";
 
     public String getProtocol(){

@@ -12,9 +12,12 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "uri", callSuper = true)
 public class Composition extends Resource {
 
+    public static final String SOURCE="source";
     String source;
 
+    public static final String DOMAIN="domain";
     String domain;
 
+    public static final String DATE="date";
     String date;
 }

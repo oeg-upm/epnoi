@@ -12,9 +12,12 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "uri", callSuper = true)
 public class Provision extends Resource {
 
+    public static final String SOURCE="source";
     String source;
 
+    public static final String DOCUMENT="document";
     String document;
 
+    public static final String DATE="date";
     String date;
 }

@@ -26,6 +26,7 @@ import org.springframework.data.cassandra.repository.support.BasicMapId;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -995,19 +996,53 @@ public class UDM {
     }
 
     // Compact Mode
-    public List<String> findByDomain(Resource.Type type,String uri){
-        LOG.debug("Finding " + type.name() + "s");
+
+    /**
+     * Filter by other resource
+     * @param resultType
+     * @param referenceType
+     * @param referenceURI
+     * @return
+     */
+    public List<String> findIn(Resource.Type resultType, Resource.Type referenceType, String referenceURI){
+        LOG.debug("Finding " + resultType.name() + "s in " + referenceType + ": " + referenceURI);
         List<String> uris = new ArrayList<>();
         try{
             unifiedSession.clean();
             UnifiedTransaction transaction = unifiedSession.beginTransaction();
-            graphRepository.findByDomain(type, uri).forEach(x -> uris.add(x.getUri()));
+            graphRepository.findIn(resultType, referenceType,referenceURI).forEach(x -> uris.add(x.getUri()));
             transaction.commit();
-            LOG.info("In domain: " + uri + " found: ["+type.name() + "]: " + uris);
+            LOG.info("In "+referenceType+": " + referenceURI + " found: ["+resultType + "]: " + uris);
         }catch (ResultProcessingException e){
-            LOG.warn("getting all " + type,e.getMessage());
+            LOG.warn("exception while finding " + resultType +"s in " + referenceType + ": " + referenceURI + ":: " + e.getMessage());
         }catch (Exception e){
-            LOG.error("Unexpected error while getting all " + type,e);
+            LOG.error("Unexpected error while finding " + resultType +"s in " + referenceType + ": " + referenceURI,e);
+        }
+        return uris;
+    }
+
+    // Compact Mode
+
+    /**
+     * Filter by field value
+     * @param resultType
+     * @param field
+     * @param value
+     * @return
+     */
+    public List<String> findBy(Resource.Type resultType, String field, String value){
+        LOG.debug("Finding " + resultType.name() + "s");
+        List<String> uris = new ArrayList<>();
+        try{
+            unifiedSession.clean();
+            UnifiedTransaction transaction = unifiedSession.beginTransaction();
+            columnRepository.findBy(resultType, field,value).forEach(x -> uris.add(x.getUri()));
+            transaction.commit();
+            LOG.info("By "+field+": " + value+ " found: ["+resultType + "]: " + uris);
+        }catch (ResultProcessingException e){
+            LOG.warn("getting all " + resultType,e.getMessage());
+        }catch (Exception e){
+            LOG.error("Unexpected error while getting all " + resultType,e);
         }
         return uris;
     }

@@ -1,6 +1,5 @@
 package org.epnoi.storage.system.graph.repository;
 
-import org.epnoi.storage.system.graph.domain.ItemNode;
 import org.epnoi.storage.system.graph.domain.SourceNode;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.stereotype.Repository;

@@ -17,10 +17,12 @@ public abstract class Relation implements Serializable {
     @Getter
     @Setter
     String uri;
+    public static final String URI="uri";
 
     @Getter
     @Setter
     String creationTime;
+    public static final String CREATION_TIME="creationTime";
 
     public abstract void setStart(Resource start);
 

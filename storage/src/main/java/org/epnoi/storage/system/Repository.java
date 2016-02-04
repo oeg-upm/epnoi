@@ -17,8 +17,13 @@ public interface Repository {
 
     Iterable<Resource> findAll(Resource.Type type);
 
-    void delete(String uri, Resource.Type type);
+    Iterable<Resource> findBy(Resource.Type resultType,String field, String value);
+
+    Iterable<Resource> findIn(Resource.Type resultType,Resource.Type referenceType,String referenceURI);
 
     void deleteAll(Resource.Type type);
+
+    void delete(String uri, Resource.Type type);
+
 
 }

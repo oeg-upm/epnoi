@@ -9,8 +9,10 @@ import java.io.Serializable;
 @EqualsAndHashCode(of={"uri"})
 public class Resource implements Serializable{
 
+	public static final String URI="uri";
 	String uri;
 
+	public static final String CREATION_TIME="creationTime";
 	String creationTime;
 
 	public String getUri(){

@@ -1,5 +1,7 @@
 package org.epnoi.storage.system.graph.repository;
 
+import org.apache.commons.lang.WordUtils;
+import org.epnoi.model.commons.StringUtils;
 import org.epnoi.model.domain.Relation;
 import org.epnoi.model.domain.Resource;
 import org.epnoi.model.domain.ResourceUtils;
@@ -11,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -65,14 +69,30 @@ public class GraphRepository implements Repository{
         }
     }
 
-    public Iterable<Resource> findByDomain(Resource.Type type,String uri) {
+    public Iterable<Resource> findBy(Resource.Type result,String field, String value) {
+        return find("findBy",result,value,field);
+    }
+
+    public Iterable<Resource> findIn(Resource.Type result,Resource.Type referenceType,String referenceURI) {
+        return find("findBy",result,referenceURI,referenceType.key());
+    }
+
+    private Iterable<Resource> find(String prefix, Resource.Type result,String uri,String reference) {
         try{
-            return factory.repositoryOf(type).findByDomain(uri);
+            BaseGraphRepository repository = factory.repositoryOf(result);
+
+            String methodName = prefix+WordUtils.capitalize(reference.toLowerCase());
+            Method method = repository.getClass().getMethod(methodName, String.class);
+            Iterable<Resource> resources = (Iterable<Resource>) method.invoke(repository, uri);
+            return resources;
         }catch (RuntimeException e){
             LOG.warn(e.getMessage());
-            return Collections.EMPTY_LIST;
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            LOG.warn("No such method to find: " + e.getMessage());
         }
+        return Collections.EMPTY_LIST;
     }
+
 
     public void delete(String uri, Resource.Type type){
         try{

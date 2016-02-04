@@ -129,4 +129,19 @@ public class UnifiedColumnRepositoryTest {
         Assert.assertFalse(columnRepository.exists(resource.getUri(),type));
     }
 
+
+    @Test
+    public void findBy(){
+
+        columnRepository.deleteAll(Resource.Type.DOCUMENT);
+
+        Document document = new Document();
+        document.setUri("documents/01");
+        document.setTitle("This is a title");
+        columnRepository.save(document,Resource.Type.DOCUMENT);
+
+        Iterable<Resource> documents = columnRepository.findBy(Resource.Type.DOCUMENT, "title", document.getTitle());
+        System.out.println("Documents: " + documents);
+
+    }
 }

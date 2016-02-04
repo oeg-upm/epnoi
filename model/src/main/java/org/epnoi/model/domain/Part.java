@@ -12,10 +12,13 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "uri", callSuper = true)
 public class Part extends Resource {
 
+    public static final String SENSE="sense";
     private String sense;
 
+    public static final String CONTENT="content";
     private String content;
 
+    public static final String TOKENS="tokens";
     private String tokens;
 
 }
