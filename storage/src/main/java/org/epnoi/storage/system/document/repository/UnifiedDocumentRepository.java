@@ -21,7 +21,7 @@ import java.util.Optional;
 public class UnifiedDocumentRepository implements Repository<Resource,Resource.Type> {
 
     @Autowired
-    UninifiedDocumentRepositoryFactory factory;
+    UnifiedDocumentRepositoryFactory factory;
 
     private static final Logger LOG = LoggerFactory.getLogger(UnifiedDocumentRepository.class);
 
