@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * Created by cbadenes on 03/02/16.
  */
 @Component
-public class UnifiedDocumentRepositoryFactory {
+public class UninifiedDocumentRepositoryFactory {
 
     @Autowired
     AnalysisDocumentRepository analysisDocumentRepository;
