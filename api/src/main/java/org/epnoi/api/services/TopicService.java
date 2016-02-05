@@ -15,45 +15,7 @@ import java.util.Optional;
 @Component
 public class TopicService extends AbstractCRUDService<Topic> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TopicService.class);
-
     public TopicService() {
         super(Resource.Type.TOPIC);
-    }
-
-
-    @Override
-    public Topic create(Topic resource) throws Exception {
-        throw new RuntimeException("Method not handled by Web Service");
-    }
-
-    @Override
-    protected Topic save(Topic resource) {
-        return null;
-    }
-
-    @Override
-    protected Optional<Topic> read(String uri) {
-        return udm.readTopic(uri);
-    }
-
-    @Override
-    protected void delete(String uri) {
-        udm.deleteTopic(uri);
-    }
-
-    @Override
-    protected void deleteAll() {
-        udm.deleteTopics();
-    }
-
-    @Override
-    protected List<String> findAll() {
-        return udm.findTopics();
-    }
-
-    @Override
-    protected String newUri() {
-        return uriGenerator.newTopic();
     }
 }

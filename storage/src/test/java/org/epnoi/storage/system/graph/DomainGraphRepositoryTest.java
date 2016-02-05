@@ -1,8 +1,8 @@
 package org.epnoi.storage.system.graph;
 
-import org.epnoi.storage.system.graph.domain.DomainNode;
-import org.epnoi.storage.system.graph.repository.BaseGraphRepository;
-import org.epnoi.storage.system.graph.repository.DomainGraphRepository;
+import org.epnoi.storage.system.graph.domain.nodes.DomainNode;
+import org.epnoi.storage.system.graph.repository.nodes.ResourceGraphRepository;
+import org.epnoi.storage.system.graph.repository.nodes.DomainGraphRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -14,7 +14,7 @@ public class DomainGraphRepositoryTest extends BaseGraphRepositoryTest<DomainNod
     DomainGraphRepository repository;
 
     @Override
-    public BaseGraphRepository<DomainNode> getRepository() {
+    public ResourceGraphRepository<DomainNode> getRepository() {
         return repository;
     }
 

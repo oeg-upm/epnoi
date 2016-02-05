@@ -20,7 +20,7 @@ public class TimeGenerator {
         df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
     }
 
-    public String getNowAsISO(){
+    public String asISO(){
         return df.format(new Date());
     }
 

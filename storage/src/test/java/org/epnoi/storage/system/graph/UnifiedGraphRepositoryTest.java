@@ -2,11 +2,8 @@ package org.epnoi.storage.system.graph;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.model.domain.*;
-import org.epnoi.storage.system.document.DocumentConfig;
-import org.epnoi.storage.system.document.repository.DocumentRepository;
-import org.epnoi.storage.system.graph.domain.DomainNode;
-import org.epnoi.storage.system.graph.repository.DomainGraphRepository;
-import org.epnoi.storage.system.graph.repository.GraphRepository;
+import org.epnoi.storage.system.graph.repository.nodes.DomainGraphRepository;
+import org.epnoi.storage.system.graph.repository.nodes.UnifiedNodeGraphRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -34,7 +31,7 @@ public class UnifiedGraphRepositoryTest {
     private static final Logger LOG = LoggerFactory.getLogger(UnifiedGraphRepositoryTest.class);
 
     @Autowired
-    GraphRepository repository;
+    UnifiedNodeGraphRepository repository;
 
     @Autowired
     DomainGraphRepository domainGraphRepository;
@@ -120,18 +117,18 @@ public class UnifiedGraphRepositoryTest {
 
         repository.deleteAll(type);
 
-        Assert.assertFalse(repository.exists(resource.getUri(),type));
+        Assert.assertFalse(repository.exists(type,resource.getUri()));
 
         repository.save(resource, type);
 
-        Assert.assertTrue(repository.exists(resource.getUri(),type));
-        Optional<Resource> result = repository.read(resource.getUri(), type);
+        Assert.assertTrue(repository.exists(type,resource.getUri()));
+        Optional<Resource> result = repository.read(type,resource.getUri());
         Assert.assertTrue(result.isPresent());
         Assert.assertEquals(resource,result.get());
 
-        repository.delete(resource.getUri(),type);
+        repository.delete(type,resource.getUri());
 
-        Assert.assertFalse(repository.exists(resource.getUri(),type));
+        Assert.assertFalse(repository.exists(type,resource.getUri()));
     }
 
 }

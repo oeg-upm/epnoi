@@ -1,69 +1,30 @@
 package org.epnoi.comparator.tasks;
 
 import org.epnoi.comparator.helper.ComparatorHelper;
-import org.epnoi.comparator.similarity.RelationalSimilarity;
+import org.epnoi.comparator.model.WeightedPair;
 import org.epnoi.model.domain.Analysis;
-import org.epnoi.model.domain.Relationship;
+import org.epnoi.model.domain.Relation;
+import org.epnoi.model.domain.RelationProperties;
+import org.epnoi.model.domain.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Created by cbadenes on 13/01/16.
  */
-// TODO Extends from an abstract class
-public class DocumentSimilarityTask implements Runnable {
-
-    private static final Logger LOG = LoggerFactory.getLogger(DocumentSimilarityTask.class);
-
-    private final Analysis analysis;
-
-    private final ComparatorHelper helper;
-
-    private Map<String,List<Relationship>> distributions;
+public class DocumentSimilarityTask extends SimilarityTask {
 
     public DocumentSimilarityTask(Analysis analysis, ComparatorHelper helper){
-        this.analysis = analysis;
-        this.helper = helper;
-        this.distributions = new HashMap<>();
-    }
-
-    @Override
-    public void run() {
-        helper.getUdm().deleteSimilarsBetweenDocumentsInDomain(analysis.getDomain());
-        List<String> documents = helper.getUdm().findDocumentsByDomain(analysis.getDomain());
-        recursiveSimilarityCalculus(documents.get(0),documents.subList(1,documents.size()));
+        super(analysis,
+                helper,
+                Relation.Type.DOCUMENT_DEALS_WITH_TOPIC,
+                Relation.Type.DOCUMENT_SIMILAR_TO_DOCUMENT);
     }
 
 
-    private void recursiveSimilarityCalculus(String uri, List<String> uris){
-        if (uris == null || uris.isEmpty()) return;
-
-        for (String uri2: uris){
-            similarityCalculus(uri,uri2);
-        }
-        recursiveSimilarityCalculus(uris.get(0),uris.subList(1,uris.size()));
-    }
-
-    private void similarityCalculus(String uri1,String uri2){
-        LOG.info("Calculating similarity between: " + uri1 + " and " + uri2);
-        Double similarity = RelationalSimilarity.between(getDistributionOf(uri1), getDistributionOf(uri2));
-        if (similarity > helper.getThreshold()){
-            // Save relation in ddbb
-            helper.getUdm().relateDocumentToDocument(uri1,uri2,similarity,analysis.getDomain());
-            helper.getUdm().relateDocumentToDocument(uri2,uri1,similarity,analysis.getDomain());
-        }
-
-
-    }
-
-    private List<Relationship> getDistributionOf(String uri){
-        List<Relationship> distribution = distributions.getOrDefault(uri, helper.getUdm().findDealsByDocumentInDomain(uri, analysis.getDomain()));
-        distributions.put(uri,distribution);
-        return distribution;
-    }
 
 }

@@ -2,15 +2,14 @@ package org.epnoi.modeler.models;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import es.upm.oeg.epnoi.matching.metrics.domain.entity.RegularResource;
+import org.epnoi.model.domain.*;
 import org.epnoi.modeler.Config;
 import org.epnoi.modeler.helper.ModelingHelper;
 import org.epnoi.modeler.models.word.W2VModel;
-import org.epnoi.storage.generator.TimeGenerator;
 import org.epnoi.storage.UDM;
+import org.epnoi.storage.generator.TimeGenerator;
 import org.epnoi.storage.generator.URIGenerator;
 import org.epnoi.storage.system.document.repository.WordDocumentRepository;
-import org.epnoi.model.domain.Domain;
-import org.epnoi.model.domain.Word;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -58,9 +57,9 @@ public class WordEmbeddingTest {
 
         String dUri = "http://epnoi.org/domains/382130c5-1d84-4b21-a591-90d2c235f0a5";
 
-        List<String> words = udm.findWordsByDomain(dUri);
+        List<String> words = udm.find(Resource.Type.WORD).in(Resource.Type.DOMAIN,dUri);
 
-        words.stream().map(uri -> wordDocumentRepository.findOne(uri)).forEach(wd -> System.out.println("WordDOcument: " + wd.getDomain()));
+        words.stream().map(uri -> wordDocumentRepository.findOne(uri)).forEach(wd -> System.out.println("WordDocument: " + wd.getDomain()));
 
     }
 
@@ -69,19 +68,19 @@ public class WordEmbeddingTest {
     public void pair(){
 
         String dUri = "http://epnoi.org/domains/382130c5-1d84-4b21-a591-90d2c235f0a5";
-        Optional<Domain> result = udm.readDomain(dUri);
+        Optional<Resource> result = udm.read(Resource.Type.DOMAIN).byUri(dUri);
 
         if (!result.isPresent()){
             LOG.error("Domain not found: " + dUri);
         }
 
-        Domain domain = result.get();
+        Domain domain = (Domain) result.get();
 
         try{
             //TODO Optimize using Spark.parallel
-            List<RegularResource> regularResources = helper.getUdm().findDocumentsByDomain(domain.getUri()).stream().
-                    map(uri -> helper.getUdm().readDocument(uri)).
-                    filter(res -> res.isPresent()).map(res -> res.get()).
+            List<RegularResource> regularResources = helper.getUdm().find(Resource.Type.DOCUMENT).in(Resource.Type.DOMAIN,domain.getUri()).stream().
+                    map(uri -> helper.getUdm().read(Resource.Type.DOCUMENT).byUri(uri)).
+                    filter(res -> res.isPresent()).map(res -> (Document) res.get()).
                     map(document -> helper.getRegularResourceBuilder().from(document.getUri(), document.getTitle(), document.getAuthoredOn(), helper.getAuthorBuilder().composeFromMetadata(document.getAuthoredBy()), document.getTokens())).
                     collect(Collectors.toList());
 
@@ -95,13 +94,13 @@ public class WordEmbeddingTest {
             // Clean Embedded relations
 //            helper.getUdm().deleteEmbeddingWordsInDomain(domain.getUri());
 
-            String analysisUri = uriGenerator.newAnalysis();
+            String analysisUri = uriGenerator.newFor(Resource.Type.ANALYSIS);
 
 
             // Build W2V Model
             W2VModel model = helper.getWordEmbeddingBuilder().build(analysisUri, regularResources);
 
-            List<Word> words = helper.getUdm().findWordsByDomain(domain.getUri()).stream().map(uri -> helper.getUdm().readWord(uri)).filter(res -> res.isPresent()).map(res -> res.get()).collect(Collectors.toList());
+            List<Word> words = helper.getUdm().find(Resource.Type.WORD).in(Resource.Type.DOMAIN,domain.getUri()).stream().map(uri -> helper.getUdm().read(Resource.Type.WORD).byUri(uri)).filter(res -> res.isPresent()).map(res -> (Word) res.get()).collect(Collectors.toList());
 
             LOG.info("Number of words: " + words.size());
 
@@ -120,34 +119,34 @@ public class WordEmbeddingTest {
     private void relateWord(Word word, W2VModel model, String domainUri){
         // EMBEDDED relation
         float[] vector = model.getRepresentation(word.getLemma());
-        helper.getUdm().relateWordToDomain(word.getUri(),domainUri, Arrays.toString(vector));
+        helper.getUdm().attachFrom(word.getUri()).to(domainUri).by(Relation.Type.WORD_EMBEDDED_IN_DOMAIN,RelationProperties.builder().description(Arrays.toString(vector)).build());
 
         // PAIRED relations
         List<WordDistribution> words = model.find(word.getLemma()).stream().filter(sim -> sim.getWeight() > helper.getSimilarityThreshold()).collect(Collectors.toList());
         for (WordDistribution wordDistribution : words){
-            Optional<String> result = helper.getUdm().findWordByLemma(wordDistribution.getWord());
+            List<String> result = helper.getUdm().find(Resource.Type.WORD).by(Word.LEMMA,wordDistribution.getWord());
             String wordUri;
-            if (!result.isPresent()){
+            if (result == null || result.isEmpty()){
                 // Create word
                 Word wordRef = new Word();
-                wordRef.setUri(uriGenerator.newWord());
-                wordRef.setCreationTime(timeGenerator.getNowAsISO());
+                wordRef.setUri(uriGenerator.newFor(Resource.Type.WORD));
+                wordRef.setCreationTime(timeGenerator.asISO());
                 wordRef.setContent(wordDistribution.getWord());
                 wordRef.setLemma(wordDistribution.getWord());
                 wordRef.setType("term");
-                udm.saveWord(wordRef);
+                udm.save(Resource.Type.WORD).with(wordRef);
 
                 wordUri = wordRef.getUri();
 
                 // Embedd to Domain
-                udm.relateWordToDomain(wordRef.getUri(),domainUri,Arrays.toString(model.getRepresentation(wordRef.getLemma())));
+                udm.attachFrom(wordRef.getUri()).to(domainUri).by(Relation.Type.WORD_EMBEDDED_IN_DOMAIN, RelationProperties.builder().description(Arrays.toString(model.getRepresentation(wordRef.getLemma()))).build());
 
             }else{
-                wordUri = result.get();
+                wordUri = result.get(0);
             }
 
             // Pair words
-            helper.getUdm().relateWordToWord(word.getUri(),wordUri,wordDistribution.getWeight(),domainUri);
+            helper.getUdm().attachFrom(word.getUri()).to(wordUri).by(Relation.Type.WORD_PAIRS_WITH_WORD,RelationProperties.builder().weight(wordDistribution.getWeight()).domain(domainUri).build());
         }
 
     }

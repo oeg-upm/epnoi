@@ -9,13 +9,10 @@ import org.epnoi.harvester.mining.TextMiner;
 import org.epnoi.harvester.mining.annotation.AnnotatedDocument;
 import org.epnoi.harvester.model.MetaInformation;
 import org.epnoi.model.Record;
-import org.epnoi.storage.generator.TimeGenerator;
+import org.epnoi.model.domain.*;
 import org.epnoi.storage.UDM;
+import org.epnoi.storage.generator.TimeGenerator;
 import org.epnoi.storage.generator.URIGenerator;
-import org.epnoi.model.domain.Document;
-import org.epnoi.model.domain.Item;
-import org.epnoi.model.domain.Part;
-import org.epnoi.model.domain.Word;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +20,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -82,7 +78,7 @@ public class ResourceBuilder implements Processor {
             updateMetainfoFromAnnotatedDoc(metaInformation,annotatedDocument);
 
             // Check by title if exist in ddbb
-            List<String> docs = udm.findDocumentsByTitle(metaInformation.getTitle());
+            List<String> docs = udm.find(Resource.Type.DOCUMENT).by(Document.TITLE,metaInformation.getTitle());
 
             if (docs != null && !docs.isEmpty()){
                 LOG.warn("Document titled: '"+metaInformation.getTitle()+"' exists in ddbb with uri: " + docs);
@@ -143,7 +139,8 @@ public class ResourceBuilder implements Processor {
             //TODO
 
             // Relate it to Domain
-            udm.relateDocumentToDomain(document.getUri(), domainUri, document.getCreationTime());  
+            udm.attachFrom(domainUri).to(document.getUri()).by(Relation.Type.DOMAIN_CONTAINS_DOCUMENT,RelationProperties.builder().date(document.getCreationTime()).build());
+
 
             // Convert to json
             String json = mapper.writeValueAsString(document);
@@ -177,35 +174,18 @@ public class ResourceBuilder implements Processor {
 
     }
 
-    private Word createAndSaveWord(String value){
-        Optional<String> uri = udm.findWordByLemma(value);
-        Word word = new Word();
-        word.setContent(value);
-        word.setStem(value);
-        word.setLemma(value);
-        word.setType("term");
-        if (uri.isPresent()){
-            word.setUri(uri.get());
-        }else{
-            word.setUri(uriGenerator.fromWord(value));
-            word.setCreationTime(timeGenerator.getNowAsISO());
-            udm.saveWord(word);
-        }
-        return word;
-    }
-
     private Document createAndSaveDocument(MetaInformation metaInformation, String rawContent, String sourceUri, String domainUri){
         // Document
         Document document = new Document();
-        document.setUri(uriGenerator.newDocument()); // Maybe better using PUBLICATION_URI
-        document.setCreationTime(timeGenerator.getNowAsISO());
+        document.setUri(uriGenerator.newFor(Resource.Type.DOCUMENT)); // Maybe better using PUBLICATION_URI
+        document.setCreationTime(timeGenerator.asISO());
         document.setPublishedOn(metaInformation.getPublished());
         document.setPublishedBy(metaInformation.getSourceUri());
         document.setAuthoredOn(metaInformation.getAuthored());
         document.setAuthoredBy(metaInformation.getCreators());
         document.setContributedBy(metaInformation.getContributors());
         document.setRetrievedFrom(metaInformation.getSourceUrl());
-        document.setRetrievedOn(timeGenerator.getNowAsISO()); //TODO hoarding time
+        document.setRetrievedOn(timeGenerator.asISO()); //TODO hoarding time
         document.setFormat(metaInformation.getPubFormat());
         document.setLanguage(metaInformation.getLanguage());
         document.setTitle(metaInformation.getTitle());
@@ -218,15 +198,16 @@ public class ResourceBuilder implements Processor {
         String tokens   = textMiner.parse(rawContent).stream().filter(token -> token.isValid()).map(token -> token.getLemma()).collect(Collectors.joining(" "));
         document.setTokens(tokens);
 
-        udm.saveDocument(document,sourceUri);
+        udm.save(Resource.Type.DOCUMENT).with(document);
+        udm.attachFrom(sourceUri).to(document.getUri()).by(Relation.Type.SOURCE_PROVIDES_DOCUMENT,RelationProperties.builder().date(timeGenerator.asISO()).build());
 
         return document;
     }
 
     private Item createAndSaveItem(MetaInformation metaInformation, String rawContent, String documentUri){
         Item item = new Item();
-        item.setUri(uriGenerator.newItem());
-        item.setCreationTime(timeGenerator.getNowAsISO());
+        item.setUri(uriGenerator.newFor(Resource.Type.ITEM));
+        item.setCreationTime(timeGenerator.asISO());
         item.setAuthoredOn(metaInformation.getAuthored());
         item.setAuthoredBy(metaInformation.getCreators());
         item.setContributedBy(metaInformation.getContributors());
@@ -242,22 +223,24 @@ public class ResourceBuilder implements Processor {
         String tokens   = textMiner.parse(rawContent).stream().filter(token -> token.isValid()).map(token -> token.getLemma()).collect(Collectors.joining(" "));
         item.setTokens(tokens);
 
-        udm.saveItem(item,documentUri);
+        udm.save(Resource.Type.ITEM).with(item);
+        udm.attachFrom(documentUri).to(item.getUri()).by(Relation.Type.DOCUMENT_BUNDLES_ITEM,RelationProperties.builder().date(timeGenerator.asISO()).build());
 
         return item;
     }
 
     private Part createAndSavePart(String sense, String rawContent, String itemUri) {
         Part part = new Part();
-        part.setUri(uriGenerator.newPart());
-        part.setCreationTime(timeGenerator.getNowAsISO());
+        part.setUri(uriGenerator.newFor(Resource.Type.PART));
+        part.setCreationTime(timeGenerator.asISO());
         part.setSense(sense);
         part.setContent(rawContent);
 
         String tokens   = textMiner.parse(rawContent).stream().filter(token -> token.isValid()).map(token -> token.getLemma()).collect(Collectors.joining(" "));
         part.setTokens(tokens);
 
-        udm.savePart(part,itemUri);
+        udm.save(Resource.Type.PART).with(part);
+        udm.attachFrom(part.getUri()).to(itemUri).by(Relation.Type.PART_DESCRIBES_ITEM,RelationProperties.builder().date(timeGenerator.asISO()).build());
 
         return part;
     }

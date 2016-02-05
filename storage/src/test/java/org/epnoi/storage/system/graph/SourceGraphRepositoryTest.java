@@ -1,9 +1,13 @@
 package org.epnoi.storage.system.graph;
 
-import org.epnoi.storage.system.graph.domain.SourceNode;
-import org.epnoi.storage.system.graph.repository.BaseGraphRepository;
-import org.epnoi.storage.system.graph.repository.SourceGraphRepository;
+import org.epnoi.storage.system.graph.domain.nodes.SourceNode;
+import org.epnoi.storage.system.graph.domain.edges.SourceProvidesDocument;
+import org.epnoi.storage.system.graph.repository.nodes.ResourceGraphRepository;
+import org.epnoi.storage.system.graph.repository.nodes.SourceGraphRepository;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Set;
 
 /**
  * Created by cbadenes on 22/12/15.
@@ -14,7 +18,7 @@ public class SourceGraphRepositoryTest extends BaseGraphRepositoryTest<SourceNod
     SourceGraphRepository repository;
 
     @Override
-    public BaseGraphRepository<SourceNode> getRepository() {
+    public ResourceGraphRepository<SourceNode> getRepository() {
         return repository;
     }
 
@@ -25,4 +29,16 @@ public class SourceGraphRepositoryTest extends BaseGraphRepositoryTest<SourceNod
         node.setCreationTime("2015-12-21T16:18:59Z");
         return node;
     }
+
+    @Test
+    public void read(){
+        SourceNode source = repository.findOneByUri("sources/01");
+        System.out.println(source);
+
+        Set<SourceProvidesDocument> documents = source.getDocuments();
+        System.out.println(documents);
+
+
+    }
+
 }

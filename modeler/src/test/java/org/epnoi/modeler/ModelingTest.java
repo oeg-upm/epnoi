@@ -2,12 +2,10 @@ package org.epnoi.modeler;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.model.Event;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.*;
 import org.epnoi.model.modules.EventBus;
 import org.epnoi.model.modules.RoutingKey;
 import org.epnoi.storage.UDM;
-import org.epnoi.model.domain.Domain;
-import org.epnoi.model.domain.Topic;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -62,8 +60,8 @@ public class ModelingTest {
         topic.setCreationTime("2016-01-14T09:37+0100");
         topic.setAnalysis(analysisURI);
 
-
-        udm.saveTopic(topic,domainURI, analysisURI);
+        udm.save(Resource.Type.TOPIC).with(topic);
+        udm.attachFrom(topic.getUri()).to(domainURI).by(Relation.Type.TOPIC_EMERGES_IN_DOMAIN, RelationProperties.builder().description(analysisURI).build());
 
 
 

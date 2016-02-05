@@ -43,8 +43,8 @@ public class RssTest {
         source.setUri("/sources/rss");
         source.setUrl("rss://rss.slashdot.org/Slashdot/slashdot");
 
-        if (!udm.existSource(source.getUri())){
-            udm.saveSource(ResourceUtils.map(source, org.epnoi.model.domain.Source.class));
+        if (!udm.exists(Resource.Type.SOURCE).withUri(source.getUri())){
+            udm.save(Resource.Type.SOURCE).with(ResourceUtils.map(source, org.epnoi.model.domain.Source.class));
         }
 
 

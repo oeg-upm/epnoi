@@ -4,12 +4,12 @@ import es.cbadenes.lab.test.IntegrationTest;
 import es.upm.oeg.epnoi.matching.metrics.domain.entity.RegularResource;
 import org.epnoi.model.domain.*;
 import org.epnoi.modeler.Config;
+import org.epnoi.modeler.models.WordDistribution;
 import org.epnoi.modeler.models.topic.TopicData;
 import org.epnoi.modeler.models.topic.TopicDistribution;
 import org.epnoi.modeler.models.topic.TopicModel;
-import org.epnoi.modeler.models.WordDistribution;
-import org.epnoi.storage.generator.TimeGenerator;
 import org.epnoi.storage.UDM;
+import org.epnoi.storage.generator.TimeGenerator;
 import org.epnoi.storage.generator.URIGenerator;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -52,67 +52,76 @@ public class TopicModelBuilderTest {
 
         // Source
         Source source = new Source();
-        source.setUri(uriGenerator.newSource());
-        source.setCreationTime(timeGenerator.getNowAsISO());
-        udm.saveSource(source);
+        source.setUri(uriGenerator.newFor(Resource.Type.SOURCE));
+        source.setCreationTime(timeGenerator.asISO());
+        udm.save(Resource.Type.SOURCE).with(source);
 
         // Domain
         Domain domain = new Domain();
-        domain.setUri(uriGenerator.newDomain());
+        domain.setUri(uriGenerator.newFor(Resource.Type.DOMAIN));
         domain.setName("test-domain");
-        udm.saveDomain(domain);
+        udm.save(Resource.Type.DOMAIN).with(domain);
 
         // Analysis
         Analysis analysis = new Analysis();
-        analysis.setUri(uriGenerator.newAnalysis());
-        analysis.setCreationTime(timeGenerator.getNowAsISO());
+        analysis.setUri(uriGenerator.newFor(Resource.Type.ANALYSIS));
+        analysis.setCreationTime(timeGenerator.asISO());
         analysis.setType("topic-model");
         analysis.setDomain(domain.getUri());
         analysis.setDescription("Topic Modeling using LDA");
         analysis.setConfiguration("");
-        udm.saveAnalysis(analysis);
+        udm.save(Resource.Type.ANALYSIS).with(analysis);
 
         // Document 1
         Document document1 = new Document();
-        document1.setUri(uriGenerator.newDocument());
-        document1.setCreationTime(timeGenerator.getNowAsISO());
+        document1.setUri(uriGenerator.newFor(Resource.Type.DOCUMENT));
+        document1.setCreationTime(timeGenerator.asISO());
         document1.setTitle("title-1");
         document1.setPublishedOn("20160112T12:07");
-        udm.saveDocument(document1,source.getUri());
-        udm.relateDocumentToDomain(document1.getUri(),domain.getUri(),document1.getCreationTime());
+        udm.save(Resource.Type.DOCUMENT).with(document1);
+        udm.attachFrom(source.getUri()).to(document1.getUri()).by(Relation.Type.SOURCE_PROVIDES_DOCUMENT, RelationProperties.builder().date(timeGenerator.asISO()).build());
+        udm.attachFrom(domain.getUri()).to(document1.getUri()).by(Relation.Type.DOMAIN_CONTAINS_DOCUMENT, RelationProperties.builder().date(timeGenerator.asISO()).build());
 
         // -> Item 1 from 1
         Item item11 = new Item();
-        item11.setUri(uriGenerator.newItem());
-        item11.setCreationTime(timeGenerator.getNowAsISO());
-        udm.saveItem(item11,document1.getUri());
+        item11.setUri(uriGenerator.newFor(Resource.Type.ITEM));
+        item11.setCreationTime(timeGenerator.asISO());
+        udm.save(Resource.Type.ITEM).with(item11);
+        udm.attachFrom(document1.getUri()).to(item11.getUri()).by(Relation.Type.DOCUMENT_BUNDLES_ITEM,RelationProperties.builder().date(timeGenerator.asISO()).build());
 
         // -> Item 2 from 1
         Item item12 = new Item();
-        item12.setUri(uriGenerator.newItem());
-        item12.setCreationTime(timeGenerator.getNowAsISO());
-        udm.saveItem(item12,document1.getUri());
+        item12.setUri(uriGenerator.newFor(Resource.Type.ITEM));
+        item12.setCreationTime(timeGenerator.asISO());
+        udm.save(Resource.Type.ITEM).with(item12);
+        udm.attachFrom(document1.getUri()).to(item12.getUri()).by(Relation.Type.DOCUMENT_BUNDLES_ITEM,RelationProperties.builder().date(timeGenerator.asISO()).build());
 
         // Document 2
         Document document2 = new Document();
-        document2.setUri(uriGenerator.newDocument());
-        document2.setCreationTime(timeGenerator.getNowAsISO());
+        document2.setUri(uriGenerator.newFor(Resource.Type.DOCUMENT));
+        document2.setCreationTime(timeGenerator.asISO());
         document2.setTitle("title-2");
         document2.setPublishedOn("20160112T12:07");
-        udm.saveDocument(document2, source.getUri());
-        udm.relateDocumentToDomain(document2.getUri(),domain.getUri(),document2.getCreationTime());
+        udm.save(Resource.Type.DOCUMENT).with(document2);
+        udm.attachFrom(source.getUri()).to(document2.getUri()).by(Relation.Type.SOURCE_PROVIDES_DOCUMENT, RelationProperties.builder().date(timeGenerator.asISO()).build());
+        udm.attachFrom(domain.getUri()).to(document2.getUri()).by(Relation.Type.DOMAIN_CONTAINS_DOCUMENT, RelationProperties.builder().date(timeGenerator.asISO()).build());
 
         // -> Item 1 from 2
         Item item21 = new Item();
-        item21.setUri(uriGenerator.newItem());
-        item21.setCreationTime(timeGenerator.getNowAsISO());
-        udm.saveItem(item21,document2.getUri());
+        item21.setUri(uriGenerator.newFor(Resource.Type.ITEM));
+        item21.setCreationTime(timeGenerator.asISO());
+        udm.save(Resource.Type.ITEM).with(item21);
+        udm.attachFrom(document2.getUri()).to(item21.getUri()).by(Relation.Type.DOCUMENT_BUNDLES_ITEM,RelationProperties.builder().date(timeGenerator.asISO()).build());
+
+
 
         // -> Item 2 from 2
         Item item22 = new Item();
-        item22.setUri(uriGenerator.newItem());
-        item22.setCreationTime(timeGenerator.getNowAsISO());
-        udm.saveItem(item22,document2.getUri());
+        item22.setUri(uriGenerator.newFor(Resource.Type.ITEM));
+        item22.setCreationTime(timeGenerator.asISO());
+        udm.save(Resource.Type.ITEM).with(item22);
+        udm.attachFrom(document2.getUri()).to(item22.getUri()).by(Relation.Type.DOCUMENT_BUNDLES_ITEM,RelationProperties.builder().date(timeGenerator.asISO()).build());
+
 
         // Creators
         User user = new User();
@@ -127,7 +136,7 @@ public class TopicModelBuilderTest {
         rrs.add(regularResourceBuilder.from(item22.getUri(),document2.getTitle(), document2.getPublishedOn(), creators, "house play home"));
 
         TopicModel model = topicModelBuilder.build(domain.getUri(), rrs);
-        String creationTime = timeGenerator.getNowAsISO();
+        String creationTime = timeGenerator.asISO();
 
 
         LOG.info("Configuration: " + model.getConfiguration());
@@ -138,34 +147,35 @@ public class TopicModelBuilderTest {
 
             // Save Topic
             Topic topic = new Topic();
-            topic.setUri(uriGenerator.newTopic());
+            topic.setUri(uriGenerator.newFor(Resource.Type.TOPIC));
             topic.setAnalysis(analysis.getUri());
             topic.setCreationTime(creationTime);
             topic.setContent("content");
-            udm.saveTopic(topic, domain.getUri(), analysis.getUri()); // Implicit relation to Domain (and Analysis)
+            udm.save(Resource.Type.TOPIC).with(topic);
+            udm.attachFrom(topic.getUri()).to(domain.getUri()).by(Relation.Type.TOPIC_EMERGES_IN_DOMAIN, RelationProperties.builder().date(timeGenerator.asISO()).description(analysis.getUri()).build());
 
             topicTable.put(topicData.getId(),topic.getUri());
 
             // Relate it to Words
             for (WordDistribution wordDistribution : topicData.getWords()){
 
-                Optional<String> wordOptional = udm.findWordByLemma(wordDistribution.getWord());
+                List<String> result = udm.find(Resource.Type.WORD).by(Word.LEMMA, wordDistribution.getWord());
                 String wordURI;
-                if (wordOptional.isPresent()){
-                    wordURI = wordOptional.get();
+                if (result != null && !result.isEmpty()){
+                    wordURI = result.get(0);
                 }else {
-                    wordURI = uriGenerator.newWord();
+                    wordURI = uriGenerator.newFor(Resource.Type.WORD);
 
                     // Create Word
                     Word word = new Word();
                     word.setUri(wordURI);
                     word.setLemma(wordDistribution.getWord());
-                    udm.saveWord(word);
+                    udm.save(Resource.Type.WORD).with(word);
 
                 }
 
                 // Relate Topic to Word (mentions)
-                udm.relateWordToTopic(wordURI,topic.getUri(),wordDistribution.getWeight());
+                udm.attachFrom(topic.getUri()).to(wordURI).by(Relation.Type.TOPIC_MENTIONS_WORD,RelationProperties.builder().weight(wordDistribution.getWeight()).build());
 
             }
         }
@@ -177,7 +187,8 @@ public class TopicModelBuilderTest {
             for (TopicDistribution topicDistribution: model.getResources().get(resourceURI)){
                 // Relate resource (Item) to Topic
                 String topicURI = topicTable.get(topicDistribution.getTopic());
-                udm.relateTopicToItem(topicURI,resourceURI,topicDistribution.getWeight());
+                udm.attachFrom(resourceURI).to(topicURI).by(Relation.Type.ITEM_DEALS_WITH_TOPIC,RelationProperties.builder().weight(topicDistribution.getWeight()).build());
+
             }
         }
         LOG.info("Model built and saved: " + model);

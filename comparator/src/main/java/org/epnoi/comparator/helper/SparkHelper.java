@@ -4,12 +4,14 @@ import lombok.Getter;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
 /**
  * Created by cbadenes on 13/01/16.
  */
+@Component
 public class SparkHelper {
 
     @Value("${epnoi.comparator.threads}")

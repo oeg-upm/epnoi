@@ -1,12 +1,11 @@
 package org.epnoi.storage.system.graph;
 
 import es.cbadenes.lab.test.IntegrationTest;
-import org.epnoi.storage.system.graph.GraphConfig;
-import org.epnoi.storage.system.graph.domain.DocumentNode;
-import org.epnoi.storage.system.graph.domain.ItemNode;
-import org.epnoi.storage.system.graph.domain.SourceNode;
-import org.epnoi.storage.system.graph.domain.relationships.ItemBundledByDocument;
-import org.epnoi.storage.system.graph.repository.*;
+import org.epnoi.storage.system.graph.domain.nodes.DocumentNode;
+import org.epnoi.storage.system.graph.domain.nodes.ItemNode;
+import org.epnoi.storage.system.graph.domain.nodes.SourceNode;
+import org.epnoi.storage.system.graph.domain.edges.DocumentBundlesItem;
+import org.epnoi.storage.system.graph.repository.nodes.*;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -66,7 +65,7 @@ public class RelationTest {
         }
 
         // Relation
-        ItemBundledByDocument bundle = new ItemBundledByDocument();
+        DocumentBundlesItem bundle = new DocumentBundlesItem();
         bundle.setDocument(dNode);
         bundle.setItem(iNode);
         dNode.addItemBundledByDocument(bundle);

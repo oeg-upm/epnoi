@@ -1,8 +1,8 @@
 package org.epnoi.storage.system.graph;
 
-import org.epnoi.storage.system.graph.domain.TopicNode;
-import org.epnoi.storage.system.graph.repository.BaseGraphRepository;
-import org.epnoi.storage.system.graph.repository.TopicGraphRepository;
+import org.epnoi.storage.system.graph.domain.nodes.TopicNode;
+import org.epnoi.storage.system.graph.repository.nodes.ResourceGraphRepository;
+import org.epnoi.storage.system.graph.repository.nodes.TopicGraphRepository;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public class TopicGraphRepositoryTest extends BaseGraphRepositoryTest<TopicNode>
     TopicGraphRepository repository;
 
     @Override
-    public BaseGraphRepository<TopicNode> getRepository() {
+    public ResourceGraphRepository<TopicNode> getRepository() {
         return repository;
     }
 
@@ -38,12 +38,6 @@ public class TopicGraphRepositoryTest extends BaseGraphRepositoryTest<TopicNode>
         String domainURI = "http://epnoi.org/domains/90e8b648-1b37-4756-9892-292560725a85";
         Iterable<TopicNode> nodes = repository.findByDomain(domainURI);
         LOG.info("Nodes: " + nodes);
-    }
-
-
-    @Test
-    public void deleteAndDetach(){
-        repository.deleteAndDetach("http://epnoi.org/topics/06d64ebc-18ef-4c85-a43e-62803ccd40af");
     }
 
 }

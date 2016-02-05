@@ -1,5 +1,6 @@
 package org.epnoi.modeler.scheduler;
 
+import org.epnoi.model.domain.Resource;
 import org.epnoi.modeler.helper.ModelingHelper;
 import org.epnoi.modeler.models.topic.TopicModeler;
 import org.epnoi.modeler.models.word.WordEmbeddingModeler;
@@ -26,8 +27,8 @@ public class ModelingTask implements Runnable{
     protected Analysis newAnalysis(String type, String configuration, String description){
 
         Analysis analysis = new Analysis();
-        analysis.setUri(helper.getUriGenerator().newAnalysis());
-        analysis.setCreationTime(helper.getTimeGenerator().getNowAsISO());
+        analysis.setUri(helper.getUriGenerator().newFor(Resource.Type.ANALYSIS));
+        analysis.setCreationTime(helper.getTimeGenerator().asISO());
         analysis.setDomain(domain.getUri());
         analysis.setType(type);
         analysis.setDescription(description);

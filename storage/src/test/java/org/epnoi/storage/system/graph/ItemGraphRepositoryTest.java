@@ -1,8 +1,8 @@
 package org.epnoi.storage.system.graph;
 
-import org.epnoi.storage.system.graph.domain.ItemNode;
-import org.epnoi.storage.system.graph.repository.BaseGraphRepository;
-import org.epnoi.storage.system.graph.repository.ItemGraphRepository;
+import org.epnoi.storage.system.graph.domain.nodes.ItemNode;
+import org.epnoi.storage.system.graph.repository.nodes.ResourceGraphRepository;
+import org.epnoi.storage.system.graph.repository.nodes.ItemGraphRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -14,7 +14,7 @@ public class ItemGraphRepositoryTest extends BaseGraphRepositoryTest<ItemNode> {
     ItemGraphRepository repository;
 
     @Override
-    public BaseGraphRepository<ItemNode> getRepository() {
+    public ResourceGraphRepository<ItemNode> getRepository() {
         return repository;
     }
 

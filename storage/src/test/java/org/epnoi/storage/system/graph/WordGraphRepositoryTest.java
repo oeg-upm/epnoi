@@ -1,8 +1,8 @@
 package org.epnoi.storage.system.graph;
 
-import org.epnoi.storage.system.graph.domain.WordNode;
-import org.epnoi.storage.system.graph.repository.BaseGraphRepository;
-import org.epnoi.storage.system.graph.repository.WordGraphRepository;
+import org.epnoi.storage.system.graph.domain.nodes.WordNode;
+import org.epnoi.storage.system.graph.repository.nodes.ResourceGraphRepository;
+import org.epnoi.storage.system.graph.repository.nodes.WordGraphRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,7 +15,7 @@ public class WordGraphRepositoryTest extends BaseGraphRepositoryTest<WordNode> {
     WordGraphRepository repository;
 
     @Override
-    public BaseGraphRepository<WordNode> getRepository() {
+    public ResourceGraphRepository<WordNode> getRepository() {
         return repository;
     }
 

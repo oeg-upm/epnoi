@@ -1,5 +1,6 @@
 package org.epnoi.storage.system;
 
+import org.epnoi.model.domain.LinkableElement;
 import org.epnoi.model.domain.Resource;
 
 import java.util.Optional;
@@ -7,23 +8,22 @@ import java.util.Optional;
 /**
  * Created by cbadenes on 03/02/16.
  */
-public interface Repository {
+public interface  Repository<R extends LinkableElement,T> {
 
-    void save(Resource resource, Resource.Type type);
+    void save(R resource, T type);
 
-    Boolean exists(String uri, Resource.Type type);
+    Boolean exists(T type, String uri);
 
-    Optional<Resource> read(String uri, Resource.Type type);
+    Optional<R> read(T type, String uri);
 
-    Iterable<Resource> findAll(Resource.Type type);
+    Iterable<R> findAll(T type);
 
-    Iterable<Resource> findBy(Resource.Type resultType,String field, String value);
+    Iterable<R> findBy(T resultType,String field, String value);
 
-    Iterable<Resource> findIn(Resource.Type resultType,Resource.Type referenceType,String referenceURI);
+    Iterable<R> findIn(T resultType,Resource.Type referenceType,String referenceURI);
 
-    void deleteAll(Resource.Type type);
+    void deleteAll(T type);
 
-    void delete(String uri, Resource.Type type);
-
+    void delete(T type, String uri);
 
 }

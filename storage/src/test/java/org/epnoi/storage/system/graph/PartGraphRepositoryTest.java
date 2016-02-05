@@ -1,8 +1,8 @@
 package org.epnoi.storage.system.graph;
 
-import org.epnoi.storage.system.graph.domain.PartNode;
-import org.epnoi.storage.system.graph.repository.BaseGraphRepository;
-import org.epnoi.storage.system.graph.repository.PartGraphRepository;
+import org.epnoi.storage.system.graph.domain.nodes.PartNode;
+import org.epnoi.storage.system.graph.repository.nodes.ResourceGraphRepository;
+import org.epnoi.storage.system.graph.repository.nodes.PartGraphRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -14,7 +14,7 @@ public class PartGraphRepositoryTest extends BaseGraphRepositoryTest<PartNode> {
     PartGraphRepository repository;
 
     @Override
-    public BaseGraphRepository<PartNode> getRepository() {
+    public ResourceGraphRepository<PartNode> getRepository() {
         return repository;
     }
 

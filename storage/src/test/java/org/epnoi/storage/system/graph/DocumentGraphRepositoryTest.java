@@ -1,9 +1,11 @@
 package org.epnoi.storage.system.graph;
 
-import org.epnoi.storage.system.graph.domain.DocumentNode;
-import org.epnoi.storage.system.graph.repository.BaseGraphRepository;
-import org.epnoi.storage.system.graph.repository.DocumentGraphRepository;
-import org.epnoi.storage.system.graph.repository.DomainGraphRepository;
+import org.epnoi.storage.system.graph.domain.nodes.DocumentNode;
+import org.epnoi.storage.system.graph.repository.edges.DocumentDealsWithTopicGraphRepository;
+import org.epnoi.storage.system.graph.repository.nodes.DocumentGraphRepository;
+import org.epnoi.storage.system.graph.repository.nodes.DomainGraphRepository;
+import org.epnoi.storage.system.graph.repository.nodes.ResourceGraphRepository;
+import org.epnoi.storage.system.graph.repository.nodes.TopicGraphRepository;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +22,16 @@ public class DocumentGraphRepositoryTest extends BaseGraphRepositoryTest<Documen
     DocumentGraphRepository repository;
 
     @Autowired
+    DocumentDealsWithTopicGraphRepository documentDealsWithTopicGraphRepository;
+
+    @Autowired
     DomainGraphRepository domainRepository;
 
+    @Autowired
+    TopicGraphRepository topicGraphRepository;
+
     @Override
-    public BaseGraphRepository<DocumentNode> getRepository() {
+    public ResourceGraphRepository<DocumentNode> getRepository() {
         return repository;
     }
 
@@ -38,7 +46,7 @@ public class DocumentGraphRepositoryTest extends BaseGraphRepositoryTest<Documen
 
     @Test
     public void similar(){
-        repository.deleteSimilarRelationsInDomain("http://epnoi.org/domains/1f02ae0b-7d96-42c6-a944-25a3050bf1e2");
+        repository.deleteSimilarToInDomain("http://epnoi.org/domains/1f02ae0b-7d96-42c6-a944-25a3050bf1e2");
     }
 
 }

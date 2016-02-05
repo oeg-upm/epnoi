@@ -24,9 +24,8 @@ public class SimilarityExecutor {
 
     @PostConstruct
     public void setup(){
-        // TODO Increase pool size to handle parallel executions
         executor = new ThreadPoolTaskScheduler();
-        executor.setPoolSize(1);
+        executor.setPoolSize(3);
         executor.initialize();
     }
 

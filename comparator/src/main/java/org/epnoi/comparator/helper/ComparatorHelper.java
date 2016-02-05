@@ -24,6 +24,9 @@ public class ComparatorHelper {
     @Autowired
     URIGenerator uriGenerator;
 
+    @Autowired
+    SparkHelper sparkHelper;
+
     @Value("${epnoi.comparator.threshold}")
     Double threshold;
 
