@@ -61,7 +61,7 @@ public class ComparisonTest {
         for (int i = 0; i < 5 ; i ++){
             Document document = createDocument("document/"+i,domain.getUri());
             for (Topic topic: topics){
-                udm.attachFrom(document.getUri()).to(topic.getUri()).by(Relation.Type.DOCUMENT_DEALS_WITH_TOPIC,RelationProperties.builder().weight(Double.valueOf(1/topics.size())).build());
+                udm.attachFrom(document.getUri()).to(topic.getUri()).by(Relation.Type.DOCUMENT_DEALS_WITH_TOPIC,RelationProperties.builder().weight(Double.valueOf(1.0/topics.size())).build());
             }
         }
 
