@@ -63,9 +63,6 @@ public class UnifiedNodeGraphRepositoryFactory {
     PartSimilarToPartGraphRepository partSimilarToPartGraphRepository;
 
     @Autowired
-    RelationGraphRepository relationGraphRepository;
-
-    @Autowired
     SourceComposesDomainGraphRepository sourceComposesDomainGraphRepository;
 
     @Autowired

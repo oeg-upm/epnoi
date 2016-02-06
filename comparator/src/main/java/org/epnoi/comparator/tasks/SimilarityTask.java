@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -20,7 +21,7 @@ import java.util.stream.StreamSupport;
 /**
  * Created by cbadenes on 05/02/16.
  */
-public abstract class SimilarityTask implements Runnable {
+public abstract class SimilarityTask implements Runnable,Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(SimilarityTask.class);
 
@@ -75,13 +76,16 @@ public abstract class SimilarityTask implements Runnable {
                 map(x -> new TopicDistribution(x._1(), x._2()))
                 ;
 
+        LOG.debug("Topic Distributions: "+topicDistributions.collect().size());
+
         List<WeightedPair> similarities = topicDistributions.
                 cartesian(topicDistributions).
                 filter(x -> x._1().getUri().compareTo(x._2().getUri()) > 0).
                 map(x -> new WeightedPair(x._1().getUri(), x._2().getUri(), RelationalSimilarity.between(x._1().getRelationships(), x._2().getRelationships()))).
-                filter(x -> x.getWeight() > helper.getThreshold()).
+//                filter(x -> x.getWeight() > 0.5).
                 collect();
 
+        LOG.debug("Similarities: "+similarities);
         return similarities;
 
     }

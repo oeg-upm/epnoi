@@ -39,9 +39,6 @@ public class UnifiedEdgeGraphRepositoryFactory {
     PartSimilarToPartGraphRepository partSimilarToPartGraphRepository;
 
     @Autowired
-    RelationGraphRepository relationGraphRepository;
-
-    @Autowired
     SourceComposesDomainGraphRepository sourceComposesDomainGraphRepository;
 
     @Autowired

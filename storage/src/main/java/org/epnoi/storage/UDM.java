@@ -27,18 +27,6 @@ public class UDM {
     @Autowired
     Helper helper;
 
-    @Autowired
-    UnifiedSession session;
-
-    @Autowired
-    UnifiedColumnRepository unifiedColumnRepository;
-
-    @Autowired
-    UnifiedDocumentRepository unifiedDocumentRepository;
-
-    @Autowired
-    UnifiedNodeGraphRepository unifiedNodeGraphRepository;
-
     /**
      * Save a resource
      * @param type
