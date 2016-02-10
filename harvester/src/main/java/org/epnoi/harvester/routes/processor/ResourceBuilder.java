@@ -54,7 +54,7 @@ public class ResourceBuilder implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-
+        AnnotatedDocument annotatedDocument = null;
         try{
             // Domain URI
             String domainUri        = exchange.getProperty(Record.DOMAIN_URI,String.class);
@@ -70,7 +70,7 @@ public class ResourceBuilder implements Processor {
             // Attached file
             // TODO Handle multiple attached files
             String path             = exchange.getProperty(Record.PUBLICATION_URL_LOCAL,String.class).replace("."+metaInformation.getPubFormat(), "."+metaInformation.getFormat());
-            AnnotatedDocument annotatedDocument = textMiner.annotate(path);
+            annotatedDocument = textMiner.annotate(path);
             String rawContent       = annotatedDocument.getContent();
 //            Map<String, Integer> tokens   = textMiner.parse(rawContent).stream().filter(token -> token.isValid()).collect(Collectors.toConcurrentMap(w -> w.getLemma(), w -> 1, Integer::sum));
 
@@ -82,6 +82,7 @@ public class ResourceBuilder implements Processor {
 
             if (docs != null && !docs.isEmpty()){
                 LOG.warn("Document titled: '"+metaInformation.getTitle()+"' exists in ddbb with uri: " + docs);
+                annotatedDocument.clean();
                 return;
             }
 
@@ -141,16 +142,20 @@ public class ResourceBuilder implements Processor {
             // Relate it to Domain
             udm.attachFrom(domainUri).to(document.getUri()).by(Relation.Type.DOMAIN_CONTAINS_DOCUMENT,RelationProperties.builder().date(document.getCreationTime()).build());
 
-
             // Convert to json
             String json = mapper.writeValueAsString(document);
 
             // Put in camel flow
             exchange.getIn().setHeader("FileName", StringUtils.replace(StringUtils.substringAfterLast("file://"+path, basedir), metaInformation.getFormat(), "json"));
             exchange.getIn().setBody(json, String.class);
+
         }catch (RuntimeException e){
             LOG.error("Error creating resources", e);
+        } finally {
+            // free memory
+            if (annotatedDocument != null) annotatedDocument.clean();
         }
+
     }
 
     private void updateMetainfoFromAnnotatedDoc(MetaInformation metaInformation, AnnotatedDocument annotatedDocument){

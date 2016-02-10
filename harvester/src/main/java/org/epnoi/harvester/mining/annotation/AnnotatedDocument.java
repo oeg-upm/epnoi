@@ -163,4 +163,12 @@ public class AnnotatedDocument implements Serializable{
     private String join(Stream<Sentence> sentences){
         return sentences.map(s -> s.getText()).collect(Collectors.joining(" "));
     }
+
+    public void clean(){
+        try {
+            this.document.cleanUp();
+        } catch (InternalProcessingException e) {
+            LOG.warn("Error when cleaning document: " + document, e);
+        }
+    }
 }
