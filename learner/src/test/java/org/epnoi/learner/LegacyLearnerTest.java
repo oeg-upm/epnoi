@@ -25,7 +25,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @TestPropertySource(properties = {"learner.task.terms.extract = false", "learner.task.terms.store = false", "learner.task.relations.parallel = true"})
 
 
-public class LearnerTest {
+public class LegacyLearnerTest {
     @Autowired
     Learner learner;
 
