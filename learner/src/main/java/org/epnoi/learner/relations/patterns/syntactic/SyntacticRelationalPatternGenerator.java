@@ -2,15 +2,11 @@ package org.epnoi.learner.relations.patterns.syntactic;
 
 import gate.Annotation;
 import gate.Document;
-import org.epnoi.learner.relations.corpus.MockUpRelationalSentencesCorpusCreator;
 import org.epnoi.learner.relations.patterns.RelationalPattern;
 import org.epnoi.learner.relations.patterns.RelationalPatternGenerator;
 import org.epnoi.model.OffsetRangeSelector;
 import org.epnoi.model.RelationalSentence;
-import org.epnoi.model.exceptions.EpnoiInitializationException;
-import org.epnoi.model.modules.Core;
-import org.epnoi.uia.commons.GateUtils;
-import org.epnoi.uia.core.CoreUtility;
+import org.epnoi.nlp.gate.GateUtils;
 import org.jgrapht.GraphPath;
 import org.jgrapht.Graphs;
 import org.jgrapht.alg.DijkstraShortestPath;
@@ -161,23 +157,5 @@ public class SyntacticRelationalPatternGenerator implements
 		return nodesLists;
 	}
 
-	// -----------------------------------------------------------------------------------------------------
 
-	public static void main(String[] args) throws EpnoiInitializationException {
-		Core core = CoreUtility.getUIACore();
-		SyntacticRelationalPatternGenerator patternGenerator = new SyntacticRelationalPatternGenerator();
-
-		MockUpRelationalSentencesCorpusCreator corpusCreator = new MockUpRelationalSentencesCorpusCreator();
-		corpusCreator.init(core);
-
-		for (RelationalSentence sentence : corpusCreator.createTestCorpus()
-				.getSentences()) {
-			List<RelationalPattern> patterns = patternGenerator
-					.generate(sentence);
-			for (RelationalPattern pattern : patterns) {
-				System.out.println("Patter:> " + pattern);
-			}
-		}
-
-	}
 }

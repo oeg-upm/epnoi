@@ -5,7 +5,7 @@ import io.swagger.annotations.*;
 import org.epnoi.api.rest.services.response.WikidataViewSummary;
 import org.epnoi.knowledgebase.wikidata.WikidataHandlerParameters;
 import org.epnoi.knowledgebase.wikidata.WikidataHandlerParameters.DumpProcessingMode;
-import org.epnoi.knowledgebase.wikidata.WikidataViewCreator;
+import org.epnoi.knowledgebase.wikidata.view.WikidataViewCreator;
 import org.epnoi.model.RelationHelper;
 import org.epnoi.model.WikidataView;
 import org.epnoi.model.exceptions.EpnoiInitializationException;

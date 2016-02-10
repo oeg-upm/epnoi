@@ -1,9 +1,6 @@
 package org.epnoi.learner.relations.extractor.parallel;
 
 import gate.Document;
-import org.apache.spark.SparkConf;
-import org.apache.spark.SparkContext;
-import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.broadcast.Broadcast;
@@ -13,20 +10,11 @@ import org.epnoi.learner.relations.corpus.parallel.DocumentToSentencesFlatMapper
 import org.epnoi.learner.relations.corpus.parallel.RelationalSentenceCandidate;
 import org.epnoi.learner.relations.corpus.parallel.Sentence;
 import org.epnoi.learner.relations.corpus.parallel.UriToAnnotatedDocumentFlatMapper;
-import org.epnoi.learner.relations.patterns.RelationalPatternsModel;
-import org.epnoi.learner.relations.patterns.RelationalPatternsModelSerializer;
-import org.epnoi.learner.relations.patterns.lexical.LexicalRelationalPatternGenerator;
-import org.epnoi.learner.terms.TermsTable;
-import org.epnoi.model.*;
+import org.epnoi.model.DeserializedRelationalSentence;
+import org.epnoi.model.Relation;
+import org.epnoi.model.RelationsTable;
 import org.epnoi.model.commons.Parameters;
-import org.epnoi.model.exceptions.EpnoiInitializationException;
-import org.epnoi.model.exceptions.EpnoiResourceAccessException;
-import org.epnoi.model.modules.Core;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import scala.Tuple2;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -35,8 +23,6 @@ public class ParallelRelationsExtractor {
     private static final Logger logger = Logger
             .getLogger(ParallelRelationsExtractor.class.getName());
     private static final long MAX_DISTANCE = 20;
-
-    private Core core;
 
     LearningParameters parameters;
 
@@ -48,11 +34,10 @@ public class ParallelRelationsExtractor {
     private static final String JOB_NAME = "RELATIONS_EXTRACTION";
     // --------------------------------------------------------------------------------------
 
-    public void init(LearningParameters parameters, DomainsTable domainsTable, Core core, JavaSparkContext sparkContext) {
+    public void init(LearningParameters parameters, DomainsTable domainsTable, JavaSparkContext sparkContext) {
         logger.info("Initializing the Relations Extractor with the following parameters");
         logger.info(parameters.toString());
         this.parameters = parameters;
-        this.core = core;
         this.sparkContext = sparkContext;
         this.domainsTable = domainsTable;
 

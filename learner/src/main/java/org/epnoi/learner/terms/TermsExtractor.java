@@ -5,7 +5,6 @@ import gate.Document;
 import org.epnoi.learner.DomainsTable;
 import org.epnoi.learner.LearningParameters;
 import org.epnoi.model.*;
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.rdf.RDFHelper;
 import org.epnoi.nlp.gate.NLPAnnotationsConstants;
 import org.epnoi.uia.informationstore.SelectorHelper;
@@ -26,7 +25,6 @@ public class TermsExtractor {
 			"symposium", "conference", "copyright", "approach", "figure",
 			"figures" });
 	private static final int MIN_TERM_LENGTH = 4;
-	private Core core;
 	// private List<String> consideredDomains;
 	private String targetDomain;
 	private String consideredResources;
@@ -45,11 +43,10 @@ public class TermsExtractor {
 
 	// -----------------------------------------------------------------------------------
 
-	public void init(Core core, DomainsTable domainsTable,
+	public void init(DomainsTable domainsTable,
 			LearningParameters parameters) {
 		logger.info("Initializing the TermExtractor with the following parameters");
 		logger.info(parameters.toString());
-		this.core = core;
 		this.parameters = parameters;
 
 		this.domainsTable = domainsTable;
@@ -140,8 +137,12 @@ public class TermsExtractor {
 		selector.setProperty(SelectorHelper.ANNOTATED_CONTENT_URI, URI + "/"
 				+ AnnotatedContentHelper.CONTENT_TYPE_OBJECT_XML_GATE);
 
-		Content<Object> annotatedContent = core.getInformationHandler()
-				.getAnnotatedContent(selector);
+		// TODO
+		logger.severe("Pending to implement by using UDM");
+//		Content<Object> annotatedContent = core.getInformationHandler()
+//				.getAnnotatedContent(selector);
+		Content<Object> annotatedContent = null;
+
 		/*
 		 * Document document = null; try { document = (Document) Factory
 		 * .createResource( "gate.corpora.DocumentImpl", Utils.featureMap(

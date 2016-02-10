@@ -1,9 +1,5 @@
 package org.epnoi.uia.core;
 
-import org.epnoi.model.RelationHelper;
-import org.epnoi.model.exceptions.EpnoiInitializationException;
-import org.epnoi.model.exceptions.EpnoiResourceAccessException;
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.parameterization.ParametersModel;
 import org.epnoi.model.parameterization.ParametersModelReader;
 
@@ -46,18 +42,6 @@ public class CoreUtility {
         }
 
         return parametersModel;
-    }
-
-    // ----------------------------------------------------------------------------------------
-    public static void main(String[] args) {
-        Core core = CoreUtility.getUIACore();
-        try {
-            System.out.println("-> "+core.getKnowledgeBaseHandler().getKnowledgeBase().areRelated("depeche mode", "band", RelationHelper.HYPERNYMY));
-        } catch (EpnoiInitializationException e) {
-            e.printStackTrace();
-        } catch (EpnoiResourceAccessException e) {
-            e.printStackTrace();
-        }
     }
 
 }

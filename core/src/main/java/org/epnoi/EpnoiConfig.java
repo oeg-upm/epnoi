@@ -1,16 +1,8 @@
 package org.epnoi;
 
-import org.epnoi.knowledgebase.KnowledgeBaseImpl;
 import org.epnoi.model.modules.Profiles;
 import org.epnoi.model.parameterization.ParametersModel;
 import org.epnoi.model.parameterization.ParametersModelReader;
-import org.epnoi.uia.annotation.AnnotationHandlerImpl;
-import org.epnoi.uia.core.CoreImpl;
-import org.epnoi.uia.domains.DomainsHandlerImpl;
-import org.epnoi.uia.harvester.HarvestersHandlerImpl;
-import org.epnoi.uia.informationhandler.InformationHandlerImpl;
-import org.epnoi.uia.nlp.NLPHandlerImpl;
-import org.epnoi.uia.search.SearchHandlerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
@@ -20,8 +12,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import java.util.logging.Logger;
 
 @Configuration
-@ComponentScan(basePackageClasses = {CoreImpl.class, NLPHandlerImpl.class, SearchHandlerImpl.class, AnnotationHandlerImpl.class, InformationHandlerImpl.class, DomainsHandlerImpl.class, KnowledgeBaseImpl.class, HarvestersHandlerImpl.class})
-
+@ComponentScan(basePackages = "org.epnoi")
 @PropertySource("classpath:epnoi.properties")
 public class EpnoiConfig {
     private static final Logger logger = Logger.getLogger(EpnoiConfig.class

@@ -5,11 +5,6 @@ import org.epnoi.learner.relations.patterns.*;
 import org.epnoi.model.RelationalSentencesCorpus;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 import org.epnoi.model.exceptions.EpnoiResourceAccessException;
-import org.epnoi.model.modules.Core;
-import org.epnoi.model.rdf.RDFHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.logging.Logger;
@@ -19,8 +14,6 @@ public class LexicalRelationalModelCreator {
             .getLogger(LexicalRelationalModelCreator.class.getName());
 
     private RelationalPatternsModelCreationParameters parameters;
-
-    private Core core;
 
     private RelationalPatternsCorpusCreator patternsCorpusCreator;
     private RelationalPatternsCorpus patternsCorpus;
@@ -32,22 +25,23 @@ public class LexicalRelationalModelCreator {
     private double interpolationConstant;
     private String path;
 
+
     // ----------------------------------------------------------------------------------------------------------------
     @PostConstruct
     public void init() throws EpnoiInitializationException {
         logger.info("Initializing the LexicalRealationalModelCreator with the following parameters");
         logger.info(parameters.toString());
-        this.core = core;
         this.parameters = parameters;
         String relationalSentencesCorpusURI = (String) this.parameters
                 .getParameterValue(RelationalPatternsModelCreationParameters.RELATIONAL_SENTENCES_CORPUS_URI);
         this.patternsCorpusCreator = new RelationalPatternsCorpusCreator();
-        this.patternsCorpusCreator.init(core,
-                new LexicalRelationalPatternGenerator());
+        this.patternsCorpusCreator.init(new LexicalRelationalPatternGenerator());
 
-        RelationalSentencesCorpus relationalSentencesCorpus = (RelationalSentencesCorpus) this.core
-                .getInformationHandler().get(relationalSentencesCorpusURI,
-                        RDFHelper.RELATIONAL_SENTECES_CORPUS_CLASS);
+        // TODO
+        logger.severe("pending to implement by using UDM");
+//        RelationalSentencesCorpus relationalSentencesCorpus = (RelationalSentencesCorpus) this.core.getInformationHandler().get(relationalSentencesCorpusURI, RDFHelper.RELATIONAL_SENTECES_CORPUS_CLASS);
+        RelationalSentencesCorpus relationalSentencesCorpus = null;
+
 
         if (relationalSentencesCorpus == null) {
             throw new EpnoiInitializationException(

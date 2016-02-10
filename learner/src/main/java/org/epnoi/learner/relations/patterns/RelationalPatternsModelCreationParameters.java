@@ -2,8 +2,7 @@ package org.epnoi.learner.relations.patterns;
 
 import org.epnoi.model.commons.Parameters;
 
-public class RelationalPatternsModelCreationParameters extends
-		Parameters<Object> {
+public class RelationalPatternsModelCreationParameters extends Parameters<Object> {
 	public static final String RELATIONAL_SENTENCES_CORPUS_URI = "RELATIONAL_SENTENCES_CORPUS_URI";
 	public static final String MAX_PATTERN_LENGTH = "MAX_PATTERN_LENGTH";
 	public static final String INTERPOLATION_CONSTANT = "INTERPOLATION_CONSTANT";

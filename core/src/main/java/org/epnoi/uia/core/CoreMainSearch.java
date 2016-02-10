@@ -1,6 +1,5 @@
 package org.epnoi.uia.core;
 
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.search.SearchContext;
 import org.epnoi.model.search.SearchResult;
 import org.epnoi.model.search.SelectExpression;

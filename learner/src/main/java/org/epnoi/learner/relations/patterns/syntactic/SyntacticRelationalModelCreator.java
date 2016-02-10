@@ -1,13 +1,12 @@
 package org.epnoi.learner.relations.patterns.syntactic;
 
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.learner.relations.corpus.MockUpRelationalSentencesCorpusCreator;
 import org.epnoi.learner.relations.corpus.RelationalSentencesCorpusCreationParameters;
 import org.epnoi.learner.relations.patterns.*;
 import org.epnoi.model.RelationalSentencesCorpus;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 import org.epnoi.model.exceptions.EpnoiResourceAccessException;
-import org.epnoi.model.modules.Core;
-import org.epnoi.uia.core.CoreUtility;
 
 import java.util.logging.Logger;
 
@@ -15,7 +14,6 @@ public class SyntacticRelationalModelCreator {
 	private static final Logger logger = Logger
 			.getLogger(SyntacticRelationalModelCreator.class.getName());
 	private RelationalPatternsModelCreationParameters parameters;
-	private Core core;
 
 	String relationalSentencesCorpusURI;
 	private RelationalSentencesCorpus relationalSentencesCorpus;
@@ -31,18 +29,15 @@ public class SyntacticRelationalModelCreator {
 
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public void init(Core core,
-			RelationalPatternsModelCreationParameters parameters)
+	public void init(LearningHelper helper, RelationalPatternsModelCreationParameters parameters)
 			throws EpnoiInitializationException {
 		logger.info("Initializing the SyntacticRealationalModelCreator with the following parameters");
 		logger.info(parameters.toString());
-		this.core = core;
 		this.parameters = parameters;
 		String relationalSentencesCorpusURI = (String) this.parameters
 				.getParameterValue(SyntacticRelationalModelCreationParameters.RELATIONAL_SENTENCES_CORPUS_URI_PARAMETER);
 		this.patternsCorpusCreator = new RelationalPatternsCorpusCreator();
-		this.patternsCorpusCreator.init(core,
-				new SyntacticRelationalPatternGenerator());
+		this.patternsCorpusCreator.init(new SyntacticRelationalPatternGenerator());
 
 		/*
 		 * FUTURE RelationalSentencesCorpus relationalSentencesCorpus =
@@ -54,7 +49,7 @@ public class SyntacticRelationalModelCreator {
 		this.relationSentencesCorpusCreator = new MockUpRelationalSentencesCorpusCreator();
 
 		try {
-			relationSentencesCorpusCreator.init(core);
+			relationSentencesCorpusCreator.init(helper);
 		} catch (EpnoiInitializationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -138,50 +133,5 @@ public class SyntacticRelationalModelCreator {
 		logger.info("It took " + Math.abs(totalTime) + " ms to build the model");
 		return model;
 	}
-
-	// ----------------------------------------------------------------------------------------------------------------
-
-	public static void main(String[] args) {
-		System.out.println("Starting the Syntactic Relational Model creation");
-		RelationalPatternsModelCreationParameters parameters = new RelationalPatternsModelCreationParameters();
-		parameters
-				.setParameter(
-						SyntacticRelationalModelCreationParameters.RELATIONAL_SENTENCES_CORPUS_URI_PARAMETER,
-						"http://drInventorFirstReview/relationalSentencesCorpus");
-		parameters
-				.setParameter(
-						SyntacticRelationalModelCreationParameters.MAX_PATTERN_LENGTH_PARAMETER,
-						20);
-
-		parameters
-				.setParameter(
-						SyntacticRelationalModelCreationParameters.MODEL_PATH_PARAMETERS,
-						"/JUNK/model.bin");
-
-		parameters
-				.setParameter(
-						RelationalSentencesCorpusCreationParameters.STORE,
-						true);
-
-		parameters.setParameter(
-				RelationalSentencesCorpusCreationParameters.VERBOSE,
-				false);
-
-		Core core = CoreUtility.getUIACore();
-
-		SyntacticRelationalModelCreator modelCreator = new SyntacticRelationalModelCreator();
-		try {
-			modelCreator.init(core, parameters);
-		} catch (EpnoiInitializationException e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
-
-		modelCreator.create();
-
-		System.out.println("Ending the Syntantic Relational Model creation");
-	}
-
-	// ----------------------------------------------------------------------------------------------------------------
 
 }

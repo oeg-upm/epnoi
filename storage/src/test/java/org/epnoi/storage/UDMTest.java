@@ -53,7 +53,6 @@ import java.util.concurrent.atomic.AtomicInteger;
         "epnoi.neo4j.contactpoints = drinventor.dia.fi.upm.es",
         "epnoi.neo4j.port = 5030",
         "epnoi.eventbus.uri = amqp://epnoi:drinventor@drinventor.dia.fi.upm.es:5041/drinventor"})
-
 public class UDMTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(UDMTest.class);

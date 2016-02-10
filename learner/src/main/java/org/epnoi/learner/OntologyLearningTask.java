@@ -11,7 +11,6 @@ import org.epnoi.learner.terms.TermsTable;
 import org.epnoi.model.Domain;
 import org.epnoi.model.RelationsTable;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
-import org.epnoi.model.modules.Core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +32,6 @@ public class OntologyLearningTask {
 
     private DomainsTableCreator domainsTableCreator;
     private DomainsTable domainsTable;
-    Core core;
     Domain domain;
     private double hypernymRelationsThreshold;
     private boolean obtainTerms;
@@ -46,16 +44,14 @@ public class OntologyLearningTask {
     private JavaSparkContext sparkContext;
 
     //
-    public void init(Core core, LearningParameters parameters, JavaSparkContext sparkContext) throws EpnoiInitializationException{
-        this.core = core;
+    public void init(LearningParameters parameters, JavaSparkContext sparkContext) throws EpnoiInitializationException{
         this.learningParameters = cloner.deepClone(parameters);
         this.sparkContext = sparkContext;
     }
     // ---------------------------------------------------------------------------------------------------------
 
 
-    private void _init(Core core,
-                       LearningParameters learningParameters){
+    private void _init(LearningParameters learningParameters){
 
 
         logger.info("Initializing the OntologyLearningTask with the following parameters: ");
@@ -77,30 +73,29 @@ public class OntologyLearningTask {
         this.parallelRelationsExtraction = (boolean)this.learningParameters.getParameterValue(LearningParameters.EXTRACT_RELATIONS_PARALLEL);
 
         this.domainsTableCreator = new DomainsTableCreator();
-        this.domainsTableCreator.init(core, learningParameters);
+        this.domainsTableCreator.init(learningParameters);
         this.domainsTable = this.domainsTableCreator.create(domain);
         this.domainsTableCreator = new DomainsTableCreator();
-        this.domainsTableCreator.init(core, learningParameters);
+        this.domainsTableCreator.init(learningParameters);
 
         if (obtainTerms) {
             this.termExtractor = new TermsExtractor();
-            this.termExtractor.init(core, this.domainsTable,
+            this.termExtractor.init(this.domainsTable,
                     learningParameters);
 
 
-            this.termsRetriever = new TermsRetriever(core);
+            this.termsRetriever = new TermsRetriever();
         }
         if (obtainRelations) {
             if(parallelRelationsExtraction){
                 this.parallelRelationsExtractor = new ParallelRelationsExtractor();
-                this.parallelRelationsExtractor.init(learningParameters,domainsTable, core,sparkContext);
+                this.parallelRelationsExtractor.init(learningParameters,domainsTable, sparkContext);
 
             }else {
                 this.relationsTableExtractor = new RelationsExtractor();
-                this.relationsTableExtractor.init(core, this.domainsTable,
-                        learningParameters);
+                this.relationsTableExtractor.init(this.domainsTable, learningParameters);
             }
-            this.relationsTableRetriever = new RelationsRetriever(core);
+            this.relationsTableRetriever = new RelationsRetriever();
         }
     }
 
@@ -160,7 +155,7 @@ public class OntologyLearningTask {
         // this.domainsTable = this.domainsTableCreator.create(domain);
 
 
-            _init(core, learningParameters);
+            _init(learningParameters);
         
         _execute();
         System.out.println("Ending the Ontology Learning Process!");

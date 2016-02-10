@@ -59,6 +59,7 @@
         <!-- Project Dependencies -->
 
         <asm.version>5.0.4</asm.version>
+        <apache.commons.lang.version>3.0</apache.commons.lang.version>
         <beanutils.version>1.9.2</beanutils.version>
         <camel.euia.version>1.0.0</camel.euia.version>
         <camel.oaipmh.version>1.0.5</camel.oaipmh.version>
@@ -137,11 +138,9 @@
     </properties>
     <modules>
         <module>storage</module>
-        <module>sources</module>
-        <module>wrappers</module>
-        <module>core</module>
+        <!--<module>core</module>-->
         <module>comparator</module>
-        <module>uia</module>
+        <!--<module>uia</module>-->
         <module>api</module>
         <module>model</module>
         <module>nlp</module>
@@ -436,6 +435,11 @@
                 <version>${commons.lang.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache.commons.lang.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.neovisionaries</groupId>
                 <artifactId>nv-i18n</artifactId>
                 <version>${nvi18n.version}</version>
@@ -653,6 +657,11 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-web</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
                 <version>${spring.version}</version>
             </dependency>
             <dependency>

@@ -1,15 +1,14 @@
 package org.epnoi.learner;
 
 import org.epnoi.model.Domain;
-import org.epnoi.model.modules.Core;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
 public class DomainsTableCreator {
 	private static final Logger logger = Logger.getLogger(DomainsTableCreator.class
 			.getName());
-	private Core core;
 	private List<Domain> consideredDomains;
 	private String targetDomain;
 
@@ -18,10 +17,9 @@ public class DomainsTableCreator {
 
 	// -----------------------------------------------------------------------------------
 
-	public void init(Core core, LearningParameters parameters) {
+	public void init(LearningParameters parameters) {
 		logger.info("Initializing the DomainsTableCreator with the following parameters: ");
 		logger.info(parameters.toString());
-		this.core = core;
 		this.parameters = parameters;
 
 		this.consideredDomains = (List<Domain>) this.parameters
@@ -40,7 +38,11 @@ public class DomainsTableCreator {
 			this.domainsTable.addDomain(domain);
 			logger.info("Creating the domain " + domain);
 
-			List<String> foundURIs = core.getDomainsHandler().gather(domain);
+			// TODO
+			logger.severe("Pending to implement by using UDM");
+//			List<String> foundURIs = core.getDomainsHandler().gather(domain);
+			List<String> foundURIs = Collections.EMPTY_LIST;
+
 			logger.info("Found initially " + foundURIs.size()
 					+ " elements in the domain");
 
@@ -58,7 +60,11 @@ public class DomainsTableCreator {
 		this.domainsTable.addDomain(domain);
 		logger.info("Creating the domain " + domain);
 
-		List<String> foundURIs = core.getDomainsHandler().gather(domain);
+		// TODO
+		logger.severe("Pending to implement by using UDM");
+//		List<String> foundURIs = core.getDomainsHandler().gather(domain);
+		List<String> foundURIs = Collections.emptyList();
+
 		logger.info("Found initially " + foundURIs.size()
 				+ " elements in the domain");
 

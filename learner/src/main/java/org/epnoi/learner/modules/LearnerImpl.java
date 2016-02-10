@@ -1,7 +1,8 @@
 package org.epnoi.learner.modules;
 
+
 import org.apache.spark.api.java.JavaSparkContext;
-import org.epnoi.learner.LearnerConfig;
+import org.epnoi.learner.Config;
 import org.epnoi.learner.LearningParameters;
 import org.epnoi.learner.OntologyLearningTask;
 import org.epnoi.learner.relations.RelationsRetriever;
@@ -10,7 +11,6 @@ import org.epnoi.learner.terms.TermsTable;
 import org.epnoi.model.Domain;
 import org.epnoi.model.RelationsTable;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.rdf.RDFHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,16 +18,15 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.logging.Logger;
 
+
+
 /**
  * Created by rgonza on 13/11/15.
  */
 @Component
 public class LearnerImpl implements Learner {
 
-    private static final Logger logger = Logger.getLogger(LearnerConfig.class
-            .getName());
-    @Autowired
-    private Core core;
+    private static final Logger logger = Logger.getLogger(Config.class.getName());
 
     @Autowired
     Trainer trainer;
@@ -40,13 +39,13 @@ public class LearnerImpl implements Learner {
 
     private TermsRetriever termsRetriever;
 
-    RelationsRetriever relationsRetriever = new RelationsRetriever(core);
+    RelationsRetriever relationsRetriever = new RelationsRetriever();
 
     @PostConstruct
     public void init() throws EpnoiInitializationException {
         logger.info("Initializing the Learner");
-        this.termsRetriever = new TermsRetriever(core);
-        this.relationsRetriever = new RelationsRetriever(core);
+        this.termsRetriever = new TermsRetriever();
+        this.relationsRetriever = new RelationsRetriever();
     }
 
     @Override
@@ -63,12 +62,15 @@ public class LearnerImpl implements Learner {
     public void learn(String domainUri) {
 
         try {
-            Domain domain = (Domain) core.getInformationHandler().get(domainUri,
-                    RDFHelper.DOMAIN_CLASS);
+            // TODO
+            logger.severe("Pending to implement by using UDM");
+//            Domain domain = (Domain) core.getInformationHandler().get(domainUri,
+//                    RDFHelper.DOMAIN_CLASS);
+            Domain domain = null;
 
             if (domain != null) {
                 OntologyLearningTask ontologyLearningTask = new OntologyLearningTask();
-                ontologyLearningTask.init(this.core, this.learningParameters, this.sparkContext);
+                ontologyLearningTask.init(this.learningParameters, this.sparkContext);
                 try {
                     ontologyLearningTask.perform(domain);
                     _storeLearningResults(ontologyLearningTask, domain);

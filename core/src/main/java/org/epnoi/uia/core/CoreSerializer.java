@@ -1,7 +1,6 @@
 package org.epnoi.uia.core;
 
 import org.epnoi.model.exceptions.EpnoiResourceAccessException;
-import org.epnoi.model.modules.Core;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

@@ -2,8 +2,8 @@ package org.epnoi.uia.harvester;
 
 import org.epnoi.model.Domain;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.modules.HarvestersHandler;
+import org.epnoi.uia.core.Core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +13,9 @@ import java.util.logging.Logger;
 @Component
 public class HarvestersHandlerImpl implements HarvestersHandler {
     private static final Logger logger = Logger.getLogger(HarvestersHandlerImpl.class.getName());
+
     @Autowired
-    private Core core;
+    Core core;
 
     /*
      * URLHarvester urlHarvester = new URLHarvester();

@@ -1,9 +1,9 @@
 package org.epnoi.uia.search;
 
 import org.epnoi.model.exceptions.EpnoiInitializationException;
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.modules.SearchHandler;
 import org.epnoi.model.search.*;
+import org.epnoi.uia.core.Core;
 import org.epnoi.uia.search.organize.SearchOrganizer;
 import org.epnoi.uia.search.project.SearchProjector;
 import org.epnoi.uia.search.select.SearchSelector;
@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 public class SearchHandlerImpl implements SearchHandler {
     private static final Logger logger = Logger.getLogger(SearchHandlerImpl.class
             .getName());
+
     @Autowired
     private Core core;
 

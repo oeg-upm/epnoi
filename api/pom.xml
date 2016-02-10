@@ -121,11 +121,6 @@
             <artifactId>epnoi-storage</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.epnoi</groupId>
-            <artifactId>epnoi-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
         <!-- Spring Web -->
         <dependency>

@@ -3,20 +3,17 @@ package org.epnoi.learner.filesystem;
 import org.epnoi.model.Domain;
 import org.epnoi.model.Paper;
 import org.epnoi.model.ResearchObject;
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.rdf.RDFHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Component
 public class DemoDataLoader {
-
-    @Autowired
-    private Core core;
 
     @Autowired
     private FilesystemHarvester filesystemHarvester;
@@ -60,15 +57,20 @@ public class DemoDataLoader {
         resources.setAggregatedResources(papers.stream().map(element -> element.getUri()).collect(Collectors.toList()));
 
 
-        this.core.getInformationHandler().put(resources,
-                org.epnoi.model.Context.getEmptyContext());
-
-        this.core.getInformationHandler().put(domain,
-                org.epnoi.model.Context.getEmptyContext());
+        // TODO
+        logger.severe("Pending to implement by using UDM");
+//        this.core.getInformationHandler().put(resources,
+//                org.epnoi.model.Context.getEmptyContext());
+//
+//        this.core.getInformationHandler().put(domain,
+//                org.epnoi.model.Context.getEmptyContext());
 
 
         System.out.println("The retrieved uris of the domain are ");
-        List<String> uris = core.getDomainsHandler().gather(domain);
+
+//        List<String> uris = core.getDomainsHandler().gather(domain);
+        List<String> uris = Collections.EMPTY_LIST;
+
         System.out.println(uris);
         System.out.println("There are " + uris.size());
     }
@@ -76,14 +78,16 @@ public class DemoDataLoader {
     // --------------------------------------------------------------------------------------------
 
     private void _eraseDomainsAndResearchObjects() {
-        List<String> domainURIs = this.core.getInformationHandler().getAll(
-                RDFHelper.DOMAIN_CLASS);
-        for (String domainURI : domainURIs) {
-            this.core.getInformationHandler().remove(domainURI,
-                    RDFHelper.DOMAIN_CLASS);
-            this.core.getInformationHandler().remove(domainURI + "/resources",
-                    RDFHelper.RESEARCH_OBJECT_CLASS);
-        }
+        // TODO
+        logger.severe("Pending to implement by using UDM");
+//        List<String> domainURIs = this.core.getInformationHandler().getAll(
+//                RDFHelper.DOMAIN_CLASS);
+//        for (String domainURI : domainURIs) {
+//            this.core.getInformationHandler().remove(domainURI,
+//                    RDFHelper.DOMAIN_CLASS);
+//            this.core.getInformationHandler().remove(domainURI + "/resources",
+//                    RDFHelper.RESEARCH_OBJECT_CLASS);
+//        }
     }
 
     // --------------------------------------------------------------------------------------------
@@ -97,13 +101,17 @@ public class DemoDataLoader {
         logger.info("Removing the computer graphics corpus");
         String corpusLabel = (String)this.parameters.getParameterValue(FilesystemHarvesterParameters.CORPUS_LABEL);
         System.out.println("this is the label "+corpusLabel);
-        List<String> paperURIs = this.core.getAnnotationHandler().getLabeledAs(
-                corpusLabel);
-        for (String paperURI : paperURIs) {
-            this.core.getAnnotationHandler().removeAnnotation(paperURI,corpusLabel);
-            this.core.getInformationHandler().remove(paperURI,
-                    RDFHelper.PAPER_CLASS);
-        }
+
+
+        // TODO
+        logger.severe("Pending to implement by using UDM");
+//        List<String> paperURIs = this.core.getAnnotationHandler().getLabeledAs(
+//                corpusLabel);
+//        for (String paperURI : paperURIs) {
+//            this.core.getAnnotationHandler().removeAnnotation(paperURI,corpusLabel);
+//            this.core.getInformationHandler().remove(paperURI,
+//                    RDFHelper.PAPER_CLASS);
+//        }
     }
 
 

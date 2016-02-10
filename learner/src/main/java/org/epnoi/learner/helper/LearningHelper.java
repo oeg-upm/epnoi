@@ -1,6 +1,9 @@
 package org.epnoi.learner.helper;
 
-import lombok.Data;
+import lombok.Getter;
+import org.epnoi.knowledgebase.KnowledgeBaseHandler;
+import org.epnoi.learner.modules.Learner;
+import org.epnoi.nlp.NLPHandler;
 import org.epnoi.storage.UDM;
 import org.epnoi.storage.generator.TimeGenerator;
 import org.epnoi.storage.generator.URIGenerator;
@@ -10,17 +13,33 @@ import org.springframework.stereotype.Component;
 /**
  * Created by cbadenes on 10/02/16.
  */
-@Data
 @Component
 public class LearningHelper {
 
+    @Getter
     @Autowired
     URIGenerator uriGenerator;
 
+    @Getter
     @Autowired
     TimeGenerator timeGenerator;
 
+    @Getter
     @Autowired
     UDM udm;
+
+    @Getter
+    @Autowired
+    Learner learner;
+
+    @Getter
+    @Autowired
+    NLPHandler nlpHandler;
+
+    @Getter
+    @Autowired
+    KnowledgeBaseHandler knowledgeBaseHandler;
+
+
 
 }

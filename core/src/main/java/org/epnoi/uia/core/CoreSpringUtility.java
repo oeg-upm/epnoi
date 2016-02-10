@@ -1,7 +1,6 @@
 package org.epnoi.uia.core;
 
 import org.epnoi.EpnoiConfig;
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.modules.Profiles;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.env.MapPropertySource;

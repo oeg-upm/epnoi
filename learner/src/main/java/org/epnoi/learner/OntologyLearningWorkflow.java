@@ -1,6 +1,7 @@
 package org.epnoi.learner;
 
 
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.learner.relations.RelationsHandler;
 import org.epnoi.learner.relations.RelationsRetriever;
 import org.epnoi.learner.relations.extractor.RelationsExtractor;
@@ -13,12 +14,7 @@ import org.epnoi.model.Relation;
 import org.epnoi.model.RelationsTable;
 import org.epnoi.model.Term;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
-import org.epnoi.model.modules.Core;
-import org.epnoi.model.rdf.RDFHelper;
-import org.epnoi.uia.core.CoreUtility;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -44,8 +40,7 @@ public class OntologyLearningWorkflow {
 	public static final String DOMAIN_URI = "http://www.epnoi.org/CGTestCorpusDomain";
 	// ---------------------------------------------------------------------------------------------------------
 
-	public void init(Core core,
-			LearningParameters learningParameters)
+	public void init(LearningParameters learningParameters)
 			throws EpnoiInitializationException {
 
 		logger.info("Initializing the OntologyLearningWorlow with the following parameters: ");
@@ -60,21 +55,20 @@ public class OntologyLearningWorkflow {
 		this.learningParameters = learningParameters;
 
 		this.domainsTableCreator = new DomainsTableCreator();
-		this.domainsTableCreator.init(core, learningParameters);
+		this.domainsTableCreator.init(learningParameters);
 		this.domainsTable = this.domainsTableCreator.create();
 
 		this.termExtractor = new TermsExtractor();
 
 		
-		this.termsRetriever = new TermsRetriever(core);
+		this.termsRetriever = new TermsRetriever();
 		
 		
 		
 		this.relationsTableExtractor = new RelationsExtractor();
-		this.relationsTableExtractor.init(core, this.domainsTable,
-				learningParameters);
+		this.relationsTableExtractor.init(this.domainsTable, learningParameters);
 
-		this.relationsTableRetriever = new RelationsRetriever(core);
+		this.relationsTableRetriever = new RelationsRetriever();
 		
 	}
 
@@ -139,75 +133,6 @@ public class OntologyLearningWorkflow {
 
 		// In future versions the ontology graph should be cleaned here.
 
-	}
-	
-	// ---------------------------------------------------------------------------------------------------------
-
-	public static void main(String[] args) {
-		System.out.println("Starting the Ontology Learning Process!");
-
-		// Core initialization
-		Core core = CoreUtility.getUIACore();
-
-
-
-		Domain domain = null;
-
-		if (core.getInformationHandler().contains(DOMAIN_URI,
-				RDFHelper.DOMAIN_CLASS)) {
-			domain = (Domain) core.getInformationHandler().get(DOMAIN_URI,
-					RDFHelper.DOMAIN_CLASS);
-		} else {
-			System.out.println("The target domian "+DOMAIN_URI+ "couldn't be found in the UIA");
-			System.exit(0);
-		}
-
-		ArrayList<Domain> consideredDomains = new ArrayList(Arrays.asList(domain));
-		String targetDomain = DOMAIN_URI;
-
-		Double hyperymExpansionMinimumThreshold = 0.7;
-		Double hypernymExtractionMinimumThresohold = 0.091;
-		boolean extractTerms = true;
-		Integer numberInitialTerms = 10;
-		String hypernymsModelPath = "/opt/epnoi/epnoideployment/firstReviewResources/lexicalModel/model.bin";
-
-		LearningParameters learningParameters = new LearningParameters();
-		learningParameters.setParameter(
-				LearningParameters.CONSIDERED_DOMAINS,
-				consideredDomains);
-
-		learningParameters.setParameter(
-				LearningParameters.TARGET_DOMAIN_URI, targetDomain);
-		learningParameters
-				.setParameter(
-						LearningParameters.HYPERNYM_RELATION_EXPANSION_THRESHOLD,
-						hyperymExpansionMinimumThreshold);
-
-		learningParameters
-				.setParameter(
-						LearningParameters.HYPERNYM_RELATION_EXTRACTION_THRESHOLD,
-						hypernymExtractionMinimumThresohold);
-		learningParameters.setParameter(
-				LearningParameters.EXTRACT_TERMS, extractTerms);
-		learningParameters.setParameter(
-				LearningParameters.NUMBER_INITIAL_TERMS,
-				numberInitialTerms);
-
-		learningParameters.setParameter(
-				LearningParameters.HYPERNYM_MODEL_PATH,
-				hypernymsModelPath);
-		learningParameters.setParameter(LearningParameters.CONSIDER_KNOWLEDGE_BASE, false);
-
-		OntologyLearningWorkflow ontologyLearningProcess = new OntologyLearningWorkflow();
-
-		try {
-			ontologyLearningProcess.init(core, learningParameters);
-		} catch (EpnoiInitializationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		ontologyLearningProcess.execute();
-		System.out.println("Ending the Ontology Learning Process!");
 	}
 
 }

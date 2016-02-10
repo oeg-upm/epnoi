@@ -1,45 +1,56 @@
 package org.epnoi.knowledgebase.wikidata;
 
-import org.epnoi.knowledgebase.wikidata.WikidataHandlerParameters.DumpProcessingMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.wikidata.wdtk.datamodel.interfaces.EntityDocumentProcessor;
 import org.wikidata.wdtk.dumpfiles.DumpContentType;
 import org.wikidata.wdtk.dumpfiles.DumpProcessingController;
 import org.wikidata.wdtk.dumpfiles.EntityTimerProcessor;
 import org.wikidata.wdtk.dumpfiles.EntityTimerProcessor.TimeoutException;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 
+@Component
 public class WikidataDumpProcessor {
+
+	private static final Logger LOG = LoggerFactory.getLogger(WikidataDumpProcessor.class);
+
+
+	@Value("${epnoi.knowledgeBase.wikidata.offline}")
+	Boolean offline;
+
+	@Value("${epnoi.knowledgeBase.wikidata.dump.path}")
+	String dumpPath;
+
+	@Value("${epnoi.knowledgeBase.wikidata.dump.mode}")
+	String wikidataDumpMode;
+
+	@Value("${epnoi.knowledgeBase.wikidata.timeout}")
+	Integer timeout;
+
+
 	private DumpProcessingController dumpProcessingController;
-	private WikidataHandlerParameters parameters;
-	private boolean offlineMode;
-	private String dumpPath;
+
 	private DumpProcessingMode dumpProcessingMode;
-	private int timeout;
+
 	private boolean onlyCurrentRevisions;
 
-	// --------------------------------------------------------------------------------------------------
 
-	public void init(WikidataHandlerParameters parameters) {
-		this.parameters = parameters;
-		this.dumpPath = (String) this.parameters
-				.getParameterValue(WikidataHandlerParameters.DUMP_PATH);
+	@PostConstruct
+	public void setup() {
 
-		this.offlineMode = (boolean) this.parameters
-				.getParameterValue(WikidataHandlerParameters.OFFLINE_MODE);
+		this.dumpProcessingMode = DumpProcessingMode.from(wikidataDumpMode);
 
-		this.dumpProcessingMode = (DumpProcessingMode) this.parameters
-				.getParameterValue(WikidataHandlerParameters.DUMP_FILE_MODE);
-		this.timeout = (int) this.parameters
-				.getParameterValue(WikidataHandlerParameters.TIMEOUT);
 
 		this.dumpProcessingController = new DumpProcessingController("wikidata");
-		this.dumpProcessingController.setOfflineMode(this.offlineMode);
+		this.dumpProcessingController.setOfflineMode(this.offline);
 		try {
 			this.dumpProcessingController.setDownloadDirectory(this.dumpPath);
 		} catch (IOException ioException) {
-
-			ioException.printStackTrace();
+			LOG.error("Error dumping wikidata", ioException);
 		}
 
 		// Should we process historic revisions or only current ones?
@@ -58,30 +69,24 @@ public class WikidataDumpProcessor {
 		}
 	}
 
-	// --------------------------------------------------------------------------------------------------
-
-	public void registerEntityDocumentProcessor(
-			EntityDocumentProcessor entityDocumentProcessor) {
+	public void registerEntityDocumentProcessor(EntityDocumentProcessor entityDocumentProcessor) {
 
 		// Subscribe to the most recent entity documents of type wikibase item:
 		dumpProcessingController.registerEntityDocumentProcessor(
 				entityDocumentProcessor, null, this.onlyCurrentRevisions);
 
 		// Also add a timer that reports some basic progress information:
-		EntityTimerProcessor entityTimerProcessor = new EntityTimerProcessor(
-				this.timeout);
+		EntityTimerProcessor entityTimerProcessor = new EntityTimerProcessor(this.timeout);
 		dumpProcessingController.registerEntityDocumentProcessor(
 				entityTimerProcessor, null, this.onlyCurrentRevisions);
 
 	}
 
-	// --------------------------------------------------------------------------------------------------
 
 	public void processEntitiesFromWikidataDump() {
 
 		// Also add a timer that reports some basic progress information:
-		EntityTimerProcessor entityTimerProcessor = new EntityTimerProcessor(
-				this.timeout);
+		EntityTimerProcessor entityTimerProcessor = new EntityTimerProcessor(this.timeout);
 		try {
 			// Start processing (may trigger downloads where needed):
 			switch (this.dumpProcessingMode) {
@@ -97,9 +102,7 @@ public class WikidataDumpProcessor {
 				// MwDumpFile dumpFile
 				// =dumpProcessingController.getMostRecentDump(DumpContentType.JSON);
 				try {
-					dumpProcessingController
-							.setDownloadDirectory((String) this.parameters
-									.getParameterValue(WikidataHandlerParameters.DUMP_PATH));
+					dumpProcessingController.setDownloadDirectory(dumpPath);
 				} catch (IOException e) {
 
 					e.printStackTrace();
@@ -124,7 +127,5 @@ public class WikidataDumpProcessor {
 		// Print final timer results:
 		entityTimerProcessor.close();
 	}
-
-	// --------------------------------------------------------------------------------------------------
 
 }

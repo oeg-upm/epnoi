@@ -5,7 +5,6 @@ import gate.Document;
 import gate.util.InvalidOffsetException;
 import org.epnoi.model.Context;
 import org.epnoi.model.User;
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.rdf.RDFHelper;
 
 import java.util.List;

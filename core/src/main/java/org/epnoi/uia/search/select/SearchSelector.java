@@ -1,11 +1,11 @@
 package org.epnoi.uia.search.select;
 
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.modules.InformationStore;
 import org.epnoi.model.modules.InformationStoreHelper;
 import org.epnoi.model.search.SearchContext;
 import org.epnoi.model.search.SearchSelectResult;
 import org.epnoi.model.search.SelectExpression;
+import org.epnoi.uia.core.Core;
 
 public class SearchSelector {
 	

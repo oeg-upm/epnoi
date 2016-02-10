@@ -1,8 +1,6 @@
 package org.epnoi.uia.core;
 
 import org.epnoi.model.*;
-import org.epnoi.model.exceptions.EpnoiInitializationException;
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.parameterization.ParametersModel;
 import org.epnoi.model.parameterization.ParametersModelReader;
 import org.epnoi.model.rdf.FeedRDFHelper;
@@ -23,15 +21,8 @@ public class CoreMainUser {
 	public static Core getUIACore() {
 
 		long time = System.currentTimeMillis();
-		Core core = new CoreImpl();
+		Core core = new Core();
 		ParametersModel parametersModel = _readParameters();
-		try {
-			core.init();
-		} catch (EpnoiInitializationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.exit(-1);
-		}
 
 		long afterTime = System.currentTimeMillis();
 		logger.info("It took " + (Long) (afterTime - time) / 1000.0
@@ -48,7 +39,7 @@ public class CoreMainUser {
 
 		try {
 
-			URL configFileURL = CoreMain.class
+			URL configFileURL = CoreMainUser.class
 					.getResource("uiaCoreMainUser.xml");
 
 			parametersModel = ParametersModelReader.read(configFileURL

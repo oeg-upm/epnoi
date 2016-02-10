@@ -22,32 +22,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.epnoi</groupId>
-			<artifactId>epnoi-nlp</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.epnoi</groupId>
 			<artifactId>epnoi-storage</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.epnoi</groupId>
 			<artifactId>epnoi-eventbus</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.epnoi</groupId>
-			<artifactId>epnoi-sources</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.epnoi</groupId>
-			<artifactId>epnoi-knowledgebase</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.epnoi</groupId>
-			<artifactId>epnoi-wrappers</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

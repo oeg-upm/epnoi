@@ -3,15 +3,14 @@ package org.epnoi.uia.domains;
 import org.epnoi.model.Domain;
 import org.epnoi.model.ResearchObject;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.modules.DomainsHandler;
 import org.epnoi.model.rdf.RDFHelper;
+import org.epnoi.uia.core.Core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -21,7 +20,7 @@ public class DomainsHandlerImpl implements DomainsHandler {
     private static final Logger logger = Logger.getLogger(DomainsHandlerImpl.class
             .getName());
     @Autowired
-    private Core core;
+    Core core;
 
     // -----------------------------------------------------------------------------------
 

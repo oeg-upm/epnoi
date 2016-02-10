@@ -5,7 +5,6 @@ import gate.Factory;
 import gate.Utils;
 import gate.creole.ResourceInstantiationException;
 import org.epnoi.model.*;
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.rdf.FeedRDFHelper;
 import org.epnoi.model.rdf.InformationSourceRDFHelper;
 import org.epnoi.model.rdf.UserRDFHelper;

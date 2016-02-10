@@ -6,16 +6,13 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.broadcast.Broadcast;
 import org.epnoi.learner.relations.corpus.RelationalSentencesCorpusCreationParameters;
-import org.epnoi.learner.relations.corpus.parallel.RelationalSentenceCandidateToRelationalSentenceFlatMapper;
-import org.epnoi.model.Context;
 import org.epnoi.model.RelationalSentence;
 import org.epnoi.model.RelationalSentencesCorpus;
 import org.epnoi.model.Selector;
 import org.epnoi.model.commons.Parameters;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.rdf.RDFHelper;
-import org.epnoi.uia.commons.WikipediaPagesRetriever;
+import org.epnoi.nlp.wikipedia.WikipediaPagesRetriever;
 import org.epnoi.uia.informationstore.SelectorHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,8 +24,7 @@ import java.util.logging.Logger;
 @Component
 public class RelationalSentencesCorpusCreator {
     private static final Logger logger = Logger.getLogger(RelationalSentencesCorpusCreator.class.getName());
-    @Autowired
-    private Core core;
+
     @Autowired
     private RelationalSentencesCorpusCreationParameters parameters;
     @Autowired
@@ -153,8 +149,10 @@ public class RelationalSentencesCorpusCreator {
     }
 
     private void _storeCorpus() {
-        core.getInformationHandler().remove(this.corpus.getUri(), RDFHelper.RELATIONAL_SENTECES_CORPUS_CLASS);
-        core.getInformationHandler().put(this.corpus, Context.getEmptyContext());
+        // TODO
+        logger.severe("Pending to implement by using UDM");
+//        core.getInformationHandler().remove(this.corpus.getUri(), RDFHelper.RELATIONAL_SENTECES_CORPUS_CLASS);
+//        core.getInformationHandler().put(this.corpus, Context.getEmptyContext());
     }
 
     // ----------------------------------------------------------------------------------------------------------------------
@@ -166,7 +164,7 @@ public class RelationalSentencesCorpusCreator {
 
         // logger.info("Retrieving the URIs of the Wikipedia articles ");
 
-        List<String> wikipediaPages = WikipediaPagesRetriever.getWikipediaArticles(core);
+        List<String> wikipediaPages = WikipediaPagesRetriever.getWikipediaArticles();
 
 
         if (runtimeParameters.getParameterValue(RelationalSentencesCorpusCreationParameters.MAX_TEXT_CORPUS_SIZE) != null) {

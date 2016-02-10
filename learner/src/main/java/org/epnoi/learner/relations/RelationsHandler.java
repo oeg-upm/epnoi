@@ -1,14 +1,12 @@
 package org.epnoi.learner.relations;
 
-import org.epnoi.learner.LearningParameters;
+import org.epnoi.knowledgebase.KnowledgeBase;
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.learner.terms.TermsRetriever;
 import org.epnoi.learner.terms.TermsTable;
 import org.epnoi.model.*;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 import org.epnoi.model.exceptions.EpnoiResourceAccessException;
-import org.epnoi.model.modules.Core;
-import org.epnoi.model.rdf.RDFHelper;
-import org.epnoi.uia.core.CoreUtility;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -22,7 +20,7 @@ import java.util.logging.Logger;
 public class RelationsHandler {
 	private static final Logger logger = Logger
 			.getLogger(RelationsHandler.class.getName());
-	private Core core;
+
 	private Map<String, RelationsTable> relationsTable;// Map to store the
 														// RelationsTable of
 														// each domain
@@ -46,18 +44,17 @@ public class RelationsHandler {
 
 	// ---------------------------------------------------------------------------------------------------------------------
 
-	public void init(Core core, RelationsHandlerParameters parameters)
+	public void init(LearningHelper helper, RelationsHandlerParameters parameters)
 			throws EpnoiInitializationException {
 		logger.info("Initializing the RelationsHandler with the following parameters:"
 				+ parameters);
 		this.parameters = parameters;
-		this.core = core;
 
 		this.consideredDomains = (List<Domain>) this.parameters
 				.getParameterValue(RelationsHandlerParameters.CONSIDERED_DOMAINS);
 
 		try {
-			this.knowledgeBase = core.getKnowledgeBaseHandler().getKnowledgeBase();
+			this.knowledgeBase = helper.getKnowledgeBaseHandler().getKnowledgeBase();
 		} catch (EpnoiResourceAccessException e) {
 			
 			throw new EpnoiInitializationException(e.getMessage());
@@ -73,8 +70,8 @@ public class RelationsHandler {
 	 * TermsTable. If there exists any problem, the domain is
 	 */
 	private void _initDomainsRelationsTables() {
-		TermsRetriever termsRetriever = new TermsRetriever(core);
-		RelationsRetriever relationsRetriever = new RelationsRetriever(core);
+		TermsRetriever termsRetriever = new TermsRetriever();
+		RelationsRetriever relationsRetriever = new RelationsRetriever();
 		if (consideredDomains == null) {
 			logger.info("The consideredDomains parameter was not set");
 		} else if (consideredDomains.size() == 0) {
@@ -223,103 +220,7 @@ public class RelationsHandler {
 	// ---------------------------------------------------------------------------------------------------------------------
 
 	public static void main(String[] args) {
-		System.out.println("Starting the RelationsHandler test!");
 
-		// Core initialization
-		Core core = CoreUtility.getUIACore();
-
-		String domainURI = "http://CGTestCorpus";
-
-		Domain domain = null;
-
-		if (core.getInformationHandler().contains(domainURI,
-				RDFHelper.DOMAIN_CLASS)) {
-			domain = (Domain) core.getInformationHandler().get(domainURI,
-					RDFHelper.DOMAIN_CLASS);
-		} else {
-			domain = new Domain();
-			domain.setLabel("CGTestCorpus");
-			domain.setUri(domainURI);
-			domain.setType(RDFHelper.PAPER_CLASS);
-		}
-
-		// List<Domain> consideredDomains = Arrays.asList(domain);
-
-		ArrayList<Domain> consideredDomains = new ArrayList<Domain>();
-		String targetDomain = domainURI;
-
-		Double hyperymExpansionMinimumThreshold = 0.7;
-		Double hypernymExtractionMinimumThresohold = 0.1;
-		boolean extractTerms = true;
-		Integer numberInitialTerms = 10;
-		String hypernymsModelPath = "/opt/epnoi/epnoideployment/firstReviewResources/lexicalModel/model.bin";
-
-		// First of all we initialize the KnowledgeBase
-	
-
-		RelationsHandlerParameters relationsHandlerParameters = new RelationsHandlerParameters();
-
-		
-		relationsHandlerParameters.setParameter(
-				RelationsHandlerParameters.CONSIDERED_DOMAINS,
-				consideredDomains);
-
-		LearningParameters learningParameters = new LearningParameters();
-		learningParameters.setParameter(
-				LearningParameters.CONSIDERED_DOMAINS,
-				consideredDomains);
-
-		learningParameters.setParameter(
-				LearningParameters.TARGET_DOMAIN_URI, targetDomain);
-		learningParameters
-				.setParameter(
-						LearningParameters.HYPERNYM_RELATION_EXPANSION_THRESHOLD,
-						hyperymExpansionMinimumThreshold);
-
-		learningParameters
-				.setParameter(
-						LearningParameters.HYPERNYM_RELATION_EXTRACTION_THRESHOLD,
-						hyperymExpansionMinimumThreshold);
-		learningParameters.setParameter(
-				LearningParameters.EXTRACT_TERMS, extractTerms);
-		learningParameters.setParameter(
-				LearningParameters.NUMBER_INITIAL_TERMS,
-				numberInitialTerms);
-
-		learningParameters.setParameter(
-				LearningParameters.HYPERNYM_MODEL_PATH,
-				hypernymsModelPath);
-
-		RelationsHandler relationsHandler = new RelationsHandler();
-		try {
-
-			relationsHandler.init(core, relationsHandlerParameters);
-
-		} catch (EpnoiInitializationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		System.out.println("Are related? "
-				+ relationsHandler.areRelated("dog", "canine",
-						RelationHelper.HYPERNYMY, "http://whatever"));
-		System.out.println("Are related? "
-				+ relationsHandler.areRelated("cats", "canine",
-						RelationHelper.HYPERNYMY, "http://whatever"));
-		System.out.println("The strange EEUU case");
-		System.out.println("Are related? "
-				+ relationsHandler.areRelated("EEUU", "country",
-						RelationHelper.HYPERNYMY, "http://whatever"));
-		System.out.println("The strange Spain case");
-		System.out.println("Are related? "
-				+ relationsHandler.areRelated("Spain", "country",
-						RelationHelper.HYPERNYMY, "http://whatever"));
-		System.out.println("Finally the dog and cat problem");
-		System.out.println("Are related? "
-				+ relationsHandler.areRelated("dog", "animal",
-						RelationHelper.HYPERNYMY, "http://whatever"));
-
-		System.out.println("Ending the RelationsHandler Process!");
 	}
 
 }

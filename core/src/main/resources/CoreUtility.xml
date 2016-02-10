@@ -7,25 +7,6 @@
 		<numberOfProcessors>10</numberOfProcessors>
 	</nlp>
 
-	<eventBus>
-		<uri>local://</uri>
-	</eventBus>
-	
-	<knowledgeBase>
-		<lazy>true</lazy>
-		<wordnet>
-			<considered>true</considered>
-			<dictionaryPath>/opt/epnoi/epnoideployment/wordnet/dictWN3.1</dictionaryPath>
-		</wordnet>
-		<wikidata>
-			<considered>true</considered>
-			<mode>load</mode>
-			<inMemory>false</inMemory>
-			<dumpPath>/opt/epnoi/epnoideployment/wikidata</dumpPath>
-			<uri>http://www.epnoi.org/wikidataView</uri>
-		</wikidata>
-	</knowledgeBase>
-
 	<virtuosoInformationStore>
 		<URI>http://virtuosoInformationStore</URI>
 		<path></path>

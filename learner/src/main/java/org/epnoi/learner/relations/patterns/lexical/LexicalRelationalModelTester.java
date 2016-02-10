@@ -5,9 +5,6 @@ import org.epnoi.learner.relations.patterns.*;
 import org.epnoi.model.RelationalSentencesCorpus;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 import org.epnoi.model.exceptions.EpnoiResourceAccessException;
-import org.epnoi.model.modules.Core;
-import org.epnoi.model.rdf.RDFHelper;
-import org.epnoi.uia.core.CoreUtility;
 
 import java.util.logging.Logger;
 
@@ -15,7 +12,6 @@ public class LexicalRelationalModelTester {
 	private static final Logger logger = Logger
 			.getLogger(LexicalRelationalModelTester.class.getName());
 	private RelationalPatternsModelCreationParameters parameters;
-	private Core core;
 	private RelationalPatternsCorpusCreator patternsCorpusCreator;
 	private RelationalPatternsCorpus patternsCorpus;
 	private RelationalPatternsModelSerializer modelSerializer;
@@ -28,12 +24,10 @@ public class LexicalRelationalModelTester {
 
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public void init(Core core,
-			RelationalPatternsModelCreationParameters parameters)
+	public void init(RelationalPatternsModelCreationParameters parameters)
 			throws EpnoiInitializationException {
 		logger.info("Initializing the LexicalRelationalModelTester with the following parameters");
 		logger.info(parameters.toString());
-		this.core = core;
 		this.parameters = parameters;
 
 		relationalSentencesCorpusURI = (String) this.parameters
@@ -43,8 +37,7 @@ public class LexicalRelationalModelTester {
 				.getParameterValue(RelationalPatternsModelCreationParameters.MODEL_PATH);
 
 		this.patternsCorpusCreator = new RelationalPatternsCorpusCreator();
-		this.patternsCorpusCreator.init(core,
-				new LexicalRelationalPatternGenerator());
+		this.patternsCorpusCreator.init(new LexicalRelationalPatternGenerator());
 
 		try {
 			this.model = (BigramSoftPatternModel) RelationalPatternsModelSerializer
@@ -93,9 +86,10 @@ public class LexicalRelationalModelTester {
 	// ----------------------------------------------------------------------------------------------------------------
 
 	public void createPatternsModel() {
-		RelationalSentencesCorpus relationalSentencesCorpus = (RelationalSentencesCorpus) this.core
-				.getInformationHandler().get(relationalSentencesCorpusURI,
-						RDFHelper.RELATIONAL_SENTECES_CORPUS_CLASS);
+		// TODO
+		logger.severe("pending to implement by using UDM");
+//		RelationalSentencesCorpus relationalSentencesCorpus = (RelationalSentencesCorpus) this.core.getInformationHandler().get(relationalSentencesCorpusURI,RDFHelper.RELATIONAL_SENTECES_CORPUS_CLASS);
+		RelationalSentencesCorpus relationalSentencesCorpus = null;
 
 		if (relationalSentencesCorpus != null) {
 			logger.info("The relational sentences  has "
@@ -138,11 +132,9 @@ public class LexicalRelationalModelTester {
 		parameters.setParameter(
 				RelationalSentencesCorpusCreationParameters.VERBOSE, false);
 
-		Core core = CoreUtility.getUIACore();
-
 		LexicalRelationalModelTester modelTester = new LexicalRelationalModelTester();
 		try {
-			modelTester.init(core, parameters);
+			modelTester.init(parameters);
 		} catch (EpnoiInitializationException e) {
 			e.printStackTrace();
 			System.exit(-1);

@@ -1,11 +1,7 @@
 package org.epnoi.learner.relations;
 
-import gate.util.compilers.eclipse.jdt.internal.compiler.lookup.SourceTypeBinding;
-import org.epnoi.model.Context;
 import org.epnoi.model.Domain;
 import org.epnoi.model.RelationsTable;
-import org.epnoi.model.modules.Core;
-import org.epnoi.model.rdf.RDFHelper;
 
 import java.util.logging.Logger;
 
@@ -13,20 +9,21 @@ public class RelationsRetriever {
 	private static final Logger logger = Logger
 			.getLogger(RelationsRetriever.class.getName());
 
-	private Core core;
 
 	// ------------------------------------------------------------------------------------------------------------
 
-	public RelationsRetriever(Core core) {
-		this.core = core;
+	public RelationsRetriever() {
 	}
 
 	// ------------------------------------------------------------------------------------------------------------
 
 	public RelationsTable retrieve(Domain domain) {
 		String URI = domain.getUri()+"/relations";
-		return (RelationsTable) this.core.getInformationHandler().get(URI,
-				RDFHelper.RELATIONS_TABLE_CLASS);
+
+		// TODO
+		logger.severe("Pending to implement by using UDM");
+//		return (RelationsTable) this.core.getInformationHandler().get(URI, RDFHelper.RELATIONS_TABLE_CLASS);
+		return null;
 	}
 
 	public RelationsTable retrieve(String domainUri) {
@@ -34,17 +31,24 @@ public class RelationsRetriever {
 
 		System.out.println("Retrieving "+ uri);
 
-		RelationsTable relationsTable = 	 (RelationsTable) this.core.getInformationHandler().get(uri,
-				RDFHelper.RELATIONS_TABLE_CLASS);
+		// TODO
+		logger.severe("Pending to implement by using UDM");
+//		RelationsTable relationsTable = 	 (RelationsTable) this.core.getInformationHandler().get(uri, RDFHelper.RELATIONS_TABLE_CLASS);
+		RelationsTable relationsTable = null;
+
+
 		System.out.println("The relation table > "+relationsTable);
 		return relationsTable;
 	}
 
 	public void store(RelationsTable relationsTable){
 		System.out.println("ESTORING > "+relationsTable);
-			this.core.getInformationHandler().put(relationsTable, Context.getEmptyContext());
 
-		}
+		// TODO
+		logger.severe("Pending to implement by using UDM");
+//		this.core.getInformationHandler().put(relationsTable, Context.getEmptyContext());
+
+	}
 
 
 }

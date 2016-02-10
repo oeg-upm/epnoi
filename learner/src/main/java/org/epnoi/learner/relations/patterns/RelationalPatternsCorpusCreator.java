@@ -3,7 +3,6 @@ package org.epnoi.learner.relations.patterns;
 import org.epnoi.model.RelationalSentence;
 import org.epnoi.model.RelationalSentencesCorpus;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
-import org.epnoi.model.modules.Core;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -12,27 +11,22 @@ public class RelationalPatternsCorpusCreator {
 	private static final Logger logger = Logger
 			.getLogger(RelationalPatternsCorpusCreator.class.getName());
 	RelationalPatternGenerator patternsGenerator;
-	Core core;
 
 	// ----------------------------------------------------------------------------------
 
 	/**
 	 * Initialization method for the RelationalPatternsCorpusCreator. Must be
 	 * called before
-	 * 
-	 * @param core
-	 *            The UIA core.
+	 *
 	 * @param relationalPatternGenerator
 	 *            The object responsible of the generation of patterns. The
 	 *            nature of the patterns of the corpus depends on the kind of
 	 *            RelationalPatterns that this object generates.
 	 * @throws EpnoiInitializationException
 	 */
-	public void init(Core core,
-			RelationalPatternGenerator relationalPatternGenerator)
+	public void init(RelationalPatternGenerator relationalPatternGenerator)
 			throws EpnoiInitializationException {
 		logger.info("Initalizing the RelationalPatternsCorpusCreator");
-		this.core = core;
 		this.patternsGenerator = relationalPatternGenerator;
 
 	}

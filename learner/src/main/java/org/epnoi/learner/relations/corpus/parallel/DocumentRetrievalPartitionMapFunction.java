@@ -6,26 +6,30 @@ import org.epnoi.model.AnnotatedContentHelper;
 import org.epnoi.model.Content;
 import org.epnoi.model.Selector;
 import org.epnoi.model.WikipediaPage;
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.rdf.RDFHelper;
-import org.epnoi.uia.core.CoreUtility;
 import org.epnoi.uia.informationstore.SelectorHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class DocumentRetrievalPartitionMapFunction implements FlatMapFunction<Iterator<String>, Document> {
-	Core core;
+
+	private static final Logger LOG = LoggerFactory.getLogger(DocumentRetrievalPartitionMapFunction.class);
 
 	@Override
 	public Iterable<Document> call(Iterator<String> URIs) throws Exception {
-		_initialization();
 		List<Document> sectionsAnnotatedContent = new ArrayList<>();
-		_initialization();
 		while (URIs.hasNext()) {
 			String uri = URIs.next();
-			WikipediaPage page = (WikipediaPage) core.getInformationHandler().get(uri, RDFHelper.WIKIPEDIA_PAGE_CLASS);
+
+			// TODO
+			LOG.error("Pending to implement by using UDM");
+//			WikipediaPage page = (WikipediaPage) core.getInformationHandler().get(uri, RDFHelper.WIKIPEDIA_PAGE_CLASS);
+			WikipediaPage page = null;
+
 			List<String> sectionsAnnotatedContentURIs = _obtainSectionsAnnotatedContentURIs(page);
 			List<Document> pageSectionsAnnotatedContent = _obtainSectionsAnnotatedContent(sectionsAnnotatedContentURIs);
 			sectionsAnnotatedContent.addAll(pageSectionsAnnotatedContent);
@@ -44,8 +48,13 @@ public class DocumentRetrievalPartitionMapFunction implements FlatMapFunction<It
 		for (String uri : sectionsAnnotatedContentURIs) {
 			
 			selector.setProperty(SelectorHelper.URI, uri);
-			
-			Content<Object> content = core.getInformationHandler().getAnnotatedContent(selector);
+
+			// TODO
+			LOG.error("Pending to implement by using UDM");
+//			Content<Object> content = core.getInformationHandler().getAnnotatedContent(selector);
+			Content<Object> content = null;
+
+
 			Document sectionAnnotatedContent = (Document) content.getContent();
 
 			if (sectionAnnotatedContent != null) {
@@ -55,17 +64,6 @@ public class DocumentRetrievalPartitionMapFunction implements FlatMapFunction<It
 
 		return sectionsAnnotatedContent;
 	}
-
-	// --------------------------------------------------------------------------------------------------------------------
-
-
-	private void _initialization() {
-		this.core = CoreUtility.getUIACore();
-
-	}
-
-
-	// --------------------------------------------------------------------------------------------------------------------
 
 	private List<String> _obtainSectionsAnnotatedContentURIs(WikipediaPage page) {
 		List<String> URIs = new ArrayList<String>();

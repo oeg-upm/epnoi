@@ -16,8 +16,8 @@ import java.util.List;
  * Created by cbadenes on 18/01/16.
  */
 @Configuration
-@ComponentScan({"org.epnoi.api","org.epnoi.eventbus","org.epnoi.storage"})
-@PropertySource("classpath:epnoi.properties")
+@ComponentScan({"org.epnoi.api","org.epnoi.storage"})
+@PropertySource("classpath:api.properties")
 public class Config {
 
 

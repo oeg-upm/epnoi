@@ -20,8 +20,8 @@ import java.util.List;
  * Created by cbadenes on 01/12/15.
  */
 @Configuration
-@ComponentScan({"org.epnoi.harvester","org.epnoi.eventbus","org.epnoi.storage"})
-@PropertySource("classpath:epnoi.properties")
+@ComponentScan({"org.epnoi.harvester","org.epnoi.storage"})
+@PropertySource("classpath:harvester.properties")
 public class Config {
 
 

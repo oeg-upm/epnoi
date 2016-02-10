@@ -1,10 +1,10 @@
 package org.epnoi.uia.commons;
 
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.modules.InformationStore;
 import org.epnoi.model.modules.InformationStoreHelper;
 import org.epnoi.model.parameterization.VirtuosoInformationStoreParameters;
 import org.epnoi.model.rdf.RDFHelper;
+import org.epnoi.uia.core.Core;
 
 import java.util.List;
 import java.util.logging.Logger;

@@ -10,30 +10,40 @@ import gate.creole.ExecutionException;
 import gate.creole.ResourceInstantiationException;
 import gate.creole.SerialAnalyserController;
 import gate.util.InvalidOffsetException;
-import org.epnoi.model.parameterization.ParametersModel;
-import org.epnoi.nlp.gate.ControllerCreator;
+import org.epnoi.nlp.helper.NLPHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 public class NLPProcessor {
-	private static final Logger logger = Logger.getLogger(NLPProcessor.class.getName());
 
-	private static final long MIN_CONTENT_LENGHT = 4;
-	private SerialAnalyserController controller = null;
-	private ControllerCreator controllerCreator = null;
-	private Corpus corpus = null;
-	private Cloner cloner = new Cloner();
+	private static final Logger LOG = LoggerFactory.getLogger(NLPProcessor.class);
 
-	private ParametersModel parameters;
+	private final SerialAnalyserController controller;
 
-	// ----------------------------------------------------------------------------------
+	private final NLPHelper helper;
+
+	Corpus corpus;
+
+	Cloner cloner;
+
+	public NLPProcessor(NLPHelper helper) throws ResourceInstantiationException {
+		LOG.info("Initializing NLP Processor..");
+		this.helper = helper;
+		this.cloner = new Cloner();
+		this.controller = helper.getController().createController();
+		this.corpus = Factory.newCorpus("Working Corpus");
+		this.controller.setCorpus(this.corpus);
+		LOG.info("NLP Processor initialized successfully");
+	}
 
 	public Document process(String content) {
 		Document document = null;
 		try {
+			LOG.trace("Trying to process: " + content);
 			document = Factory.newDocument(content);
-			if (document.getContent().size() > NLPProcessor.MIN_CONTENT_LENGHT) {
+			if (document.getContent().size() > helper.getMinContentLength()) {
 				this.corpus.add(document);
 
 				try {
@@ -53,57 +63,25 @@ public class NLPProcessor {
 		return document;
 	}
 
-	// ----------------------------------------------------------------------------------
-
 	private Document _handleProcessingException(ExecutionException e) {
-		Document document;
-		document = new DocumentImpl();
-		logger.severe("There was an error processing the document, an empty annotated document has been created");
-		logger.severe(e.getMessage());
-		return document;
+		LOG.warn("There was an error processing the document, an empty annotated document has been created: "+ e.getMessage());
+		return new DocumentImpl();
 	}
-
-	// ----------------------------------------------------------------------------------
 
 	private Document _handleResourceInstantiationException(Exception e) {
-		Document document;
-		document = new DocumentImpl();
-		logger.severe(
-				"There was an error locating resources while processing the document, an empty annotated document has been created");
-		logger.severe(e.getMessage());
-		return document;
+		LOG.warn("There was an error locating resources while processing the document, an empty annotated document has been created: " +e.getMessage());
+		return new DocumentImpl();
 	}
 
-	// ----------------------------------------------------------------------------------
 
 	public void release(Document document) {
 		try {
+			LOG.debug("releasing document: " + document);
 			Factory.deleteResource(document);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Error releasing document: " + document,e);
 		}
 	}
-
-	// ----------------------------------------------------------------------------------
-
-	public void init(ParametersModel parameters) {
-		this.parameters=parameters;
-		this.controllerCreator = new ControllerCreator();
-		// MainFrame.getInstance().setVisible(true);
-		this.controllerCreator.init(parameters);
-		this.controller = controllerCreator.createController();
-
-		try {
-			this.corpus = Factory.newCorpus("Working Corpus");
-		} catch (ResourceInstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		this.controller.setCorpus(this.corpus);
-	}
-
-	// ----------------------------------------------------------------------------------
 
 	private static void showTerms(Document document) {
 		for (Annotation annotation : document.getAnnotations().get("TermCandidate")) {
@@ -114,14 +92,11 @@ public class NLPProcessor {
 				System.out.println(document.getContent().getContent(annotation.getStartNode().getOffset(),
 						annotation.getEndNode().getOffset()));
 			} catch (InvalidOffsetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOG.error("Error getting terms",e);
 			}
 		}
 
 	}
-
-	// ----------------------------------------------------------------------------------
 
 	private static void showDependencies(Document document) {
 

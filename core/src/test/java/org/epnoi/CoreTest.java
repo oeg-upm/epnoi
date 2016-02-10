@@ -4,9 +4,9 @@ import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.model.Context;
 import org.epnoi.model.Relation;
 import org.epnoi.model.RelationsTable;
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.rdf.RDFHelper;
 
+import org.epnoi.uia.core.Core;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;

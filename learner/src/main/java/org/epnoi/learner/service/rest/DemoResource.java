@@ -1,25 +1,20 @@
 package org.epnoi.learner.service.rest;
 
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.epnoi.learner.filesystem.DemoDataLoader;
-import org.epnoi.learner.filesystem.FilesystemHarvester;
 import org.epnoi.learner.modules.Learner;
-import org.epnoi.model.Domain;
-import org.epnoi.model.Relation;
-import org.epnoi.model.Term;
-import org.epnoi.model.modules.Core;
-import org.epnoi.model.rdf.RDFHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.ws.rs.*;
-import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -31,9 +26,6 @@ public class DemoResource {
             .getName());
     @Autowired
     private Learner learner;
-
-    @Autowired
-    private Core core;
 
     @Autowired
     private DemoDataLoader demoDataLoader;

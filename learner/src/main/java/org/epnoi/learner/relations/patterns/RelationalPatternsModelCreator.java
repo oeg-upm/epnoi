@@ -1,13 +1,13 @@
 package org.epnoi.learner.relations.patterns;
 
+import org.epnoi.learner.Config;
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.learner.relations.corpus.MockUpRelationalSentencesCorpusCreator;
 import org.epnoi.model.RelationalSentencesCorpus;
 import org.epnoi.model.commons.Parameters;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 import org.epnoi.model.exceptions.EpnoiResourceAccessException;
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.modules.Profiles;
-import org.epnoi.model.rdf.RDFHelper;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.ArrayList;
@@ -18,8 +18,6 @@ import java.util.logging.Logger;
 public class RelationalPatternsModelCreator {
     private static final Logger logger = Logger
             .getLogger(RelationalPatternsModelCreator.class.getName());
-
-    private Core core;
 
 
     private RelationalPatternsModelCreationParameters parameters;
@@ -38,15 +36,16 @@ public class RelationalPatternsModelCreator {
     private boolean verbose;
     private boolean test;
     private String path;
+    private LearningHelper helper;
 
     // ----------------------------------------------------------------------------------------------------------------
 
-    public void init(Core core,
+    public void init(LearningHelper helper,
                      RelationalPatternsModelCreationParameters parameters)
             throws EpnoiInitializationException {
         logger.info("Initializing the RelationalPatternsModelCreator with the following parameters");
         logger.info(parameters.toString());
-        this.core = core;
+        this.helper = helper;
         this.parameters = parameters;
         this.relationalSentencesCorpusURI = (String) this.parameters
                 .getParameterValue(RelationalPatternsModelCreationParameters.RELATIONAL_SENTENCES_CORPUS_URI);
@@ -61,12 +60,12 @@ public class RelationalPatternsModelCreator {
 
             throw new EpnoiInitializationException(exception.getMessage());
         }
-        this.patternsCorpusCreator.init(core, relationalPatternsGenerator);
+        this.patternsCorpusCreator.init(relationalPatternsGenerator);
 
         this.relationSentencesCorpusCreator = new MockUpRelationalSentencesCorpusCreator();
 
         try {
-            this.relationSentencesCorpusCreator.init(core);
+            this.relationSentencesCorpusCreator.init(helper);
         } catch (EpnoiInitializationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -183,9 +182,13 @@ public class RelationalPatternsModelCreator {
 
     private RelationalSentencesCorpus _retrieveRelationalSentencesCorpus() {
         logger.info("Retrieving the relational sentences corpus with the following uri " + relationalSentencesCorpusURI);
-        RelationalSentencesCorpus relationalSentencesCorpus = (RelationalSentencesCorpus) this.core
-                .getInformationHandler().get(relationalSentencesCorpusURI,
-                        RDFHelper.RELATIONAL_SENTECES_CORPUS_CLASS);
+
+        //TODO
+        logger.severe("Pending to implement by using UDM");
+//        RelationalSentencesCorpus relationalSentencesCorpus = (RelationalSentencesCorpus) this.core
+//                .getInformationHandler().get(relationalSentencesCorpusURI,
+//                        RDFHelper.RELATIONAL_SENTECES_CORPUS_CLASS);
+        RelationalSentencesCorpus relationalSentencesCorpus = null;
 
         if (relationalSentencesCorpus == null) {
             logger.info("The Relational Sentences Corpus "
@@ -265,7 +268,7 @@ public class RelationalPatternsModelCreator {
 
 
 */
-        applicationContext.register(org.epnoi.learner.LearnerConfig.class);
+        applicationContext.register(Config.class);
         applicationContext.refresh();
 
         List<String> beans = new ArrayList<>();

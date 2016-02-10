@@ -1,17 +1,9 @@
 package org.epnoi.learner.terms;
 
-import org.epnoi.learner.DomainsTableCreator;
-import org.epnoi.learner.DomainsTable;
-import org.epnoi.learner.LearningParameters;
-import org.epnoi.model.Context;
 import org.epnoi.model.Domain;
 import org.epnoi.model.Term;
-import org.epnoi.model.modules.Core;
-import org.epnoi.model.rdf.RDFHelper;
-import org.epnoi.uia.core.CoreUtility;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -20,14 +12,11 @@ public class TermsRetriever {
     private static final Logger logger = Logger.getLogger(TermsRetriever.class
             .getName());
 
-    private Core core;
-
-
 
     // -----------------------------------------------------------------------------------
 
-    public TermsRetriever(Core core) {
-        this.core = core;
+    public TermsRetriever() {
+
     }
 
     // -----------------------------------------------------------------------------------
@@ -36,8 +25,11 @@ public class TermsRetriever {
         logger.info("Storing the Terms Table for domain " + domain);
 
         for (Term term : termsTable.getTerms()) {
-            core.getInformationHandler().put(term, Context.getEmptyContext());
-            core.getAnnotationHandler().label(term.getUri(), domain.getLabel());
+
+            // TODO
+            logger.severe("Pending to implement by using UDM");
+//            core.getInformationHandler().put(term, Context.getEmptyContext());
+//            core.getAnnotationHandler().label(term.getUri(), domain.getLabel());
         }
         System.out
                 .println("=========================================================================================================================");
@@ -57,8 +49,10 @@ public class TermsRetriever {
     // -----------------------------------------------------------------------------------
 
     public TermsTable retrieve(String domainUri) {
-        Domain domain = (Domain) core.getInformationHandler().get(domainUri,
-                RDFHelper.DOMAIN_CLASS);
+        // TODO
+        logger.severe("Pending to implement by using UDM");
+//        Domain domain = (Domain) core.getInformationHandler().get(domainUri, RDFHelper.DOMAIN_CLASS);
+        Domain domain = null;
 
         if (domain != null) {
 
@@ -75,12 +69,19 @@ public class TermsRetriever {
 
         // First we retrieve the URIs of the resources associated with the
         // considered domain
-        List<String> foundURIs = this.core.getAnnotationHandler().getLabeledAs(
-                domainLabel, RDFHelper.TERM_CLASS);
+        // TODO
+        logger.severe("Pending to implement by using UDM");
+//        List<String> foundURIs = this.core.getAnnotationHandler().getLabeledAs(domainLabel, RDFHelper.TERM_CLASS);
+        List<String> foundURIs = Collections.EMPTY_LIST;
+
+
         // The terms are then retrieved and added to the Terms Table
         for (String termURI : foundURIs) {
-            Term term = (Term) this.core.getInformationHandler().get(termURI,
-                    RDFHelper.TERM_CLASS);
+            // TODO
+            logger.severe("Pending to implement by using UDM");
+//            Term term = (Term) this.core.getInformationHandler().get(termURI, RDFHelper.TERM_CLASS);
+            Term term = null;
+
             termsTable.addTerm(term);
         }
         return termsTable;
@@ -89,13 +90,16 @@ public class TermsRetriever {
     // -----------------------------------------------------------------------------------
 
     private void remove(Domain domain) {
-        List<String> foundURIs = this.core.getAnnotationHandler().getLabeledAs(
-                domain.getLabel(), RDFHelper.TERM_CLASS);
+        // TODO
+        logger.severe("Pending to implement by using UDM");
+//        List<String> foundURIs = this.core.getAnnotationHandler().getLabeledAs(domain.getLabel(), RDFHelper.TERM_CLASS);
+        List<String> foundURIs = Collections.emptyList();
 
         for (String termURI : foundURIs) {
             System.out.println("Removing the term " + termURI);
-            this.core.getInformationHandler().remove(termURI,
-                    RDFHelper.TERM_CLASS);
+            // TODO
+            logger.severe("Pending to implement by using UDM");
+//            this.core.getInformationHandler().remove(termURI, RDFHelper.TERM_CLASS);
         }
     }
 

@@ -2,9 +2,7 @@ package org.epnoi.learner;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.learner.modules.Learner;
-import org.epnoi.learner.relations.extractor.parallel.ParallelRelationsExtractor;
 import org.epnoi.model.Relation;
-import org.epnoi.model.Term;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -20,7 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @Category(IntegrationTest.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = LearnerConfig.class)
+@ContextConfiguration(classes = Config.class)
 @ActiveProfiles("develop")
 @TestPropertySource(properties = {"learner.task.terms.extract = false", "learner.task.terms.store = false", "learner.task.relations.parallel = true"})
 

@@ -1,5 +1,7 @@
 package org.epnoi.knowledgebase.wikidata;
 
+import org.epnoi.knowledgebase.wikidata.view.CassandraWikidataView;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;

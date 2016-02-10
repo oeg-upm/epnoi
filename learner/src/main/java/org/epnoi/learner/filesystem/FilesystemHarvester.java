@@ -6,12 +6,15 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
-import org.epnoi.model.*;
+import org.epnoi.model.AnnotatedContentHelper;
+import org.epnoi.model.Context;
+import org.epnoi.model.Paper;
+import org.epnoi.model.Selector;
 import org.epnoi.model.commons.Parameters;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 import org.epnoi.model.exceptions.EpnoiResourceAccessException;
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.rdf.RDFHelper;
+import org.epnoi.nlp.NLPHandler;
 import org.epnoi.uia.informationstore.SelectorHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,7 +37,7 @@ import java.util.logging.Logger;
 public class FilesystemHarvester {
 
     @Autowired
-    private Core core;
+    NLPHandler nlpHandler;
 
     @Autowired
     private FilesystemHarvesterParameters parameters;
@@ -161,20 +164,23 @@ public class FilesystemHarvester {
                 Paper paper = _harvestFile(directoryToHarvest + "/"
                         + fileToHarvest, fileToHarvest);
                 harvestedPapers.add(paper);
-                if (core.getInformationHandler().contains(paper.getUri(),
-                        RDFHelper.PAPER_CLASS)) {
-                    if (overwrite) {
-                        _removePaper(paper);
 
-                        _addPaper(paper);
-                    } else {
-                        logger.info("Skipping " + fileToHarvest
-                                + " since it was already in the UIA");
-                    }
-
-                } else {
-                    _addPaper(paper);
-                }
+                // TODO
+                logger.severe("Pending to implement by using UDM");
+//                if (core.getInformationHandler().contains(paper.getUri(),
+//                        RDFHelper.PAPER_CLASS)) {
+//                    if (overwrite) {
+//                        _removePaper(paper);
+//
+//                        _addPaper(paper);
+//                    } else {
+//                        logger.info("Skipping " + fileToHarvest
+//                                + " since it was already in the UIA");
+//                    }
+//
+//                } else {
+//                    _addPaper(paper);
+//                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -184,14 +190,19 @@ public class FilesystemHarvester {
 
     private void _addPaper(Paper paper) {
         // First the paper is added to the UIA
-        core.getInformationHandler().put(paper, Context.getEmptyContext());
+
+        // TODO
+        logger.severe("Pending to implement by using UDM");
+//        core.getInformationHandler().put(paper, Context.getEmptyContext());
 
         // Later it is annotated as belonging to the harvested
         // corpus
         long startTme = System.currentTimeMillis();
 
-        core.getAnnotationHandler().label(paper.getUri(), this.corpusURI);
-        core.getAnnotationHandler().label(paper.getUri(), this.corpusLabel);
+        // TODO
+        logger.severe("Pending to implement by using UDM");
+//        core.getAnnotationHandler().label(paper.getUri(), this.corpusURI);
+//        core.getAnnotationHandler().label(paper.getUri(), this.corpusLabel);
 
         long totalTime = Math.abs(startTme - System.currentTimeMillis());
         logger.info("It took " + totalTime
@@ -202,8 +213,7 @@ public class FilesystemHarvester {
         startTme = System.currentTimeMillis();
         Document annotatedContent = null;
         try {
-            annotatedContent = this.core.getNLPHandler()
-                    .process(paper.getDescription());
+            annotatedContent = nlpHandler.process(paper.getDescription());
         } catch (EpnoiResourceAccessException e) {
 
             e.printStackTrace();
@@ -217,10 +227,12 @@ public class FilesystemHarvester {
         annotationSelector.setProperty(SelectorHelper.TYPE,
                 RDFHelper.PAPER_CLASS);
 
-        core.getInformationHandler().setAnnotatedContent(
-                annotationSelector,
-                new Content<Object>(annotatedContent,
-                        AnnotatedContentHelper.CONTENT_TYPE_OBJECT_XML_GATE));
+        // TODO
+        logger.severe("Pending to implement by using UDM");
+//        core.getInformationHandler().setAnnotatedContent(
+//                annotationSelector,
+//                new Content<Object>(annotatedContent,
+//                        AnnotatedContentHelper.CONTENT_TYPE_OBJECT_XML_GATE));
 
         totalTime = Math.abs(startTme - System.currentTimeMillis());
         logger.info("It took " + totalTime
@@ -231,10 +243,12 @@ public class FilesystemHarvester {
 
     private void _removePaper(Paper paper) {
         logger.info("The paper was already in the UIA, lets delete it (and its associated annotation)");
-        core.getAnnotationHandler().removeLabel(paper.getUri(), this.corpusURI);
-        core.getAnnotationHandler().removeLabel(paper.getUri(), this.corpusLabel);
-        core.getInformationHandler().remove(paper.getUri(),
-                RDFHelper.PAPER_CLASS);
+
+        // TODO
+        logger.severe("Pending to implement by using UDM");
+//        core.getAnnotationHandler().removeLabel(paper.getUri(), this.corpusURI);
+//        core.getAnnotationHandler().removeLabel(paper.getUri(), this.corpusLabel);
+//        core.getInformationHandler().remove(paper.getUri(), RDFHelper.PAPER_CLASS);
     }
 
     // ----------------------------------------------------------------------------------------

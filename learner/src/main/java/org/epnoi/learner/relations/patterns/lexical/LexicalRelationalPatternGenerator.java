@@ -9,8 +9,8 @@ import org.epnoi.model.DeserializedRelationalSentence;
 import org.epnoi.model.OffsetRangeSelector;
 import org.epnoi.model.RelationalSentence;
 import org.epnoi.nlp.gate.AnnotationsComparator;
+import org.epnoi.nlp.gate.GateUtils;
 import org.epnoi.nlp.gate.NLPAnnotationsConstants;
-import org.epnoi.uia.commons.GateUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

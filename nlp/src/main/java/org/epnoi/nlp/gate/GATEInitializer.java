@@ -3,38 +3,39 @@ package org.epnoi.nlp.gate;
 import gate.Gate;
 import gate.util.GateException;
 import org.epnoi.model.parameterization.ParametersModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Logger;
 
+@Component
 public class GATEInitializer {
 
+	private static final Logger LOG = LoggerFactory.getLogger(GATEInitializer.class);
 
-	private ParametersModel parameters;
+	@Value("${epnoi.nlp.gatePath}")
+	String gatePath;
 
-	private static final Logger logger = Logger.getLogger(GATEInitializer.class
-			.getName());
-
-		// ----------------------------------------------------------------------------------------------------------
-
+	
 	/**
 	 * Initializtion of the Gate natural language processing framework and the
 	 * needed Gate plugins
 	 */
-
+	@PostConstruct
 	public void init(ParametersModel parameters) {
-		this.parameters=parameters;
-		logger.info("Initializing Gate");
-		String gateHomePath = this.parameters.getNlp().getGatePath();
-		String pluginsPath = gateHomePath + "/plugins";
+		LOG.info("Initializing Gate");
+		String pluginsPath = gatePath + "/plugins";
 		// String grammarsPath = gateHomePath + "/grammars/nounphrases";
 
-		logger.info("The gateHomePath is set to " + gateHomePath
+		LOG.info("The gateHomePath is set to " + gatePath
 				+ ", the pluginsPath is set to " + pluginsPath);
 
-		File gateHomeDirectory = new File(gateHomePath);
+		File gateHomeDirectory = new File(gatePath);
 		File pluginsDirectory = new File(pluginsPath);
 
 		Gate.setPluginsHome(pluginsDirectory);
@@ -48,28 +49,23 @@ public class GATEInitializer {
 			_initGATEPlugins(pluginsDirectory);
 
 		} catch (MalformedURLException | GateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Error initializing GATE",e);
 		}
 
 	}
 
-	//-----------------------------------------------------------------------------------------------------
-	
 	private void _initGATEPlugins(File pluginsDirectory)
 			throws MalformedURLException, GateException {
-		
+
 		//ANNIE Plugin----------------------------------------------------------------------------------
 		URL anniePlugin = new File(pluginsDirectory, "ANNIE").toURI().toURL();
 
 		Gate.getCreoleRegister().registerDirectories(anniePlugin);
 
-		/*Desactivated 
+		/*Desactivated
 		URL stanfordCoreNLPPlugin = new File(pluginsDirectory,
 				"Parser_Stanford").toURI().toURL();
 		Gate.getCreoleRegister().registerDirectories(stanfordCoreNLPPlugin);
 		*/
 	}
-
-	// ----------------------------------------------------------------------------------------------------------
 }

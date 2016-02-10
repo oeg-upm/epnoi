@@ -5,7 +5,9 @@ import org.epnoi.model.WikidataView;
 import java.util.Set;
 
 public class WikidataHandlerInMemoryImpl implements WikidataHandler {
+
 	private WikidataStemmer stemmer = new WikidataStemmer();
+
 	private WikidataView wikidataView;
 
 	// --------------------------------------------------------------------------------------------------

@@ -1,37 +1,65 @@
 package org.epnoi.knowledgebase.wikidata;
 
-import org.epnoi.knowledgebase.wikidata.WikidataHandlerParameters.DumpProcessingMode;
-import org.epnoi.model.Context;
+import org.epnoi.knowledgebase.wikidata.view.CassandraWikidataView;
+import org.epnoi.knowledgebase.wikidata.view.WikidataViewCreator;
 import org.epnoi.model.RelationHelper;
 import org.epnoi.model.WikidataView;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
-import org.epnoi.model.modules.Core;
-import org.epnoi.model.rdf.RDFHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.wikidata.wdtk.dumpfiles.DumpProcessingController;
 
-import java.util.*;
-import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A factory that creates WikidataHandlers
  * 
- * @author Rafael Gonzalez-Cabero {@link http://www.github.com/fitash}
+ * @author Rafael Gonzalez-Cabero
  * 
  *
  */
+@Component
 public class WikidataHandlerBuilder {
-	private static final Logger logger = Logger.getLogger(WikidataHandlerBuilder.class.getName());
-	private Core core;
-	private WikidataHandlerParameters parameters;
-	private boolean inMemory;
-	private String dumpPath;
+
+	private static final Logger LOG = LoggerFactory.getLogger(WikidataHandlerBuilder.class);
+
+	@Value("${epnoi.knowledgeBase.wikidata.considered}")
+	Boolean wikidataEnabled;
+
+	@Value("${epnoi.knowledgeBase.wikidata.mode}")
+	String wikidataMode;
+
+	@Value("${epnoi.knowledgeBase.wikidata.offline}")
+	Boolean offline;
+
+	@Value("${epnoi.knowledgeBase.wikidata.inMemory}")
+	Boolean wikidataInMemory;
+
+	@Value("${epnoi.knowledgeBase.wikidata.dump.path}")
+	String wikidataDumpPath;
+
+	@Value("${epnoi.knowledgeBase.wikidata.dump.mode}")
+	String wikidataDumpMode;
+
+	@Value("${epnoi.knowledgeBase.wikidata.uri}")
+	String wikidataUri;
+
+	@Value("${epnoi.knowledgeBase.wikidata.timeout}")
+	Integer wikidataTimeout;
+
 	private DumpProcessingMode dumpProcessingMode;
-	private int timeout;
 
 	private boolean create;
-	private String wikidataViewURI;
 	private DumpProcessingController dumpProcessingController;
-	private WikidataViewCreator wikidataViewCreator = new WikidataViewCreator();
+
+	@Autowired
+	WikidataViewCreator wikidataViewCreator;
 
 	private Map<String, Set<String>> labelsDictionary = new HashMap<>();
 
@@ -40,26 +68,15 @@ public class WikidataHandlerBuilder {
 	private Map<String, Set<String>> hypernymRelations = new HashMap<>();
 	Map<String, Map<String, Set<String>>> relationsTable = new HashMap<>();
 
-	// --------------------------------------------------------------------------------------------------
 
-	public void init(Core core, WikidataHandlerParameters parameters) throws EpnoiInitializationException {
-		logger.info("Initialiazing the WikidataHandler with the following parameters: " + parameters);
-		this.core = core;
-		this.parameters = parameters;
+	@PostConstruct
+	public void setup() throws EpnoiInitializationException {
 
-		this.dumpPath = (String) this.parameters.getParameterValue(WikidataHandlerParameters.DUMP_PATH);
+		LOG.info("Initialiazing the WikidataHandler with the following parameters");
 
-		this.inMemory = (boolean) this.parameters.getParameterValue(WikidataHandlerParameters.IN_MEMORY);
+		this.dumpProcessingMode = DumpProcessingMode.from(wikidataDumpMode);
 
-		this.dumpProcessingMode = (DumpProcessingMode) this.parameters
-				.getParameterValue(WikidataHandlerParameters.DUMP_FILE_MODE);
-		this.timeout = (int) this.parameters.getParameterValue(WikidataHandlerParameters.TIMEOUT);
-
-		this.create = (boolean) this.parameters.getParameterValue(WikidataHandlerParameters.CREATE_WIKIDATA_VIEW);
-
-		this.wikidataViewURI = (String) this.parameters.getParameterValue(WikidataHandlerParameters.WIKIDATA_VIEW_URI);
-
-		wikidataViewCreator.init(core, parameters);
+		this.create = org.epnoi.model.parameterization.ParametersModel.KNOWLEDGEBASE_WIKIDATA_MODE_CREATE.equals(wikidataMode);
 
 	}
 
@@ -67,14 +84,13 @@ public class WikidataHandlerBuilder {
 
 	/**
 	 * Builds a WikidataHandler. If the parameter
-	 * WikidataHandlerParameters.STORE_PARAMETER (see
-	 * {@link WikidataHandlerParameters}) is set to true, the associated
+	 * WikidataHandlerParameters.STORE_PARAMETER is set to true, the associated
 	 * WikidataView is stored in the UIA for later use
 	 * 
 	 * @return A WikidataHandler with its associated WikidataView
 	 */
 	public WikidataHandler build() throws EpnoiInitializationException {
-		logger.info("Building a WikidataHandler with the following parameters: " + parameters);
+		LOG.info("Building a WikidataHandler with the following parameters: ");
 		
 		
 
@@ -83,18 +99,18 @@ public class WikidataHandlerBuilder {
 			_createWikidataVIew();
 		}
 
-		logger.info("Retrieving the  WikidataView");
+		LOG.info("Retrieving the  WikidataView");
 		try {
-			if (this.inMemory) {
+			if (this.wikidataInMemory) {
 				return _retrieveWikidataViewInMemory();
 			} else {
 				return _retriveWikidataViewFromCassandra();
 
 			}
 		} catch (Exception e) {
-			logger.severe("The wikidataview with uri " + this.wikidataViewURI + " couldn't be retrieved ");
+			LOG.error("The wikidataview with uri " + this.wikidataUri + " couldn't be retrieved ");
 			throw new EpnoiInitializationException(
-					"The wikidataview " + this.wikidataViewURI + " couldn't be retrieved " + e.getMessage());
+					"The wikidataview " + this.wikidataUri + " couldn't be retrieved " + e.getMessage());
 		}
 
 
@@ -102,9 +118,9 @@ public class WikidataHandlerBuilder {
 	// --------------------------------------------------------------------------------------------------
 
 	private WikidataHandler _retriveWikidataViewFromCassandra() {
-		logger.info("The WikidataView will be accessed directly in Cassandra");
+		LOG.info("The WikidataView will be accessed directly in Cassandra");
 		
-		CassandraWikidataView wikidataView = new CassandraWikidataView(core, this.wikidataViewURI);
+		CassandraWikidataView wikidataView = new CassandraWikidataView(wikidataUri);
 		
 		return new WikidataHandlerCassandraImpl(wikidataView);
 	}
@@ -112,17 +128,18 @@ public class WikidataHandlerBuilder {
 	// --------------------------------------------------------------------------------------------------
 	
 	private WikidataHandler _retrieveWikidataViewInMemory() {
-		WikidataView inMemoryWikidataView= (WikidataView) this.core.getInformationHandler().get(this.wikidataViewURI,
-				RDFHelper.WIKIDATA_VIEW_CLASS);
-		
-		return new WikidataHandlerInMemoryImpl(inMemoryWikidataView);
+		LOG.error("pending to implement by using UDM");
+		//TODO
+		//WikidataView inMemoryWikidataView= (WikidataView) this.core.getInformationHandler().get(wikidataUri, RDFHelper.WIKIDATA_VIEW_CLASS);
+//		return new WikidataHandlerInMemoryImpl(inMemoryWikidataView);
+		return null;
 	}
 	
 	// --------------------------------------------------------------------------------------------------
 
 	private void _createWikidataVIew() {
 		
-		logger.info(
+		LOG.info(
 				"Creating a new WikidataView, since the retrieve flag was set false, and the create flag was set as true");
 		//WikidataView inMemoryWikidataView = _generateWikidataview();
 	
@@ -130,48 +147,15 @@ public class WikidataHandlerBuilder {
 
 		WikidataView inMemoryWikidataView = this.wikidataViewCreator.create();
 	
-		logger.info("Storing the new built WikidataView, since the store flag was activated");
+		LOG.info("Storing the new built WikidataView, since the store flag was activated");
 		// First we remove the WikidataWiew if there is one with the same
 		// URI
-		
-		 
-		this.core.getInformationHandler().remove(this.wikidataViewURI, RDFHelper.WIKIDATA_VIEW_CLASS);
 
-		this.core.getInformationHandler().put(inMemoryWikidataView, Context.getEmptyContext());
+		LOG.error("pending to implement by using UDM");
+		//TODO
+//		this.core.getInformationHandler().remove(this.wikidataViewURI, RDFHelper.WIKIDATA_VIEW_CLASS);
+//		this.core.getInformationHandler().put(inMemoryWikidataView, Context.getEmptyContext());
 	
-	}
-	private static WikidataView _generateWikidataview() {
-//System.out.println("Creating the dictionary ");
-		Map<String, Set<String>> labelsDictionary = new HashMap<>();
-		Map<String, Set<String>> labelsReverseDictionary = new HashMap<>();
-		
-		
-		Map<String, Map<String, Set<String>>> relations = new HashMap<>();
-		Map<String, Set<String>> hypernymRelations = new HashMap<>();
-		Set<String> destionationSet = new HashSet<String>();
-		destionationSet.add("http://testTargetA");
-		destionationSet.add("http://testTargetB");
-		hypernymRelations.put("http://testSource", destionationSet);
-		relations.put(RelationHelper.HYPERNYMY, hypernymRelations);
-
-		
-		
-		Set<String> labelDictionary = new HashSet<String>();
-		labelDictionary.add("http://testTargetA");
-		//labelDictionary.add("http://testTargetB");
-		labelsDictionary.put("target label", labelDictionary);
-		labelsDictionary.put("source label", new HashSet<String>(Arrays.asList("http://testSource")));
-		
-		
-		labelsReverseDictionary.put("http://testSource", new HashSet<String>(Arrays.asList("source label")));
-		
-		labelsReverseDictionary.put("http://testTargetA", new HashSet<String>(Arrays.asList("target label")));
-		
-
-		WikidataView wikidataView = new WikidataView(
-				WikidataHandlerParameters.DEFAULT_URI, labelsDictionary,
-				labelsReverseDictionary, relations);
-		return wikidataView;
 	}
 
 }

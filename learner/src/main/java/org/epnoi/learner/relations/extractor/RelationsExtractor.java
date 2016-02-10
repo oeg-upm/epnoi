@@ -5,6 +5,7 @@ import gate.AnnotationSet;
 import gate.Document;
 import gate.DocumentContent;
 import gate.util.InvalidOffsetException;
+import org.epnoi.knowledgebase.KnowledgeBase;
 import org.epnoi.learner.DomainsTable;
 import org.epnoi.learner.LearningParameters;
 import org.epnoi.learner.relations.patterns.RelationalPattern;
@@ -14,7 +15,6 @@ import org.epnoi.learner.terms.TermCandidateBuilder;
 import org.epnoi.learner.terms.TermsTable;
 import org.epnoi.model.*;
 import org.epnoi.model.commons.Parameters;
-import org.epnoi.model.modules.Core;
 import org.epnoi.model.rdf.RDFHelper;
 import org.epnoi.nlp.gate.NLPAnnotationsConstants;
 import org.epnoi.uia.informationstore.SelectorHelper;
@@ -28,7 +28,6 @@ public class RelationsExtractor {
     private static final Logger logger = Logger
             .getLogger(RelationsExtractor.class.getName());
     private static final long MAX_DISTANCE = 20;
-    private Core core;
     private RelationalPatternsModel softPatternModel;
     private Parameters parameters;
     private DomainsTable domainsTable;
@@ -43,11 +42,10 @@ public class RelationsExtractor {
 
     // --------------------------------------------------------------------------------------
 
-    public void init(Core core, DomainsTable domainsTable, Parameters parameters) {
+    public void init(DomainsTable domainsTable, Parameters parameters) {
         logger.info("Initializing the Relations Extractor with the following parameters");
         logger.info(parameters.toString());
 
-        this.core = core;
         this.parameters = parameters;
         String hypernymModelPath = (String) parameters
                 .getParameterValue(LearningParameters.HYPERNYM_MODEL_PATH);
@@ -266,8 +264,13 @@ public class RelationsExtractor {
         selector.setProperty(SelectorHelper.ANNOTATED_CONTENT_URI, URI + "/"
                 + AnnotatedContentHelper.CONTENT_TYPE_OBJECT_XML_GATE);
 
-        Content<Object> annotatedContent = core.getInformationHandler()
-                .getAnnotatedContent(selector);
+
+        // TODO
+        logger.severe("Pending to implement by using UDM");
+//        Content<Object> annotatedContent = core.getInformationHandler().getAnnotatedContent(selector);
+        Content<Object> annotatedContent = null;
+
+
 		/*
 		 * Document document = null; try { document = (Document) Factory
 		 * .createResource( "gate.corpora.DocumentImpl", Utils.featureMap(

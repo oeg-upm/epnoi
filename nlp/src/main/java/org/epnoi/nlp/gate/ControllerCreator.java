@@ -7,20 +7,22 @@ import gate.ProcessingResource;
 import gate.creole.ResourceInstantiationException;
 import gate.creole.SerialAnalyserController;
 import org.epnoi.model.parameterization.ParametersModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.net.MalformedURLException;
 
+@Component
 public class ControllerCreator {
-	private ParametersModel parameters;
 
-	// -----------------------------------------------------------------------------
+	private static final Logger LOG = LoggerFactory.getLogger(ControllerCreator.class);
 
-	public void init(ParametersModel parameters) {
-		this.parameters=parameters;
-	}
+	@Value("${epnoi.nlp.gatePath}")
+	String gatePath;
 
-	// -----------------------------------------------------------------------------
 
 	public SerialAnalyserController createController() {
 		// In this piece of code we just initialize the processing resources.
@@ -28,10 +30,11 @@ public class ControllerCreator {
 		// initialization
 		try {
 
+			LOG.info("Creating new controller from GATE: " + gatePath + " ..");
+
 		//	System.out.println("......> " + this.core);
-			String gateHomePath = this.parameters.getNlp()
-					.getGatePath();
-			String grammarsPath = gateHomePath + "/grammars/nounphrases";
+
+			String grammarsPath = gatePath + "/grammars/nounphrases";
 
 			SerialAnalyserController controller = (SerialAnalyserController) Factory
 					.createResource("gate.creole.SerialAnalyserController");
@@ -72,12 +75,8 @@ public class ControllerCreator {
 			controller.add(mainGrammarTransducer);
 
 			return controller;
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ResourceInstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (MalformedURLException | ResourceInstantiationException e) {
+			LOG.error("Error creating a new controller", e);
 		}
 		return null;
 	}

@@ -1,12 +1,12 @@
 package org.epnoi.learner.relations.corpus;
 
 import gate.Document;
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.model.OffsetRangeSelector;
 import org.epnoi.model.RelationalSentence;
 import org.epnoi.model.RelationalSentencesCorpus;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 import org.epnoi.model.exceptions.EpnoiResourceAccessException;
-import org.epnoi.model.modules.Core;
 
 import java.util.logging.Logger;
 
@@ -14,13 +14,13 @@ public class MockUpRelationalSentencesCorpusCreator {
 	private static final Logger logger = Logger
 			.getLogger(MockUpRelationalSentencesCorpusCreator.class.getName());
 
-	private Core core;
 	private RelationalSentencesCorpus corpus;
+	private LearningHelper helper;
 
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public void init(Core core) throws EpnoiInitializationException {
-		this.core = core;
+	public void init(LearningHelper helper) throws EpnoiInitializationException {
+		this.helper = helper;
 		this.corpus = new RelationalSentencesCorpus();
 		
 	}
@@ -36,8 +36,7 @@ public class MockUpRelationalSentencesCorpusCreator {
 
 		Document annotatedContentA=null;
 		try {
-			annotatedContentA = core.getNLPHandler()
-					.process("A dog is a canine");
+			annotatedContentA = helper.getNlpHandler().process("A dog is a canine");
 		} catch (EpnoiResourceAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -48,7 +47,7 @@ public class MockUpRelationalSentencesCorpusCreator {
 
 		Document annotatedContentB=null;
 		try {
-			annotatedContentB = core.getNLPHandler()
+			annotatedContentB = helper.getNlpHandler()
 					.process("A dog, is a canine (and other things!)");
 		} catch (EpnoiResourceAccessException e) {
 			// TODO Auto-generated catch block

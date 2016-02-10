@@ -6,8 +6,8 @@ import gate.Document;
 import gate.DocumentContent;
 import gate.annotation.AnnotationSetImpl;
 import org.apache.spark.api.java.function.FlatMapFunction;
+import org.epnoi.nlp.gate.GateUtils;
 import org.epnoi.nlp.gate.NLPAnnotationsConstants;
-import org.epnoi.uia.commons.GateUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;

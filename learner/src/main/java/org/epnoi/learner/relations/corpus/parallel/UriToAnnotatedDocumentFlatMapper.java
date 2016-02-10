@@ -6,13 +6,12 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import gate.Document;
-import gate.corpora.DocumentImpl;
 import org.epnoi.learner.relations.corpus.RelationalSentencesCorpusCreationParameters;
 import org.epnoi.model.clients.thrift.AnnotatedContentServiceClient;
 import org.epnoi.model.clients.thrift.KnowledgeBaseServiceClient;
 import org.epnoi.model.commons.Parameters;
 import org.epnoi.model.rdf.RDFHelper;
-import org.epnoi.uia.commons.GateUtils;
+import org.epnoi.nlp.gate.GateUtils;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;

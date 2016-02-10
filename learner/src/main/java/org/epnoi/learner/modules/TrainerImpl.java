@@ -1,13 +1,12 @@
 package org.epnoi.learner.modules;
 
-import org.epnoi.learner.LearnerConfig;
+import org.epnoi.learner.Config;
 import org.epnoi.learner.relations.corpus.RelationalSentencesCorpusCreationParameters;
 import org.epnoi.learner.relations.corpus.parallel.RelationalSentencesCorpusCreator;
 import org.epnoi.learner.relations.patterns.RelationalPatternsModelCreationParameters;
 import org.epnoi.learner.relations.patterns.RelationalPatternsModelCreator;
 import org.epnoi.model.commons.Parameters;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
-import org.epnoi.model.modules.Core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -20,10 +19,8 @@ import java.util.logging.Logger;
  */
 @Component
 public class TrainerImpl implements Trainer {
-    private static final Logger logger = Logger.getLogger(LearnerConfig.class
+    private static final Logger logger = Logger.getLogger(Config.class
             .getName());
-    @Autowired
-    private Core core;
 
     @Autowired
     RelationalSentencesCorpusCreationParameters relationalSentencesCorpusCreatorParameters;

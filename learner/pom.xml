@@ -18,22 +18,13 @@
         <!-- Internal Dependencies -->
         <dependency>
             <groupId>org.epnoi</groupId>
-            <artifactId>epnoi-core</artifactId>
+            <artifactId>epnoi-nlp</artifactId>
             <version>${project.version}</version>
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.springframework.data</groupId>-->
-                    <!--<artifactId>spring-data-neo4j</artifactId>-->
-                <!--</exclusion>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.springframework.data</groupId>-->
-                    <!--<artifactId>spring-data-cassandra</artifactId>-->
-                <!--</exclusion>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.springframework.data</groupId>-->
-                    <!--<artifactId>spring-data-elasticsearch</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
+        </dependency>
+        <dependency>
+            <groupId>org.epnoi</groupId>
+            <artifactId>epnoi-knowledgebase</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

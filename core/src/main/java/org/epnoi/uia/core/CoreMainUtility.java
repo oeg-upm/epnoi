@@ -1,7 +1,5 @@
 package org.epnoi.uia.core;
 
-import org.epnoi.model.modules.Core;
-
 public class CoreMainUtility {
 
 	public static void main(String[] args) {
