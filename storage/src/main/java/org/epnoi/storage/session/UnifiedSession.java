@@ -38,7 +38,8 @@ public class UnifiedSession {
 
     public UnifiedTransaction beginTransaction(){
         UnifiedTransaction transaction = new UnifiedTransaction();
-        transaction.setNeo4jTransaction(this.neo4jSession.beginTransaction());
+        //TODO bug on neo4j library:
+        //transaction.setNeo4jTransaction(this.neo4jSession.beginTransaction());
         //TODO Add Cassandra Transaction
         //TODO Add Elasticsearch Transaction
         return transaction;

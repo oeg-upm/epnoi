@@ -29,7 +29,7 @@
 	<virtuosoInformationStore>
 		<URI>http://virtuosoInformationStore</URI>
 		<path></path>
-		<host>localhost</host>
+		<host>zavijava.dia.fi.upm.es</host>
 		<port>1111</port>
 		<graph>http://drInventorFirstReview</graph>
 		<user>dba</user>
