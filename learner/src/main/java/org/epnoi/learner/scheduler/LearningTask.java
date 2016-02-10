@@ -1,25 +1,23 @@
-package org.epnoi.modeler.scheduler;
+package org.epnoi.learner.scheduler;
 
-import org.epnoi.model.domain.Resource;
-import org.epnoi.modeler.helper.ModelingHelper;
-import org.epnoi.modeler.models.topic.TopicModeler;
-import org.epnoi.modeler.models.word.WordEmbeddingModeler;
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.model.domain.Analysis;
 import org.epnoi.model.domain.Domain;
+import org.epnoi.model.domain.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by cbadenes on 13/01/16.
+ * Created by cbadenes on 10/02/16.
  */
-public class ModelingTask implements Runnable{
+public class LearningTask implements Runnable{
 
-    private static final Logger LOG = LoggerFactory.getLogger(ModelingTask.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LearningTask.class);
 
     protected final Domain domain;
-    protected final ModelingHelper helper;
+    protected final LearningHelper helper;
 
-    public ModelingTask(Domain domain, ModelingHelper modelingHelper){
+    public LearningTask(Domain domain, LearningHelper modelingHelper){
         this.domain = domain;
         this.helper = modelingHelper;
     }
@@ -38,7 +36,6 @@ public class ModelingTask implements Runnable{
 
     @Override
     public void run() {
-        helper.getModelBuilder().execute(new TopicModeler(domain,helper));
-        helper.getModelBuilder().execute(new WordEmbeddingModeler(domain,helper));
+        //TODO
     }
 }
