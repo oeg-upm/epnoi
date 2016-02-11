@@ -26,7 +26,7 @@ public class UpfAnnotator {
     @PostConstruct
     public void setup() throws DRIexception {
 
-        LOG.info("Configured path: " + driConfigPath);
+        LOG.info("Initializing UPF Text Mining Framework from: " + driConfigPath + " ..");
 
         // Set property file path
         Factory.setDRIPropertyFilePath(driConfigPath);
@@ -36,6 +36,8 @@ public class UpfAnnotator {
 
         // Initialize
         Factory.initFramework();
+
+        LOG.info("UPF Text Mining Framework initialized successfully");
     }
 
     public AnnotatedDocument annotate(String documentPath) throws DRIexception {
