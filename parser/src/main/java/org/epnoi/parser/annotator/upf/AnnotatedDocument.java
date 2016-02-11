@@ -56,6 +56,16 @@ public class AnnotatedDocument implements Serializable{
         }
     }
 
+    public String getXml() {
+        try {
+            return document.getXMLString();
+        } catch (InternalProcessingException e) {
+            LOG.error("Error getting XML text from: " + document, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+
     public String getTitle(){
         try{
             return this.document.extractHeader().getTitle().trim();

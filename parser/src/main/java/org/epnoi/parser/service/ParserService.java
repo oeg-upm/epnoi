@@ -77,7 +77,7 @@ public class ParserService {
 //            List<Word> words = tokens.keySet().stream().map(token -> createAndSaveWord(token)).collect(Collectors.toList());
 
             // Item
-            Item item = createAndSaveItem(metaInformation,rawContent,document.getUri());
+            Item item = createAndSaveItem(metaInformation,annotatedDocument,document.getUri());
             // Mentions from Item
             // TODO
 //            words.stream().forEach(word -> udm.relateWordToItem(word.getUri(),item.getUri(),tokens.get(word.getLemma()).longValue()));
@@ -185,7 +185,7 @@ public class ParserService {
         return document;
     }
 
-    private Item createAndSaveItem(MetaInformation metaInformation, String rawContent, String documentUri){
+    private Item createAndSaveItem(MetaInformation metaInformation, AnnotatedDocument document, String documentUri){
         Item item = new Item();
         item.setUri(uriGenerator.newFor(Resource.Type.ITEM));
         item.setCreationTime(timeGenerator.asISO());
@@ -199,9 +199,10 @@ public class ParserService {
         item.setDescription(metaInformation.getDescription());
         item.setUrl(metaInformation.getPubURI());
         item.setType(metaInformation.getType());
-        item.setContent(rawContent);
+        item.setContent(document.getContent());
+        item.setAnnotated(document.getXml());
 
-        String tokens   = textMiner.parse(rawContent).stream().filter(token -> token.isValid()).map(token -> token.getLemma()).collect(Collectors.joining(" "));
+        String tokens   = textMiner.parse(item.getContent()).stream().filter(token -> token.isValid()).map(token -> token.getLemma()).collect(Collectors.joining(" "));
         item.setTokens(tokens);
 
         udm.save(Resource.Type.ITEM).with(item);

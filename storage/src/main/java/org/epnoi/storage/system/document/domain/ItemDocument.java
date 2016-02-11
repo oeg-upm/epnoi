@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.epnoi.model.domain.Item;
+import org.epnoi.model.domain.Resource;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
@@ -14,10 +15,44 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class ItemDocument extends Item{
+public class ItemDocument extends Resource{
 
     @Id
     private String uri;
 
     private String domain;
+
+    public static final String AUTHORED_ON=Item.AUTHORED_ON;
+    private String authoredOn;
+
+    public static final String AUTHORED_BY=Item.AUTHORED_BY;
+    private String authoredBy;
+
+    public static final String CONTRIBUTED_BY=Item.CONTRIBUTED_BY;
+    private String contributedBy;
+
+    public static final String FORMAT=Item.FORMAT;
+    private String format;
+
+    public static final String LANGUAGE=Item.LANGUAGE;
+    private String language;
+
+    public static final String TITLE=Item.TITLE;
+    private String title;
+
+    public static final String SUBJECT=Item.SUBJECT;
+    private String subject;
+
+    public static final String DESCRIPTION=Item.DESCRIPTION;
+    private String description;
+
+    public static final String URL=Item.URL;
+    private String url;
+
+    public static final String TYPE=Item.TYPE;
+    private String type;
+
+    public static final String CONTENT=Item.CONTENT;
+    private String content;
+
 }
