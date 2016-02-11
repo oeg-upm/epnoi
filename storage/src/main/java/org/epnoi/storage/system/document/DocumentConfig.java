@@ -34,7 +34,7 @@ public class DocumentConfig {
 
 
         Settings settings = ImmutableSettings.settingsBuilder().
-                put("cluster.name", "drinventor").
+//                        put("cluster.name", "drinventor").
                         put("client.transport.sniff", false).
                         put("client.transport.ping_timeout", 30, TimeUnit.SECONDS).
                 build();
