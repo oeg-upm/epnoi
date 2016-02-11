@@ -32,7 +32,7 @@ public class UpfAnnotator {
         Factory.setDRIPropertyFilePath(driConfigPath);
 
         // Enable bibliography entry parsing
-        Factory.setEnableBibEntryParsing(true);
+        Factory.setEnableBibEntryParsing(false);
 
         // Initialize
         Factory.initFramework();

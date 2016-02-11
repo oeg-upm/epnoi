@@ -15,9 +15,6 @@ mv hoarder/target/hoarder.war /opt/drinventor/tomcat-background/webapps/
 rm -rf /opt/drinventor/tomcat-background/webapps/parser*
 cp parser/target/parser.war /opt/drinventor/tomcat-background/webapps/parser1.war
 cp parser/target/parser.war /opt/drinventor/tomcat-background/webapps/parser2.war
-cp parser/target/parser.war /opt/drinventor/tomcat-background/webapps/parser3.war
-cp parser/target/parser.war /opt/drinventor/tomcat-background/webapps/parser4.war
-cp parser/target/parser.war /opt/drinventor/tomcat-background/webapps/parser5.war
 #scp harvester/target/harvester.war cbadenes@drinventor.dia.fi.upm.es:/opt/drinventor/tomcat-background/webapps/
 
 rm -rf /opt/drinventor/tomcat-background/webapps/harvester*
