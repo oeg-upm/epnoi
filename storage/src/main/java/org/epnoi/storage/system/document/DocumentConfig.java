@@ -1,6 +1,8 @@
 package org.epnoi.storage.system.document;
 
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.settings.ImmutableSettings;
+import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,8 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by cbadenes on 21/12/15.
@@ -27,7 +31,15 @@ public class DocumentConfig {
 
     @Bean
     public TransportClient client(){
-        TransportClient client = new TransportClient();
+
+
+        Settings settings = ImmutableSettings.settingsBuilder().
+                put("cluster.name", "drinventor").
+                        put("client.transport.sniff", false).
+                        put("client.transport.ping_timeout", 30, TimeUnit.SECONDS).
+                build();
+
+        TransportClient client = new TransportClient(settings);
         TransportAddress address = new InetSocketTransportAddress(env.getProperty("epnoi.elasticsearch.contactpoints"),Integer.parseInt(env.getProperty("epnoi.elasticsearch.port")));
         client.addTransportAddress(address);
         return client;
