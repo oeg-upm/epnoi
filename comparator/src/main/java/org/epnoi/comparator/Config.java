@@ -16,8 +16,8 @@ import java.util.List;
  * Created by cbadenes on 13/01/16.
  */
 @Configuration
-@ComponentScan({"org.epnoi.comparator","org.epnoi.storage","es.upm.oeg.epnoi.ressist.parser"})
-@PropertySource("classpath:comparator.properties")
+@ComponentScan({"org.epnoi.comparator","org.epnoi.storage","org.epnoi.eventbus","es.upm.oeg.epnoi.ressist.parser"})
+@PropertySource({"classpath:comparator.properties","classpath:eventbus.properties","classpath:storage.properties"})
 public class Config {
 
     @Autowired

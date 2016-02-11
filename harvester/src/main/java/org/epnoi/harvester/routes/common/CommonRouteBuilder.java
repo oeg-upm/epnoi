@@ -1,7 +1,7 @@
 package org.epnoi.harvester.routes.common;
 
-import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.language.SimpleExpression;
 import org.epnoi.harvester.routes.processor.ErrorHandler;
 import org.epnoi.harvester.routes.processor.ResourceBuilder;
 import org.slf4j.Logger;
@@ -22,9 +22,6 @@ public class CommonRouteBuilder extends RouteBuilder {
     private static final Logger LOG = LoggerFactory.getLogger(CommonRouteBuilder.class);
 
     public static final String URI_RO_BUILD        = "direct:common.ro.build";
-
-    //TODO parallelize by seda
-    // public static final String URI_RO_BUILD        = "seda:common.ro.build";
 
     @Autowired
     ErrorHandler errorHandler;
@@ -49,8 +46,11 @@ public class CommonRouteBuilder extends RouteBuilder {
 
         from(URI_RO_BUILD).
                 process(resourceBuilder).
-                log(LoggingLevel.INFO,LOG,"File harvested: '${header.CamelFileName}'");
-//                to("file:"+outdir+"?fileName=${header.FileName}"); // TODO Create a file
+                convertBodyTo(byte[].class).
+                setHeader("rabbitmq.DELIVERY_MODE",new SimpleExpression("2")).
+                setHeader("rabbitmq.EXCHANGE_NAME",new SimpleExpression("epnoi.eventbus")).
+                setHeader("rabbitmq.ROUTING_KEY",new SimpleExpression("file.created")).
+                to("rabbitmq://localhost:5672/ex2?connectionFactory=#customConnectionFactory");
 
     }
 }

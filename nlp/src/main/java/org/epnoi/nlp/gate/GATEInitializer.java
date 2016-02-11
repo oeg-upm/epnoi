@@ -27,7 +27,7 @@ public class GATEInitializer {
 	 * needed Gate plugins
 	 */
 	@PostConstruct
-	public void init(ParametersModel parameters) {
+	public void init() {
 		LOG.info("Initializing Gate");
 		String pluginsPath = gatePath + "/plugins";
 		// String grammarsPath = gateHomePath + "/grammars/nounphrases";

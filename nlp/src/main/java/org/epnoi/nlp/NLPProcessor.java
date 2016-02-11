@@ -20,7 +20,7 @@ public class NLPProcessor {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NLPProcessor.class);
 
-	private final SerialAnalyserController controller;
+	private final SerialAnalyserController serialAnalyserController;
 
 	private final NLPHelper helper;
 
@@ -32,9 +32,9 @@ public class NLPProcessor {
 		LOG.info("Initializing NLP Processor..");
 		this.helper = helper;
 		this.cloner = new Cloner();
-		this.controller = helper.getController().createController();
+		this.serialAnalyserController = helper.getController().createController();
 		this.corpus = Factory.newCorpus("Working Corpus");
-		this.controller.setCorpus(this.corpus);
+		this.serialAnalyserController.setCorpus(this.corpus);
 		LOG.info("NLP Processor initialized successfully");
 	}
 
@@ -47,7 +47,7 @@ public class NLPProcessor {
 				this.corpus.add(document);
 
 				try {
-					controller.execute();
+					serialAnalyserController.execute();
 				} catch (ExecutionException e) {
 					document = _handleProcessingException(e);
 				}

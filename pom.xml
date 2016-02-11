@@ -142,6 +142,7 @@
         <module>comparator</module>
         <!--<module>uia</module>-->
         <module>api</module>
+        <module>parser</module>
         <module>model</module>
         <module>nlp</module>
         <module>harvester</module>
@@ -181,6 +182,11 @@
             <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-script</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-rabbitmq</artifactId>
                 <version>${camel.version}</version>
             </dependency>
             <dependency>

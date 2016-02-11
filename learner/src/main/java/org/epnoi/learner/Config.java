@@ -21,8 +21,8 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.*;
 
 @Configuration
-@ComponentScan(basePackages = {"org.epnoi.learner","org.epnoi.knowledgebase","org.epnoi.nlp","org.epnoi.storage"})
-@PropertySource("classpath:learner.properties")
+@ComponentScan({"org.epnoi.learner","org.epnoi.storage","org.epnoi.eventbus","org.epnoi.knowledgebase","org.epnoi.nlp"})
+@PropertySource({"classpath:learner.properties","classpath:eventbus.properties","classpath:storage.properties","classpath:knowledgebase.properties","classpath:nlp.properties"})
 public class Config {
     private static final Logger logger = LoggerFactory.getLogger(Config.class.getName());
 

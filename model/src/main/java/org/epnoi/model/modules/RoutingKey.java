@@ -22,4 +22,8 @@ public class RoutingKey {
     public static RoutingKey of(Resource.Type resource, Resource.State state){
         return new RoutingKey(resource.key()+"."+state.key());
     }
+
+    public static RoutingKey of(String key){
+        return new RoutingKey(key);
+    }
 }

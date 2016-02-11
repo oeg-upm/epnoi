@@ -21,7 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @Category(IntegrationTest.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = Config.class)
-@TestPropertySource(properties = { "epnoi.upf.miner.config = src/test/resources/DRIconfig.properties", "epnoi.harvester.folder.input = src/test/resources/inbox"})
+@TestPropertySource(properties = { "epnoi.harvester.folder.input = src/test/resources/inbox"})
 public class HarvestingTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(HarvestingTest.class);

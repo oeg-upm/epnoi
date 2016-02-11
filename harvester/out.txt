@@ -1,0 +1,8 @@
+# GATE
+- [-] composición estática del contexto. Descarga previa de Gate y enlace por referencia.
+- [-] ejecución monohilo mediante Factoria con variables estáticas compartidas por instancia de jvm.
+
+# StanfordCoreNLP
+- [+] lemmatizer
+- [+] composición dinámica del contexto (diccionarios, parsers..) mediante dependencias Maven
+- [+] ejecución multihilo mediante la instanciacion de distintos pipeline para cada uno de ellos.

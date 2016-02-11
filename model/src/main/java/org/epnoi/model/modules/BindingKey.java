@@ -22,4 +22,8 @@ public class BindingKey {
         return new BindingKey(routingKey.key,groupKey);
     }
 
+    public static BindingKey of(String key, String group){
+        return new BindingKey(key,group);
+    }
+
 }

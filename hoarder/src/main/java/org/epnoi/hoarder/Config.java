@@ -14,7 +14,7 @@ import java.util.List;
 
 @Configuration
 @ComponentScan({"org.epnoi.hoarder","org.epnoi.eventbus"})
-@PropertySource("classpath:hoarder.properties")
+@PropertySource({"classpath:hoarder.properties","classpath:eventbus.properties"})
 public class Config {
 
 

@@ -459,6 +459,12 @@ public class UDMTest {
     }
 
     @Test
+    public void deleteAll(){
+        udm.delete(Resource.Type.ANY).all();
+    }
+
+
+    @Test
     public void sourceAndDomain(){
 
         String sourceURI = "http://epnoi.org/sources/48afa130-28c1-4bb3-bbc2-dac5da760fa1";

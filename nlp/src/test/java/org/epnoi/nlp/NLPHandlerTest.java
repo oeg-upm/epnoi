@@ -6,8 +6,11 @@ import org.epnoi.model.exceptions.EpnoiResourceAccessException;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
@@ -16,7 +19,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @Category(IntegrationTest.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = Config.class)
+@TestPropertySource(properties = {
+        "epnoi.nlp.gatePath = /Users/cbadenes/Tools/gate"})
 public class NLPHandlerTest {
+
+    private static final Logger LOG = LoggerFactory.getLogger(NLPHandlerTest.class);
 
     @Autowired
     NLPHandler nlpHandler;
@@ -45,7 +52,7 @@ public class NLPHandlerTest {
             threadB.join();
             threadC.join();
         } catch (InterruptedException e) { // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error("Error on initial flow",e);
         }
     }
 
@@ -80,13 +87,11 @@ public class NLPHandlerTest {
             try {
                 document = nlpHandler.process(this.sentence);
             } catch (EpnoiResourceAccessException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                LOG.error("Error processing sentence: " + sentence, e);
             }
 
-            System.out
-                    .println("[" + name + "]>" + document.getAnnotations().size());
-            System.out.println("It took " + (time - System.currentTimeMillis() + " !!!!!!"));
+            LOG.info("[" + name + "]>" + document.getAnnotations().size());
+            LOG.info("It took " + (time - System.currentTimeMillis() + " !!!!!!"));
 
         }
     }

@@ -10,8 +10,8 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
  * Created by cbadenes on 10/02/16.
  */
 @Configuration
-@ComponentScan({"org.epnoi.nlp","org.epnoi.storage"})
-@PropertySource("classpath:nlp.properties")
+@ComponentScan({"org.epnoi.nlp","org.epnoi.storage","org.epnoi.eventbus"})
+@PropertySource({"classpath:nlp.properties","classpath:storage.properties","classpath:eventbus.properties"})
 public class Config {
 
     //To resolve ${} in @Value

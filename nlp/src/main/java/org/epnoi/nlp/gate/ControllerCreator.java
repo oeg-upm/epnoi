@@ -77,7 +77,7 @@ public class ControllerCreator {
 			return controller;
 		} catch (MalformedURLException | ResourceInstantiationException e) {
 			LOG.error("Error creating a new controller", e);
+			throw new RuntimeException(e);
 		}
-		return null;
 	}
 }

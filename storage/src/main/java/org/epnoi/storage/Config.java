@@ -11,7 +11,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
  */
 @Configuration
 @ComponentScan({"org.epnoi.storage","org.epnoi.eventbus"})
-@PropertySource("classpath:storage.properties")
+@PropertySource({"classpath:storage.properties","classpath:eventbus.properties"})
 public class Config {
 
     //To resolve ${} in @Value
