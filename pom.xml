@@ -134,7 +134,7 @@
         <virtuoso.jena.version>1.0</virtuoso.jena.version>
         <virtuoso.jdbc.version>1.0</virtuoso.jdbc.version>
         <wdtk.version>0.4.0</wdtk.version>
-        <xml.api.version>1.3.04</xml.api.version>
+        <xml.api.version>1.4.01</xml.api.version><!-- 1.3.04 -->
     </properties>
     <modules>
         <module>storage</module>

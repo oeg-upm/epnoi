@@ -33,6 +33,15 @@ public class ModelingTest {
     @Autowired
     UDM udm;
 
+
+    @Test
+    public void run() throws InterruptedException {
+        LOG.info("Sleepping...");
+        Thread.sleep(120000);
+        LOG.info("Wake Up!");
+    }
+
+
     @Test
     public void simulate() throws InterruptedException {
         Domain domain = new Domain();

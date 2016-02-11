@@ -12,6 +12,9 @@
 	<name>epnoi modeler</name>
 	<description>epnoi modeler</description>
 
+	<properties/>
+
+
 	<build>
 		<finalName>modeler</finalName>
 		<plugins>
