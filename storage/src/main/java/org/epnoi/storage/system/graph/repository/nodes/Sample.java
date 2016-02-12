@@ -1,14 +1,14 @@
 package org.epnoi.storage.system.graph.repository.nodes;
 
 import org.apache.commons.lang.math.RandomUtils;
-import org.epnoi.storage.system.graph.repository.GraphRepository;
+import org.epnoi.storage.actions.RepeatableActionExecutor;
 
 import java.util.Optional;
 
 /**
  * Created by cbadenes on 12/02/16.
  */
-public class Sample extends GraphRepository {
+public class Sample extends RepeatableActionExecutor {
 
     public Integer test(){
         Optional<Object> result = performRetries(4, "sample", () -> {

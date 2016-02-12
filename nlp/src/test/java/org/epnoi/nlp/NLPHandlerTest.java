@@ -20,7 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = Config.class)
 @TestPropertySource(properties = {
-        "epnoi.nlp.gatePath = /Users/cbadenes/Tools/gate"})
+        "epnoi.nlp.gatePath = /Users/cbadenes/Tools/drinventor/gate"})
 public class NLPHandlerTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(NLPHandlerTest.class);

@@ -1,19 +1,26 @@
 package org.epnoi.storage.session;
 
+import org.epnoi.storage.actions.RepeatableActionExecutor;
 import org.neo4j.ogm.session.Neo4jSession;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
+import org.neo4j.ogm.session.transaction.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.Optional;
 
 /**
  * Created by cbadenes on 03/02/16.
  */
 @Component
-public class UnifiedSession {
+public class UnifiedSession extends RepeatableActionExecutor{
+
+    private static final Logger LOG = LoggerFactory.getLogger(UnifiedSession.class);
 
     @Value("${epnoi.neo4j.contactpoints}")
     String neo4jHost;
@@ -38,8 +45,16 @@ public class UnifiedSession {
 
     public UnifiedTransaction beginTransaction(){
         UnifiedTransaction transaction = new UnifiedTransaction();
-        //TODO bug on neo4j library:
-        transaction.setNeo4jTransaction(this.neo4jSession.beginTransaction());
+
+        //TODO bug on neo4j-ogm library: check updates from 1.1.5
+        Optional<Object> result = performRetries(0, "getting neo4j session", () -> this.neo4jSession.beginTransaction());
+
+        if (result.isPresent()){
+            transaction.setNeo4jTransaction((Transaction) result.get());
+        }else{
+            LOG.warn("no transaction created for the next operation");
+        }
+
         //TODO Add Cassandra Transaction
         //TODO Add Elasticsearch Transaction
         return transaction;

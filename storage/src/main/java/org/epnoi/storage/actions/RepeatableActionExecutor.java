@@ -1,4 +1,4 @@
-package org.epnoi.storage.system.graph.repository;
+package org.epnoi.storage.actions;
 
 import org.epnoi.storage.exception.RepositoryNotFound;
 import org.slf4j.Logger;
@@ -9,9 +9,9 @@ import java.util.Optional;
 /**
  * Created by cbadenes on 12/02/16.
  */
-public abstract class GraphRepository {
+public abstract class RepeatableActionExecutor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GraphRepository.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RepeatableActionExecutor.class);
 
     private static final Integer WAITING_TIME = 200; //msecs
 
@@ -25,7 +25,7 @@ public abstract class GraphRepository {
         }
     }
 
-    protected Optional<Object> performRetries(Integer retries, String id, GraphAction function){
+    protected Optional<Object> performRetries(Integer retries, String id, RepeatableAction function){
         try {
             return Optional.of(function.run());
         }catch (RepositoryNotFound e){

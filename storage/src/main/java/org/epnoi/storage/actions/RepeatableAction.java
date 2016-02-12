@@ -1,4 +1,4 @@
-package org.epnoi.storage.system.graph.repository;
+package org.epnoi.storage.actions;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
  * Created by cbadenes on 12/02/16.
  */
 @FunctionalInterface
-public interface GraphAction<T> {
+public interface RepeatableAction<T> {
 
     public abstract T run() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException;
 }

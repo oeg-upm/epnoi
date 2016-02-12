@@ -5,10 +5,9 @@ import org.epnoi.model.domain.Relation;
 import org.epnoi.model.domain.RelationProperties;
 import org.epnoi.model.domain.Resource;
 import org.epnoi.model.domain.ResourceUtils;
-import org.epnoi.storage.exception.RepositoryNotFound;
 import org.epnoi.storage.system.Repository;
 import org.epnoi.storage.system.graph.domain.nodes.Node;
-import org.epnoi.storage.system.graph.repository.GraphRepository;
+import org.epnoi.storage.actions.RepeatableActionExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ import java.util.Optional;
  * Created by cbadenes on 02/02/16.
  */
 @Component
-public class UnifiedNodeGraphRepository extends GraphRepository implements Repository<Resource,Resource.Type> {
+public class UnifiedNodeGraphRepository extends RepeatableActionExecutor implements Repository<Resource,Resource.Type> {
 
     @Autowired
     UnifiedNodeGraphRepositoryFactory factory;
@@ -104,7 +103,7 @@ public class UnifiedNodeGraphRepository extends GraphRepository implements Repos
 
     public Resource attach(String uri1, String uri2, Relation.Type type, RelationProperties properties){
         Optional<Object> result = performRetries(0, "attach " + type + " btw [" + uri1 + "] and [" + uri2 + "]", () -> {
-            Node startingNode = (Node) factory.repositoryOf(type.getStart()).findOneByUri(uri1);
+            Node startingNode = (Node)  factory.repositoryOf(type.getStart()).findOneByUri(uri1);
             Node endingNode = (Node) factory.repositoryOf(type.getEnd()).findOneByUri(uri2);
 
             Relation relation = factory.relationOf(type);

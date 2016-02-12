@@ -6,7 +6,7 @@ import org.epnoi.model.domain.Resource;
 import org.epnoi.model.domain.ResourceUtils;
 import org.epnoi.storage.system.Repository;
 import org.epnoi.storage.system.graph.domain.edges.Edge;
-import org.epnoi.storage.system.graph.repository.GraphRepository;
+import org.epnoi.storage.actions.RepeatableActionExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import java.util.Optional;
  * Created by cbadenes on 02/02/16.
  */
 @Component
-public class UnifiedEdgeGraphRepository extends GraphRepository implements Repository<Relation,Relation.Type>  {
+public class UnifiedEdgeGraphRepository extends RepeatableActionExecutor implements Repository<Relation,Relation.Type>  {
 
     @Autowired
     UnifiedEdgeGraphRepositoryFactory factory;
