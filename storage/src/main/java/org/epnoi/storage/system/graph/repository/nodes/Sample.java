@@ -3,6 +3,7 @@ package org.epnoi.storage.system.graph.repository.nodes;
 import org.apache.commons.lang.math.RandomUtils;
 import org.epnoi.storage.actions.RepeatableActionExecutor;
 
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Optional;
 public class Sample extends RepeatableActionExecutor {
 
     public Integer test(){
-        Optional<Object> result = performRetries(4, "sample", () -> {
+        Optional<Object> result = performRetries(0, "sample", () -> {
             if (RandomUtils.nextInt() % 2 == 0) return 1;
             throw new RuntimeException();
         });
@@ -27,6 +28,7 @@ public class Sample extends RepeatableActionExecutor {
 
     public static void main(String[] args){
         Sample sample = new Sample();
+        System.out.println(new Date());
         System.out.println(sample.test());
     }
 }

@@ -3,7 +3,7 @@ package org.epnoi.model.domain;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@ToString
+@ToString(callSuper = true)
 @EqualsAndHashCode(of={"uri"})
 public class Resource extends LinkableElement {
 

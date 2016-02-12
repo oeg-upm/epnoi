@@ -17,9 +17,9 @@ public abstract class RepeatableActionExecutor {
 
     private static final Integer MAX_RETRIES = 5;
 
-    protected void waitForRetry(){
+    protected void waitForRetry(Integer retries){
         try {
-            Thread.sleep(WAITING_TIME);
+            Thread.sleep(retries*WAITING_TIME+WAITING_TIME );
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -37,7 +37,7 @@ public abstract class RepeatableActionExecutor {
                 return Optional.empty();
             }
             else{
-                waitForRetry();
+                waitForRetry(retries);
                 return performRetries(++retries,id,function);
             }
         }
