@@ -113,7 +113,7 @@ public class UnifiedColumnRepository implements Repository<Resource,Resource.Typ
     public void deleteAll(Resource.Type type){
         try{
             factory.repositoryOf(type).deleteAll();
-            LOG.debug("All " + type.name() + "s have been deleted");
+            LOG.debug("All " + type.plural() + " have been deleted");
         }catch (RuntimeException e){
             LOG.warn(e.getMessage());
         }
