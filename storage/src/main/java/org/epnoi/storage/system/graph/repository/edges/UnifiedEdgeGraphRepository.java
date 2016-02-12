@@ -1,15 +1,17 @@
 package org.epnoi.storage.system.graph.repository.edges;
 
 import org.apache.commons.lang.WordUtils;
-import org.epnoi.model.domain.*;
+import org.epnoi.model.domain.Relation;
+import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.ResourceUtils;
 import org.epnoi.storage.system.Repository;
 import org.epnoi.storage.system.graph.domain.edges.Edge;
+import org.epnoi.storage.system.graph.repository.GraphRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Optional;
@@ -18,7 +20,7 @@ import java.util.Optional;
  * Created by cbadenes on 02/02/16.
  */
 @Component
-public class UnifiedEdgeGraphRepository implements Repository<Relation,Relation.Type>  {
+public class UnifiedEdgeGraphRepository extends GraphRepository implements Repository<Relation,Relation.Type>  {
 
     @Autowired
     UnifiedEdgeGraphRepositoryFactory factory;
@@ -27,43 +29,33 @@ public class UnifiedEdgeGraphRepository implements Repository<Relation,Relation.
 
     @Override
     public void save(Relation relation, Relation.Type type){
-        try{
-            factory.repositoryOf(type).save(ResourceUtils.map(relation, factory.mappingOf(type)));
-        }catch (RuntimeException e){
-            LOG.warn(e.getMessage());
-        }
+        performRetries(0, "save " + type + "[" + relation + "]", () ->
+                factory.repositoryOf(type).save(ResourceUtils.map(relation, factory.mappingOf(type))));
     }
 
     @Override
     public Boolean exists(Relation.Type type, String uri) {
-        try{
-            return factory.repositoryOf(type).findOneByUri(uri) != null;
-        }catch (RuntimeException e){
-            LOG.warn(e.getMessage());
-        }
-        return Boolean.FALSE;
+        Optional<Object> result = performRetries(0, "exists " + type + "[" + uri + "]", () ->
+                factory.repositoryOf(type).findOneByUri(uri) != null);
+        return (result.isPresent())? (Boolean) result.get() : Boolean.FALSE;
     }
 
     @Override
     public Optional<Relation> read(Relation.Type type, String uri) {
-        Optional<Relation> result = Optional.empty();
-        try{
+        Optional<Object> result = performRetries(0, "read " + type + "[" + uri + "]", () -> {
+            Optional<Relation> relation = Optional.empty();
             Edge edge = (Edge) factory.repositoryOf(type).findOneByUri(uri);
-            if (edge != null) result = Optional.of((Relation) ResourceUtils.map(edge, factory.mappingOf(type)));
-        }catch (RuntimeException e){
-            LOG.warn(e.getMessage());
-        }
-        return result;
+            if (edge != null) relation = Optional.of((Relation) ResourceUtils.map(edge, factory.mappingOf(type)));
+            return relation;
+        });
+        return (result.isPresent())? (Optional<Relation>) result.get() : Optional.empty();
     }
 
     @Override
     public Iterable<Relation> findAll(Relation.Type type) {
-        try{
-            return factory.repositoryOf(type).findAll();
-        }catch (RuntimeException e){
-            LOG.warn(e.getMessage());
-            return Collections.EMPTY_LIST;
-        }
+        Optional<Object> result = performRetries(0, "findAll " + type, () ->
+                factory.repositoryOf(type).findAll());
+        return (result.isPresent())? (Iterable<Relation>) result.get() : Collections.EMPTY_LIST;
     }
 
     @Override
@@ -76,49 +68,31 @@ public class UnifiedEdgeGraphRepository implements Repository<Relation,Relation.
         return find("findBy",result,referenceURI,referenceType.key());
     }
 
-    private Iterable<Relation> find(String prefix, Relation.Type result,String uri,String reference) {
-        try{
-            RelationGraphRepository repository = factory.repositoryOf(result);
-
-            String methodName = prefix+WordUtils.capitalize(reference.toLowerCase());
+    private Iterable<Relation> find(String prefix, Relation.Type resultType,String uri,String reference) {
+        Optional<Object> result = performRetries(0, prefix + " " + resultType + "[" + uri + "] and ref: " + reference, () -> {
+            RelationGraphRepository repository = factory.repositoryOf(resultType);
+            String methodName = prefix + WordUtils.capitalize(reference.toLowerCase());
             Method method = repository.getClass().getMethod(methodName, String.class);
             Iterable<Relation> resources = (Iterable<Relation>) method.invoke(repository, uri);
             return resources;
-        }catch (RuntimeException e){
-            LOG.warn(e.getMessage());
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            LOG.warn("No such method to find: " + e.getMessage());
-        }
-        return Collections.EMPTY_LIST;
+        });
+        return (result.isPresent())? (Iterable<Relation>) result.get() : Collections.EMPTY_LIST;
     }
 
     @Override
     public void deleteAll(Relation.Type type) {
-        try{
+        performRetries(0,"delete all "+ type, () -> {
             factory.repositoryOf(type).deleteAll();
-        }catch (RuntimeException e){
-            LOG.warn(e.getMessage());
-        }
+            return 1;
+        });
     }
 
     @Override
     public void delete(Relation.Type type, String uri) {
-        try{
+        performRetries(0,"delete " + type + "["+uri+"]", () -> {
             Relation relation = factory.repositoryOf(type).findOneByUri(uri);
             if (relation != null) factory.repositoryOf(type).delete( factory.mappingOf(type).cast(relation) );
-        }catch (RuntimeException e){
-            LOG.warn(e.getMessage());
-        }
-    }
-
-    public void delete(Relation.Type type, String startUri, String endUri){
-        try{
-            Iterable<Relation> resource = factory.repositoryOf(type).findByNodes(startUri,endUri);
-            if (resource != null){
-                resource.forEach(relation ->factory.repositoryOf(type).delete( factory.mappingOf(type).cast(relation) ) );
-            }
-        }catch (RuntimeException e){
-            LOG.warn(e.getMessage());
-        }
+            return 1;
+        });
     }
 }

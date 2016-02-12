@@ -33,7 +33,7 @@ create index on research.documents (subject);
 create index on research.documents (rights);
 create index on research.documents (type);
 
-create table if not exists research.items(uri text, creationTime text, authoredOn text, authoredBy text, contributedBy text, format text, language text, title text, subject text, description text, url text, type text, content text, tokens text, primary key (uri));
+create table if not exists research.items(uri text, creationTime text, authoredOn text, authoredBy text, contributedBy text, format text, language text, title text, subject text, description text, url text, type text, content text, tokens text, annotated text, primary key (uri));
 create index on research.items (creationTime);
 create index on research.items (authoredOn);
 create index on research.items (authoredBy);

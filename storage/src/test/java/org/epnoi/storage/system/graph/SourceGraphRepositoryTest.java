@@ -30,15 +30,4 @@ public class SourceGraphRepositoryTest extends BaseGraphRepositoryTest<SourceNod
         return node;
     }
 
-    @Test
-    public void read(){
-        SourceNode source = repository.findOneByUri("sources/01");
-        System.out.println(source);
-
-        Set<SourceProvidesDocument> documents = source.getDocuments();
-        System.out.println(documents);
-
-
-    }
-
 }

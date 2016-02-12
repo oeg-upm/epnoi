@@ -200,7 +200,6 @@ public class ParserService {
         item.setUrl(metaInformation.getPubURI());
         item.setType(metaInformation.getType());
         item.setContent(document.getContent());
-        item.setAnnotated(document.getXml());
 
         String tokens   = textMiner.parse(item.getContent()).stream().filter(token -> token.isValid()).map(token -> token.getLemma()).collect(Collectors.joining(" "));
         item.setTokens(tokens);

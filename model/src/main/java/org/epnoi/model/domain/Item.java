@@ -48,7 +48,4 @@ public class Item extends Resource {
     public static final String TOKENS="tokens";
     private String tokens;
 
-    public static final String ANNOTATED="annotated";
-    private String annotated;
-
 }

@@ -1,5 +1,6 @@
 package org.epnoi.storage.system.column;
 
+import com.datastax.driver.core.SocketOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -31,6 +32,7 @@ public class ColumnConfig extends AbstractCassandraConfiguration{
         CassandraClusterFactoryBean cluster = new CassandraClusterFactoryBean();
         cluster.setContactPoints(env.getProperty("epnoi.cassandra.contactpoints"));
         cluster.setPort(Integer.parseInt(env.getProperty("epnoi.cassandra.port")));
+        cluster.setSocketOptions(getSocketOptions());
         return cluster;
     }
 
