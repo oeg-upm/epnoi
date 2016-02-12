@@ -1,5 +1,6 @@
 package org.epnoi.storage.session;
 
+import org.epnoi.storage.actions.RepeatableActionExecutor;
 import org.neo4j.ogm.session.transaction.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,7 +8,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by cbadenes on 03/02/16.
  */
-public class UnifiedTransaction {
+public class UnifiedTransaction extends RepeatableActionExecutor{
 
     private static final Logger LOG = LoggerFactory.getLogger(UnifiedTransaction.class);
 
@@ -16,12 +17,10 @@ public class UnifiedTransaction {
     public void commit(){
 
         if (neo4jTransaction != null) {
-            try{
+            performRetries(0,"Commit transaction: " + neo4jTransaction, () -> {
                 neo4jTransaction.commit();
-            }catch (NullPointerException e){
-                // NullPointerException on: java.util.concurrent.ConcurrentHashMap.putVal(ConcurrentHashMap.java:1011)
-                LOG.info("Internal error synchronizing transaction. ");
-            }
+                return 1;
+            });
         }
     }
 

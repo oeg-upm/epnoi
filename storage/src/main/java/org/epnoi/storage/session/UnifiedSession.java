@@ -47,13 +47,13 @@ public class UnifiedSession extends RepeatableActionExecutor{
         UnifiedTransaction transaction = new UnifiedTransaction();
 
         //TODO bug on neo4j-ogm library: check updates from 1.1.5
-        Optional<Object> result = performRetries(0, "getting neo4j session", () -> this.neo4jSession.beginTransaction());
-
-        if (result.isPresent()){
-            transaction.setNeo4jTransaction((Transaction) result.get());
-        }else{
-            LOG.warn("no transaction created for the next operation");
-        }
+//        Optional<Object> result = performRetries(0, "getting neo4j session", () -> this.neo4jSession.beginTransaction());
+//
+//        if (result.isPresent()){
+//            transaction.setNeo4jTransaction((Transaction) result.get());
+//        }else{
+//            LOG.warn("no transaction created for the next operation");
+//        }
 
         //TODO Add Cassandra Transaction
         //TODO Add Elasticsearch Transaction

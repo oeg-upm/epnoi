@@ -31,7 +31,7 @@ public class SimilarityExecutor {
 
 
     public void execute(Runnable task){
-        LOG.info("Added to queue similarity task: " + task + " and delayed: ");
+        LOG.info("Added to queue similarity task: " + task + " and delayed: " + delay + "msecs");
         //this.executor.execute(task);
         this.executor.schedule(task, new Date(System.currentTimeMillis() + delay));
     }
