@@ -13,7 +13,7 @@ public class Sample extends RepeatableActionExecutor {
 
     public Integer test(){
         Optional<Object> result = performRetries(0, "sample", () -> {
-            if (RandomUtils.nextInt() % 2 == 0) return 1;
+            if (RandomUtils.nextInt(10) == 1) return 1;
             throw new RuntimeException();
         });
 

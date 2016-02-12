@@ -13,13 +13,14 @@ public abstract class RepeatableActionExecutor {
 
     private static final Logger LOG = LoggerFactory.getLogger(RepeatableActionExecutor.class);
 
-    private static final Integer WAITING_TIME = 200; //msecs
+    private static final Integer WAITING_TIME = 500; //msecs
 
     private static final Integer MAX_RETRIES = 5;
 
     protected void waitForRetry(Integer retries){
         try {
-            Thread.sleep(retries*WAITING_TIME+WAITING_TIME );
+
+            Thread.sleep(Double.valueOf(Math.exp(retries)*WAITING_TIME).longValue());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
