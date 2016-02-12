@@ -1,6 +1,7 @@
 package org.epnoi.storage.system.column.repository;
 
 import org.epnoi.model.domain.Resource;
+import org.epnoi.storage.exception.RepositoryNotFound;
 import org.epnoi.storage.system.column.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,7 +36,7 @@ public class UnifiedColumnRepositoryFactory {
     @Autowired
     WordColumnRepository wordColumnRepository;
 
-    public BaseColumnRepository repositoryOf(Resource.Type type){
+    public BaseColumnRepository repositoryOf(Resource.Type type) throws RepositoryNotFound {
         switch (type){
             case ANALYSIS: return analysisColumnRepository;
             case DOCUMENT: return documentColumnRepository;
@@ -46,7 +47,7 @@ public class UnifiedColumnRepositoryFactory {
             case TOPIC: return topicColumnRepository;
             case WORD: return wordColumnRepository;
         }
-        throw new RuntimeException("Repository not found for " + type);
+        throw new RepositoryNotFound("Column Repository not found for " + type);
     }
 
     public Class mappingOf(Resource.Type type){

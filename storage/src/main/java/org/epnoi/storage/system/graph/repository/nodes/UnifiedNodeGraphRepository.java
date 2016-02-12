@@ -5,6 +5,7 @@ import org.epnoi.model.domain.Relation;
 import org.epnoi.model.domain.RelationProperties;
 import org.epnoi.model.domain.Resource;
 import org.epnoi.model.domain.ResourceUtils;
+import org.epnoi.storage.exception.RepositoryNotFound;
 import org.epnoi.storage.system.Repository;
 import org.epnoi.storage.system.graph.domain.nodes.Node;
 import org.epnoi.storage.system.graph.repository.GraphRepository;
@@ -87,6 +88,7 @@ public class UnifiedNodeGraphRepository extends GraphRepository implements Repos
         performRetries(0, "delete all " + type, () -> {
             factory.repositoryOf(type).deleteAll();
             return 1;
+
         });
     }
 

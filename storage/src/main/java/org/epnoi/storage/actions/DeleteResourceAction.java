@@ -36,7 +36,7 @@ public class DeleteResourceAction {
 
             List<Resource.Type> types = (type.equals(Resource.Type.ANY)) ? Arrays.asList(Resource.Type.values()) : Arrays.asList(new Resource.Type[]{type});
 
-            types.stream().forEach( t ->{
+            types.stream().filter(x -> !x.equals(Resource.Type.ANY)).forEach(t ->{
                 helper.getUnifiedColumnRepository().deleteAll(t);
                 helper.getUnifiedDocumentRepository().deleteAll(t);
                 helper.getUnifiedNodeGraphRepository().deleteAll(t);

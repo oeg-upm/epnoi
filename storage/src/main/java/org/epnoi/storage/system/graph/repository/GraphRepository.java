@@ -1,5 +1,6 @@
 package org.epnoi.storage.system.graph.repository;
 
+import org.epnoi.storage.exception.RepositoryNotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,9 +26,11 @@ public abstract class GraphRepository {
     }
 
     protected Optional<Object> performRetries(Integer retries, String id, GraphAction function){
-        try{
-            System.out.println("retry: " + retries);
+        try {
             return Optional.of(function.run());
+        }catch (RepositoryNotFound e){
+            LOG.warn(e.getMessage());
+            return Optional.empty();
         }catch (Exception e){
             if (retries >= MAX_RETRIES){
                 LOG.error("Error executing a "+id+" after " + MAX_RETRIES + " retries",e);

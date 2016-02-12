@@ -1,6 +1,7 @@
 package org.epnoi.storage.system.document.repository;
 
 import org.epnoi.model.domain.Resource;
+import org.epnoi.storage.exception.RepositoryNotFound;
 import org.epnoi.storage.system.document.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,7 +36,7 @@ public class UnifiedDocumentRepositoryFactory {
     @Autowired
     WordDocumentRepository wordDocumentRepository;
 
-    public BaseDocumentRepository repositoryOf(Resource.Type type){
+    public BaseDocumentRepository repositoryOf(Resource.Type type) throws RepositoryNotFound{
         switch (type){
             case ANALYSIS: return analysisDocumentRepository;
             case DOCUMENT: return documentDocumentRepository;
@@ -46,7 +47,7 @@ public class UnifiedDocumentRepositoryFactory {
             case TOPIC: return topicDocumentRepository;
             case WORD: return wordDocumentRepository;
         }
-        throw new RuntimeException("Repository not found for " + type);
+        throw new RepositoryNotFound("Document Repository not found for " + type);
     }
 
     public Class mappingOf(Resource.Type type){

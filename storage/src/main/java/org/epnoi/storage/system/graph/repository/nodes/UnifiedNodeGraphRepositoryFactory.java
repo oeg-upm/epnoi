@@ -2,6 +2,7 @@ package org.epnoi.storage.system.graph.repository.nodes;
 
 import org.epnoi.model.domain.Relation;
 import org.epnoi.model.domain.Resource;
+import org.epnoi.storage.exception.RepositoryNotFound;
 import org.epnoi.storage.system.graph.domain.edges.*;
 import org.epnoi.storage.system.graph.domain.nodes.*;
 import org.epnoi.storage.system.graph.repository.edges.*;
@@ -81,7 +82,7 @@ public class UnifiedNodeGraphRepositoryFactory {
     WordPairsWithWordGraphRepository wordPairsWithWordGraphRepository;
 
 
-    public ResourceGraphRepository repositoryOf(Resource.Type type){
+    public ResourceGraphRepository repositoryOf(Resource.Type type) throws RepositoryNotFound {
         switch (type){
             case DOCUMENT: return documentGraphRepository;
             case DOMAIN: return domainGraphRepository;
@@ -91,10 +92,10 @@ public class UnifiedNodeGraphRepositoryFactory {
             case TOPIC: return topicGraphRepository;
             case WORD: return wordGraphRepository;
         }
-        throw new RuntimeException("Repository not found for " + type);
+        throw new RepositoryNotFound("Graph Repository not found for " + type);
     }
 
-    public RelationGraphRepository repositoryOf(Relation.Type type){
+    public RelationGraphRepository repositoryOf(Relation.Type type) throws RepositoryNotFound {
         switch (type){
             case DOCUMENT_BUNDLES_ITEM: return documentBundlesItemGraphRepository;
             case DOCUMENT_DEALS_WITH_TOPIC: return documentDealsWithTopicGraphRepository;
@@ -112,7 +113,7 @@ public class UnifiedNodeGraphRepositoryFactory {
             case WORD_EMBEDDED_IN_DOMAIN: return wordEmbeddedInDomainGraphRepository;
             case WORD_PAIRS_WITH_WORD: return wordPairsWithWordGraphRepository;
         }
-        throw new RuntimeException("Repository not found for " + type);
+        throw new RepositoryNotFound("Graph Repository not found for " + type);
     }
 
     public Class mappingOf(Resource.Type type){
