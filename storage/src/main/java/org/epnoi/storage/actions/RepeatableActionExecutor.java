@@ -17,6 +17,7 @@ public abstract class RepeatableActionExecutor {
 
     private static final Integer MAX_RETRIES = 5;
 
+
     protected void waitForRetry(Integer retries){
         try {
 
@@ -26,6 +27,14 @@ public abstract class RepeatableActionExecutor {
         }
     }
 
+
+    /**
+     * Bug on Neo4j-OGM https://github.com/neo4j/neo4j/issues/6178
+     * @param retries
+     * @param id
+     * @param function
+     * @return
+     */
     protected Optional<Object> performRetries(Integer retries, String id, RepeatableAction function){
         try {
             return Optional.of(function.run());

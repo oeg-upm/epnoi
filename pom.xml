@@ -989,7 +989,7 @@
         <!-- External Libraries -->
         <repository>
             <id>external-libs</id>
-            <url>https://raw.github.com/epnoi/external-libs/mvn-repo/</url>
+            <url>https://raw.github.com/cbadenes/external-libs/mvn-repo/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
