@@ -33,7 +33,7 @@ public abstract class RepeatableActionExecutor {
             LOG.warn(e.getMessage());
             return Optional.empty();
         }catch (Exception e){
-            if (retries >= MAX_RETRIES){
+            if (retries > MAX_RETRIES){
                 LOG.error("Error executing "+id+" after " + MAX_RETRIES + " retries",e);
                 return Optional.empty();
             }
