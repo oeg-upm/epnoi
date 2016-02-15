@@ -13,7 +13,6 @@ import org.epnoi.model.commons.Parameters;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 import org.epnoi.model.rdf.RDFHelper;
 import org.epnoi.nlp.wikipedia.WikipediaPagesRetriever;
-import org.epnoi.uia.informationstore.SelectorHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -158,8 +157,11 @@ public class RelationalSentencesCorpusCreator {
     // ----------------------------------------------------------------------------------------------------------------------
 
     private List<String> _collectCorpusURIs() {
-        Selector selector = new Selector();
-        selector.setProperty(SelectorHelper.TYPE, RDFHelper.WIKIPEDIA_PAGE_CLASS);
+//        Selector selector = new Selector();
+//        selector.setProperty(SelectorHelper.TYPE, RDFHelper.WIKIPEDIA_PAGE_CLASS);
+
+
+
         // String uri = "http://en.wikipedia.org/wiki/AccessibleComputing";
 
         // logger.info("Retrieving the URIs of the Wikipedia articles ");

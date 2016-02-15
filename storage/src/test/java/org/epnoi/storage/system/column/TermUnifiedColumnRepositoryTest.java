@@ -1,0 +1,65 @@
+package org.epnoi.storage.system.column;
+
+import org.epnoi.model.domain.ResourceUtils;
+import org.epnoi.storage.system.column.domain.TermColumn;
+import org.epnoi.storage.system.column.domain.WordColumn;
+import org.epnoi.storage.system.column.repository.BaseColumnRepository;
+import org.epnoi.storage.system.column.repository.TermColumnRepository;
+import org.epnoi.storage.system.column.repository.WordColumnRepository;
+import org.junit.Assert;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.cassandra.repository.support.BasicMapId;
+
+/**
+ * Created by cbadenes on 22/12/15.
+ */
+public class TermUnifiedColumnRepositoryTest extends BaseColumnRepositoryTest<TermColumn> {
+
+    @Autowired
+    TermColumnRepository repository;
+
+    @Override
+    public BaseColumnRepository<TermColumn> getRepository() {
+        return repository;
+    }
+
+    @Override
+    public TermColumn getEntity() {
+        TermColumn term = new TermColumn();
+        term.setUri("terms/72ce5395-6268-439a-947e-802229e7f022");
+        term.setCreationTime("2015-12-21T16:18:59Z");
+        term.setContent("molecular");
+        term.setConsensus(2.0);
+        term.setCvalue(0.8);
+        term.setLength(1);
+        term.setOcurrences(2);
+        term.setPertinence(0.8);
+        term.setProbability(0.5);
+        term.setSubterms(2);
+        term.setSuperterms(2);
+        term.setTermhood(0.9);
+        return term;
+    }
+
+    @Test
+    public void findByContent(){
+
+        String termURI = "terms/72ce5395-6268-439a-947e-802229e7f022";
+        repository.delete(BasicMapId.id(ResourceUtils.URI,termURI));
+
+        Iterable<TermColumn> res1 = repository.findByContent("samples");
+        Assert.assertFalse(res1.iterator().hasNext());
+
+        TermColumn sample = new TermColumn();
+        sample.setUri(termURI);
+        sample.setCreationTime("20160112T1533");
+        sample.setContent("samples");
+        repository.save(sample);
+
+        Iterable<TermColumn> res2 = repository.findByContent("samples");
+        Assert.assertTrue(res2.iterator().hasNext());
+
+    }
+
+}

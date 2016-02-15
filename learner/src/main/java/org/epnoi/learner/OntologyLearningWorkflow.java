@@ -1,7 +1,6 @@
 package org.epnoi.learner;
 
 
-import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.learner.relations.RelationsHandler;
 import org.epnoi.learner.relations.RelationsRetriever;
 import org.epnoi.learner.relations.extractor.RelationsExtractor;
@@ -12,7 +11,7 @@ import org.epnoi.learner.terms.TermsTable;
 import org.epnoi.model.Domain;
 import org.epnoi.model.Relation;
 import org.epnoi.model.RelationsTable;
-import org.epnoi.model.Term;
+import org.epnoi.model.domain.Term;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 
 import java.util.HashSet;

@@ -1,33 +1,26 @@
 package org.epnoi.learner.terms;
 
 import org.epnoi.model.Domain;
-import org.epnoi.model.Term;
+import org.epnoi.model.domain.Term;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
+@Component
 public class TermsRetriever {
 
-    private static final Logger logger = Logger.getLogger(TermsRetriever.class
-            .getName());
-
-
-    // -----------------------------------------------------------------------------------
-
-    public TermsRetriever() {
-
-    }
-
-    // -----------------------------------------------------------------------------------
+    private static final Logger LOG = LoggerFactory.getLogger(TermsRetriever.class);
 
     public void store(Domain domain, TermsTable termsTable) {
-        logger.info("Storing the Terms Table for domain " + domain);
+        LOG.info("Storing the Terms Table for domain " + domain);
 
         for (Term term : termsTable.getTerms()) {
 
             // TODO
-            logger.severe("Pending to implement by using UDM");
+            LOG.error("Pending to implement by using UDM");
 //            core.getInformationHandler().put(term, Context.getEmptyContext());
 //            core.getAnnotationHandler().label(term.getUri(), domain.getLabel());
         }
@@ -50,7 +43,7 @@ public class TermsRetriever {
 
     public TermsTable retrieve(String domainUri) {
         // TODO
-        logger.severe("Pending to implement by using UDM");
+        LOG.error("Pending to implement by using UDM");
 //        Domain domain = (Domain) core.getInformationHandler().get(domainUri, RDFHelper.DOMAIN_CLASS);
         Domain domain = null;
 
@@ -70,7 +63,7 @@ public class TermsRetriever {
         // First we retrieve the URIs of the resources associated with the
         // considered domain
         // TODO
-        logger.severe("Pending to implement by using UDM");
+        LOG.error("Pending to implement by using UDM");
 //        List<String> foundURIs = this.core.getAnnotationHandler().getLabeledAs(domainLabel, RDFHelper.TERM_CLASS);
         List<String> foundURIs = Collections.EMPTY_LIST;
 
@@ -78,7 +71,7 @@ public class TermsRetriever {
         // The terms are then retrieved and added to the Terms Table
         for (String termURI : foundURIs) {
             // TODO
-            logger.severe("Pending to implement by using UDM");
+            LOG.error("Pending to implement by using UDM");
 //            Term term = (Term) this.core.getInformationHandler().get(termURI, RDFHelper.TERM_CLASS);
             Term term = null;
 
@@ -91,60 +84,61 @@ public class TermsRetriever {
 
     private void remove(Domain domain) {
         // TODO
-        logger.severe("Pending to implement by using UDM");
+        LOG.error("Pending to implement by using UDM");
 //        List<String> foundURIs = this.core.getAnnotationHandler().getLabeledAs(domain.getLabel(), RDFHelper.TERM_CLASS);
         List<String> foundURIs = Collections.emptyList();
 
         for (String termURI : foundURIs) {
             System.out.println("Removing the term " + termURI);
             // TODO
-            logger.severe("Pending to implement by using UDM");
+            LOG.error("Pending to implement by using UDM");
 //            this.core.getInformationHandler().remove(termURI, RDFHelper.TERM_CLASS);
         }
     }
 
     // -----------------------------------------------------------------------------------
 
-    public static void main(String[] args) {
-        /*
-		TermsExtractor termExtractor = new TermsExtractor();
+//    public static void main(String[] args) {
+//        /*
+//		TermsExtractor termExtractor = new TermsExtractor();
+//
+//		// List<String> consideredDomains = Arrays.asList("cs", "math");
+//
+//		ArrayList<String> consideredDomains = new ArrayList(Arrays.asList("CGTestCorpus"));
+//		String targetDomain = "CGTestCorpus";
+//		Double hyperymMinimumThreshold = 0.7;
+//		boolean extractTerms = true;
+//		Integer numberInitialTerms = 10;
+//		String consideredResources = RDFHelper.PAPER_CLASS;
+//
+//		LearningParameters learningParameters = new LearningParameters();
+//		learningParameters.setParameter(
+//				LearningParameters.CONSIDERED_DOMAINS,
+//				consideredDomains);
+//		learningParameters.setParameter(
+//				LearningParameters.TARGET_DOMAIN_URI, targetDomain);
+//		learningParameters
+//				.setParameter(
+//						LearningParameters.HYPERNYM_RELATION_EXPANSION_THRESHOLD,
+//						hyperymMinimumThreshold);
+//		learningParameters.setParameter(
+//				LearningParameters.EXTRACT_TERMS, extractTerms);
+//		learningParameters.setParameter(
+//				LearningParameters.NUMBER_INITIAL_TERMS,
+//				numberInitialTerms);
+//
+//		Core core = CoreUtility.getUIACore();
+//		DomainsTableCreator domainGatherer = new DomainsTableCreator();
+//		domainGatherer.init(core, learningParameters);
+//
+//		DomainsTable domainsTable = domainGatherer.create();
+//
+//		termExtractor.init(core, domainsTable, learningParameters);
+//		// termExtractor.removeTerms();
+//		TermsTable termsTable = termExtractor.extract();
+//		termExtractor.storeTable(termsTable);
+//*/
+//    }
 
-		// List<String> consideredDomains = Arrays.asList("cs", "math");
-
-		ArrayList<String> consideredDomains = new ArrayList(Arrays.asList("CGTestCorpus"));
-		String targetDomain = "CGTestCorpus";
-		Double hyperymMinimumThreshold = 0.7;
-		boolean extractTerms = true;
-		Integer numberInitialTerms = 10;
-		String consideredResources = RDFHelper.PAPER_CLASS;
-
-		LearningParameters learningParameters = new LearningParameters();
-		learningParameters.setParameter(
-				LearningParameters.CONSIDERED_DOMAINS,
-				consideredDomains);
-		learningParameters.setParameter(
-				LearningParameters.TARGET_DOMAIN_URI, targetDomain);
-		learningParameters
-				.setParameter(
-						LearningParameters.HYPERNYM_RELATION_EXPANSION_THRESHOLD,
-						hyperymMinimumThreshold);
-		learningParameters.setParameter(
-				LearningParameters.EXTRACT_TERMS, extractTerms);
-		learningParameters.setParameter(
-				LearningParameters.NUMBER_INITIAL_TERMS,
-				numberInitialTerms);
-
-		Core core = CoreUtility.getUIACore();
-		DomainsTableCreator domainGatherer = new DomainsTableCreator();
-		domainGatherer.init(core, learningParameters);
-
-		DomainsTable domainsTable = domainGatherer.create();
-
-		termExtractor.init(core, domainsTable, learningParameters);
-		// termExtractor.removeTerms();
-		TermsTable termsTable = termExtractor.extract();
-		termExtractor.storeTable(termsTable);
-*/
-    }
 
 }

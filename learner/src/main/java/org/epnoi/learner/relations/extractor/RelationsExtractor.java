@@ -15,9 +15,9 @@ import org.epnoi.learner.terms.TermCandidateBuilder;
 import org.epnoi.learner.terms.TermsTable;
 import org.epnoi.model.*;
 import org.epnoi.model.commons.Parameters;
+import org.epnoi.model.domain.Term;
 import org.epnoi.model.rdf.RDFHelper;
 import org.epnoi.nlp.gate.NLPAnnotationsConstants;
-import org.epnoi.uia.informationstore.SelectorHelper;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -258,11 +258,11 @@ public class RelationsExtractor {
 
     private Content<Object> retrieveAnnotatedDocument(String URI) {
 
-        Selector selector = new Selector();
-        selector.setProperty(SelectorHelper.URI, URI);
-        selector.setProperty(SelectorHelper.TYPE, RDFHelper.PAPER_CLASS);
-        selector.setProperty(SelectorHelper.ANNOTATED_CONTENT_URI, URI + "/"
-                + AnnotatedContentHelper.CONTENT_TYPE_OBJECT_XML_GATE);
+//        Selector selector = new Selector();
+//        selector.setProperty(SelectorHelper.URI, URI);
+//        selector.setProperty(SelectorHelper.TYPE, RDFHelper.PAPER_CLASS);
+//        selector.setProperty(SelectorHelper.ANNOTATED_CONTENT_URI, URI + "/"
+//                + AnnotatedContentHelper.CONTENT_TYPE_OBJECT_XML_GATE);
 
 
         // TODO

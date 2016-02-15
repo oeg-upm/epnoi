@@ -1,6 +1,6 @@
 package org.epnoi.learner.terms;
 
-import org.epnoi.model.Term;
+import org.epnoi.model.domain.Term;
 
 import java.util.*;
 
@@ -46,7 +46,7 @@ public class TermsTable {
 	public void addTerm(Term term) {
 		this.orderedTerms.put(term, term.getUri());
 		this.terms.put(term.getUri(), term);
-		this.terms.put(term.getAnnotatedTerm().getWord(), term);
+		this.terms.put(term.getContent(), term);
 	}
 
 	// --------------------------------------------------------------------
@@ -82,8 +82,8 @@ public class TermsTable {
 
 		@Override
 		public int compare(Term term1, Term term2) {
-			if (term1.getAnnotatedTerm().getAnnotation().getTermhood() < term2
-					.getAnnotatedTerm().getAnnotation().getTermhood()) {
+			if (term1.getTermhood() < term2
+					.getTermhood()) {
 				return 1;
 			} else {
 				return -1;
@@ -121,8 +121,8 @@ public class TermsTable {
 		int i = 1;
 		for (Term term : this.getMostProbable(numberOfDeatiledTerms)) {
 			System.out.println("(" + i++ + ")"
-					+ term.getAnnotatedTerm().getWord() + " with termhood "
-					+ term.getAnnotatedTerm().getAnnotation().getTermhood());
+					+ term.getContent() + " with termhood "
+					+ term.getTermhood());
 
 			System.out
 					.println("------------------------------------------------------");
@@ -137,4 +137,16 @@ public class TermsTable {
 		System.out
 				.println("=====================================================================================================================");
 	}
+
+
+	public static void main(String[] args){
+
+
+		Properties properties = System.getProperties();
+
+		System.out.println(properties);
+
+
+	}
+
 }

@@ -13,7 +13,6 @@ import org.epnoi.nlp.NLPHandler;
 import org.epnoi.nlp.gate.GateUtils;
 import org.epnoi.nlp.gate.NLPAnnotationsConstants;
 import org.epnoi.nlp.wikipedia.WikipediaPagesRetriever;
-import org.epnoi.uia.informationstore.SelectorHelper;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -137,8 +136,8 @@ public class RelationalSentencesCorpusCreatorTest {
     // ----------------------------------------------------------------------------------------------------------------------
 
     private void _searchWikipediaCorpus() {
-        Selector selector = new Selector();
-        selector.setProperty(SelectorHelper.TYPE, RDFHelper.WIKIPEDIA_PAGE_CLASS);
+//        Selector selector = new Selector();
+//        selector.setProperty(SelectorHelper.TYPE, RDFHelper.WIKIPEDIA_PAGE_CLASS);
         // String uri = "http://en.wikipedia.org/wiki/AccessibleComputing";
         int nullCounts = 1;
         int sectionsCount = 1;

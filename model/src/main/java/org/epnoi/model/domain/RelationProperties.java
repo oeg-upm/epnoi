@@ -17,6 +17,7 @@ public class RelationProperties {
     @Getter
     String date;
 
+    //TODO this field should be removed
     @Getter
     String domain;
 
@@ -25,5 +26,6 @@ public class RelationProperties {
 
     @Getter
     Long times;
+
 
 }

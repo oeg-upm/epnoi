@@ -38,7 +38,9 @@ public abstract class Relation extends LinkableElement {
         TOPIC_EMERGES_IN_DOMAIN(Resource.Type.TOPIC,Resource.Type.DOMAIN,"emergesIn"),
         TOPIC_MENTIONS_WORD(Resource.Type.TOPIC,Resource.Type.WORD,"mentions"),
         WORD_PAIRS_WITH_WORD(Resource.Type.WORD,Resource.Type.WORD,"pairsWith"),
-        WORD_EMBEDDED_IN_DOMAIN(Resource.Type.WORD,Resource.Type.DOMAIN,"embeddedIn")
+        WORD_EMBEDDED_IN_DOMAIN(Resource.Type.WORD,Resource.Type.DOMAIN,"embeddedIn"),
+        TERM_MENTIONS_WORD(Resource.Type.TERM,Resource.Type.WORD,"mentions"),
+        TERM_APPEARED_IN_DOMAIN(Resource.Type.TERM,Resource.Type.DOMAIN,"appearedIn")
         ;
 
         private final Resource.Type start;

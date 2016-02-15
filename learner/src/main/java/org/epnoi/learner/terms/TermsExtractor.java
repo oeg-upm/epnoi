@@ -5,9 +5,9 @@ import gate.Document;
 import org.epnoi.learner.DomainsTable;
 import org.epnoi.learner.LearningParameters;
 import org.epnoi.model.*;
+import org.epnoi.model.domain.Term;
 import org.epnoi.model.rdf.RDFHelper;
 import org.epnoi.nlp.gate.NLPAnnotationsConstants;
-import org.epnoi.uia.informationstore.SelectorHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -131,11 +131,11 @@ public class TermsExtractor {
 
 	private Content<Object> retrieveAnnotatedDocument(String URI) {
 
-		Selector selector = new Selector();
-		selector.setProperty(SelectorHelper.URI, URI);
-		selector.setProperty(SelectorHelper.TYPE, RDFHelper.PAPER_CLASS);
-		selector.setProperty(SelectorHelper.ANNOTATED_CONTENT_URI, URI + "/"
-				+ AnnotatedContentHelper.CONTENT_TYPE_OBJECT_XML_GATE);
+//		Selector selector = new Selector();
+//		selector.setProperty(SelectorHelper.URI, URI);
+//		selector.setProperty(SelectorHelper.TYPE, RDFHelper.PAPER_CLASS);
+//		selector.setProperty(SelectorHelper.ANNOTATED_CONTENT_URI, URI + "/"
+//				+ AnnotatedContentHelper.CONTENT_TYPE_OBJECT_XML_GATE);
 
 		// TODO
 		logger.severe("Pending to implement by using UDM");
@@ -473,7 +473,16 @@ public class TermsExtractor {
 			Term newTerm = new Term();
 			// The term URI is obtained using an auxiliary function
 			newTerm.setUri(Term.buildURI(term.getWord(), this.targetDomain));
-			newTerm.setAnnotatedTerm(term);
+			newTerm.setConsensus(term.getAnnotation().getDomainConsensus());
+			newTerm.setContent(term.getWord());
+			newTerm.setCvalue(term.getAnnotation().getCValue());
+			newTerm.setLength(term.getAnnotation().getLength());
+			newTerm.setOcurrences(term.getAnnotation().getOcurrences());
+			newTerm.setPertinence(term.getAnnotation().getDomainPertinence());
+			newTerm.setProbability(term.getAnnotation().getTermProbability());
+			newTerm.setSubterms(term.getAnnotation().getOcurrencesAsSubterm());
+			newTerm.setSuperterms(term.getAnnotation().getNumberOfSuperterns());
+			newTerm.setTermhood(term.getAnnotation().getTermhood());
 			termsTable.addTerm(newTerm);
 		}
 

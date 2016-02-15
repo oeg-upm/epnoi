@@ -2,6 +2,8 @@ package org.epnoi.learner;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.learner.modules.Learner;
+import org.epnoi.learner.terms.TermsTable;
+import org.epnoi.model.RelationsTable;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -28,6 +30,20 @@ public class LearnerTest {
 
     @Test
     public void learnOntology(){
+
+        String domainURI = "sample";
+
+        // Learn Ontology
+        learner.learn(domainURI);
+
+        // Retrieve Terms
+        TermsTable terms = learner.retrieveTerminology(domainURI);
+        LOG.info("Terms: " + terms);
+
+        RelationsTable relations = learner.retrieveRelations(domainURI);
+        LOG.info("Relations: " + relations);
+
+
         LOG.info("success");
     }
 

@@ -1,6 +1,6 @@
 package org.epnoi.learner.terms;
 
-import org.epnoi.model.Term;
+import org.epnoi.model.domain.Term;
 
 public class TermVertice {
 	private Term term;

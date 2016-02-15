@@ -13,9 +13,7 @@ public interface WordGraphRepository extends ResourceGraphRepository<WordNode> {
     @Override
     WordNode findOneByUri(String uri);
 
-    //@Query("match (w:Word)-[:EMBEDDED_IN]->(domain{uri:{0}}) return w")
-    // match (w:Word)<-[:MENTIONS]-(Topic)-[:EMERGES_IN]->(domain {uri : 'http://epnoi.org/domains/382130c5-1d84-4b21-a591-90d2c235f0a5'}) return w
-    @Query("match (w:Word)<-[:MENTIONS]-(Topic)-[:EMERGES_IN]->(domain{uri:{0}}) return w")
+    @Query("match (w:Word)-[:EMBEDDED_IN]->(domain{uri:{0}}) return w")
     Iterable<WordNode> findByDomain(String uri);
 
     @Query("match (in:Word)-[s{domain:{0}}]->(out:Word) delete s")

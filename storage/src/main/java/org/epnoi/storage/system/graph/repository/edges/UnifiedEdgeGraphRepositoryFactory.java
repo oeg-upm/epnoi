@@ -57,6 +57,12 @@ public class UnifiedEdgeGraphRepositoryFactory {
     @Autowired
     WordPairsWithWordGraphRepository wordPairsWithWordGraphRepository;
 
+    @Autowired
+    TermAppearedInDomainGraphRepository termAppearedInDomainGraphRepository;
+
+    @Autowired
+    TermMentionsWordGraphRepository termMentionsWordGraphRepository;
+
 
     public RelationGraphRepository repositoryOf(Relation.Type type) throws RepositoryNotFound{
         switch (type){
@@ -75,6 +81,8 @@ public class UnifiedEdgeGraphRepositoryFactory {
             case TOPIC_MENTIONS_WORD: return topicMentionsWordGraphRepository;
             case WORD_EMBEDDED_IN_DOMAIN: return wordEmbeddedInDomainGraphRepository;
             case WORD_PAIRS_WITH_WORD: return wordPairsWithWordGraphRepository;
+            case TERM_APPEARED_IN_DOMAIN: return termAppearedInDomainGraphRepository;
+            case TERM_MENTIONS_WORD: return termMentionsWordGraphRepository;
         }
         throw new RepositoryNotFound("Graph Repository not found for " + type);
     }
@@ -96,6 +104,8 @@ public class UnifiedEdgeGraphRepositoryFactory {
             case TOPIC_MENTIONS_WORD: return TopicMentionsWord.class;
             case WORD_EMBEDDED_IN_DOMAIN: return WordEmbeddedInDomain.class;
             case WORD_PAIRS_WITH_WORD: return WordPairsWithWord.class;
+            case TERM_APPEARED_IN_DOMAIN: return TermAppearedInDomain.class;
+            case TERM_MENTIONS_WORD: return TermMentionsWord.class;
             default: throw new RuntimeException("No relation found for type: " + type);
         }
 
@@ -118,6 +128,8 @@ public class UnifiedEdgeGraphRepositoryFactory {
             case TOPIC_MENTIONS_WORD: return new TopicMentionsWord();
             case WORD_EMBEDDED_IN_DOMAIN: return new WordEmbeddedInDomain();
             case WORD_PAIRS_WITH_WORD: return new WordPairsWithWord();
+            case TERM_APPEARED_IN_DOMAIN: return new TermAppearedInDomain();
+            case TERM_MENTIONS_WORD: return new TermMentionsWord();
             default: throw new RuntimeException("No relation found for type: " + type);
         }
 

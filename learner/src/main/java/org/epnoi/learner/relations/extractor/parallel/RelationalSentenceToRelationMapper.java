@@ -7,6 +7,7 @@ import org.epnoi.learner.relations.patterns.lexical.LexicalRelationalPatternGene
 import org.epnoi.learner.relations.patterns.lexical.RelaxedBigramSoftPatternModel;
 import org.epnoi.learner.terms.TermCandidateBuilder;
 import org.epnoi.model.*;
+import org.epnoi.model.domain.Term;
 
 import java.util.ArrayList;
 import java.util.Iterator;

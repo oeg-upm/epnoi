@@ -1,6 +1,7 @@
 package org.epnoi.model;
 
 import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.Term;
 
 import java.util.*;
 
@@ -108,8 +109,7 @@ public class RelationsTable extends Resource {
 			Term targetTerm, String type, String provenanceSentence,
 			double relationhood) {
 
-		String relationURI = Relation.buildURI(sourceTerm.getAnnotatedTerm()
-				.getWord(), targetTerm.getAnnotatedTerm().getWord(), type,
+		String relationURI = Relation.buildURI(sourceTerm.getContent(), targetTerm.getContent(), type,
 				domain);
 		System.out.println("RelationURI > " + relationURI);
 		if (this.hasRelation(relationURI)) {

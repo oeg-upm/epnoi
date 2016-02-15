@@ -3,7 +3,7 @@ package org.epnoi.learner;
 import org.epnoi.learner.terms.TermVertice;
 import org.epnoi.learner.terms.TermsTable;
 import org.epnoi.model.RelationsTable;
-import org.epnoi.model.Term;
+import org.epnoi.model.domain.Term;
 import org.epnoi.model.commons.Parameters;
 
 import java.util.List;
