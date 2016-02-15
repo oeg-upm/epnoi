@@ -1,7 +1,7 @@
 package org.epnoi.learner.helper;
 
 import lombok.Getter;
-import org.epnoi.knowledgebase.KnowledgeBaseHandler;
+import org.epnoi.knowledgebase.KnowledgeBase;
 import org.epnoi.learner.modules.Learner;
 import org.epnoi.nlp.NLPHandler;
 import org.epnoi.storage.UDM;
@@ -38,7 +38,7 @@ public class LearningHelper {
 
     @Getter
     @Autowired
-    KnowledgeBaseHandler knowledgeBaseHandler;
+    KnowledgeBase knowledgeBase;
 
 
 

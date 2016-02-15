@@ -85,6 +85,7 @@ public class WikidataDumpProcessor {
 
 	public void processEntitiesFromWikidataDump() {
 
+		LOG.info("Processing entities from wikidata dump: " + dumpPath + " ..");
 		// Also add a timer that reports some basic progress information:
 		EntityTimerProcessor entityTimerProcessor = new EntityTimerProcessor(this.timeout);
 		try {
@@ -104,17 +105,15 @@ public class WikidataDumpProcessor {
 				try {
 					dumpProcessingController.setDownloadDirectory(dumpPath);
 				} catch (IOException e) {
-
-					e.printStackTrace();
-					System.exit(-1);
+					LOG.error("Wikidata dump does not exist: " + dumpPath, e);
+					throw new RuntimeException(e);
 				}
 
 				dumpProcessingController.processMostRecentJsonDump();
 
 				break;
 			case JUST_ONE_DAILY_FOR_TEST:
-				dumpProcessingController.processDump(dumpProcessingController
-						.getMostRecentDump(DumpContentType.DAILY));
+				dumpProcessingController.processDump(dumpProcessingController.getMostRecentDump(DumpContentType.DAILY));
 				break;
 			default:
 				throw new RuntimeException("Unsupported dump processing type "
@@ -123,7 +122,7 @@ public class WikidataDumpProcessor {
 		} catch (TimeoutException e) {
 
 		}
-		System.out.println("AQUI IRIA LA COMPACTACION!!!");
+		LOG.debug("AQUI IRIA LA COMPACTACION!!!");
 		// Print final timer results:
 		entityTimerProcessor.close();
 	}

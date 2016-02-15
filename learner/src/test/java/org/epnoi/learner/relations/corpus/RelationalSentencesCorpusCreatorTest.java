@@ -4,7 +4,6 @@ import es.cbadenes.lab.test.IntegrationTest;
 import gate.Document;
 import gate.DocumentContent;
 import org.epnoi.knowledgebase.KnowledgeBase;
-import org.epnoi.knowledgebase.KnowledgeBaseHandler;
 import org.epnoi.learner.Config;
 import org.epnoi.model.*;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
@@ -42,10 +41,9 @@ public class RelationalSentencesCorpusCreatorTest {
     NLPHandler nlpHandler;
 
     @Autowired
-    KnowledgeBaseHandler knowledgeBaseHandler;
+    KnowledgeBase knowledgeBase;
 
     private RelationalSentencesCorpus corpus;
-    private KnowledgeBase knowledgeBase;
     private RelationalSentencesCorpusCreationParameters parameters;
     private boolean storeResult;
     private boolean verbose;
@@ -60,12 +58,6 @@ public class RelationalSentencesCorpusCreatorTest {
                 + parameters.toString());
         this.parameters = parameters;
         this.corpus = new RelationalSentencesCorpus();
-
-        try {
-            this.knowledgeBase = knowledgeBaseHandler.getKnowledgeBase();
-        } catch (EpnoiResourceAccessException e) {
-            throw new EpnoiInitializationException(e.getMessage());
-        }
 
         this.storeResult = (boolean) parameters.getParameterValue(RelationalSentencesCorpusCreationParameters.STORE);
 

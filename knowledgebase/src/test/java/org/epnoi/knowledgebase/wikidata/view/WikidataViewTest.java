@@ -1,20 +1,42 @@
-package org.epnoi.knowledgebase.wikidata;
+package org.epnoi.knowledgebase.wikidata.view;
 
+import es.cbadenes.lab.test.IntegrationTest;
+import org.epnoi.knowledgebase.Config;
 import org.epnoi.model.RelationHelper;
 import org.epnoi.model.WikidataView;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.*;
 
 /**
  * Created by cbadenes on 10/02/16.
  */
-public class WikidataHandlerBuilderTest {
+@Category(IntegrationTest.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = Config.class)
+@TestPropertySource(properties = {
+        "epnoi.knowledgeBase.wordnet.considered = true",
+        "epnoi.knowledgeBase.wordnet.dictionaryPath = /Users/cbadenes/Tools/drinventor/wordnet/dictWN3.1",
+        "epnoi.knowledgeBase.wikidata.timeout = 100",
+        "epnoi.knowledgeBase.wikidata.offline = true",
+        "epnoi.knowledgeBase.wikidata.mode = create",
+        "epnoi.knowledgeBase.wikidata.inMemory = false",
+        "epnoi.knowledgeBase.wikidata.dump.mode = json",
+        "epnoi.knowledgeBase.wikidata.dump.path = /Users/cbadenes/Tools/drinventor/wikidata",
+        "epnoi.knowledgeBase.wikidata.uri = http://www.epnoi.org/wikidataView"})
+public class WikidataViewTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WikidataHandlerBuilderTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WikidataViewTest.class);
 
 
+    @Test
     public void basic(){
         //System.out.println("Creating the dictionary ");
         Map<String, Set<String>> labelsDictionary = new HashMap<>();

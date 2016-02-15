@@ -1,10 +1,13 @@
 package org.epnoi.knowledgebase.wikidata.view;
 
-import org.epnoi.knowledgebase.wikidata.DumpProcessingMode;
 import org.epnoi.knowledgebase.wikidata.WikidataDumpProcessor;
 import org.epnoi.model.RelationHelper;
 import org.epnoi.model.WikidataView;
+import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.SerializedObject;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
+import org.epnoi.storage.UDM;
+import org.epnoi.storage.generator.TimeGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +15,7 @@ import org.springframework.stereotype.Component;
 import org.wikidata.wdtk.datamodel.interfaces.*;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class WikidataViewCreator {
@@ -25,28 +25,17 @@ public class WikidataViewCreator {
 	@org.springframework.beans.factory.annotation.Value("${epnoi.knowledgeBase.wikidata.mode}")
 	String wikidataMode;
 
-	@org.springframework.beans.factory.annotation.Value("${epnoi.knowledgeBase.wikidata.offline}")
-	Boolean offline;
-
-	@org.springframework.beans.factory.annotation.Value("${epnoi.knowledgeBase.wikidata.inMemory}")
-	Boolean wikidataInMemory;
-
-	@org.springframework.beans.factory.annotation.Value("${epnoi.knowledgeBase.wikidata.dump.path}")
-	String wikidataDumpPath;
-
-	@org.springframework.beans.factory.annotation.Value("${epnoi.knowledgeBase.wikidata.dump.mode}")
-	String wikidataDumpMode;
-
 	@org.springframework.beans.factory.annotation.Value("${epnoi.knowledgeBase.wikidata.uri}")
 	String wikidataUri;
-
-	@org.springframework.beans.factory.annotation.Value("${epnoi.knowledgeBase.wikidata.timeout}")
-	Integer wikidataTimeout;
 
 	@Autowired
 	WikidataDumpProcessor wikidataDumpProcessor;
 
-	private DumpProcessingMode dumpProcessingMode;
+	@Autowired
+	UDM udm;
+
+	@Autowired
+	TimeGenerator timeGenerator;
 
 	private Map<String, Set<String>> labelsDictionary = new HashMap<>();
 
@@ -54,48 +43,61 @@ public class WikidataViewCreator {
 
 	private Map<String, Set<String>> hypernymRelations = new HashMap<>();
 
-	Map<String, Map<String, Set<String>>> relationsTable = new HashMap<>();
+	private Map<String, Map<String, Set<String>>> relationsTable = new HashMap<>();
 
 
 	@PostConstruct
 	public void setup() throws EpnoiInitializationException {
-		LOG.info("Initialiazing the WikidataViewCreator with the following parameters");
-
-		this.dumpProcessingMode = DumpProcessingMode.from(wikidataDumpMode);
+		LOG.info("Initializing the WikidataViewCreator");
 
 		// Subscribe to the most recent entity documents of type wikibase item:
 		this.wikidataDumpProcessor.registerEntityDocumentProcessor(new HypernymRelationsEntityProcessor());
 
 	}
 
-	public WikidataView create() {
-		LOG.info("Creating a WikidataView with the following parameters");
-		WikidataView wikidataView = null;
+	public boolean hasToBeCreated(){
+		return wikidataMode.equalsIgnoreCase("create");
+	}
 
-		relationsTable.put(RelationHelper.HYPERNYMY, hypernymRelations);
+	public WikidataView create() {
+		LOG.info("Creating a new WikidataView ..");
+
+		this.relationsTable.put(RelationHelper.HYPERNYMY, hypernymRelations);
 		this.wikidataDumpProcessor.processEntitiesFromWikidataDump();
-		wikidataView = new WikidataView(wikidataUri, labelsDictionary, labelsReverseDictionary, relationsTable);
-		
+		WikidataView wikidataView = new WikidataView(wikidataUri, labelsDictionary, labelsReverseDictionary, relationsTable);
+
+		// Compressing wikidata view
 		WikidataViewCompressor wikidataViewCompressor = new WikidataViewCompressor();
-		
 		wikidataView= wikidataViewCompressor.compress(wikidataView);
 
 		return wikidataView;
+
 	}
 
 
 	public void store(WikidataView wikidataView) {
 
-		LOG.error("Pending to implement using UDM");
-//		this.core.getInformationHandler().remove(wikidataView.getUri(),RDFHelper.WIKIDATA_VIEW_CLASS);
-//		this.core.getInformationHandler().put(wikidataView,Context.getEmptyContext());
+		LOG.info("Saving wikidataview: " + wikidataView.getUri() + " by using UDM..");
+
+		SerializedObject serializedObject = new SerializedObject();
+		serializedObject.setUri(wikidataView.getUri());
+		serializedObject.setCreationTime(timeGenerator.asISO());
+		serializedObject.setInstance(wikidataView);
+
+		udm.save(Resource.Type.SERIALIZED_OBJECT).with(serializedObject);
 	}
 
 
 	public WikidataView retrieve(String uri) {
-		LOG.error("Pending to implement using UDM");
-//		return (WikidataView) this.core.getInformationHandler().get(uri,RDFHelper.WIKIDATA_VIEW_CLASS);
-		return null;
+		LOG.debug("Getting wikidata view: " + uri +" by using UDM");
+		WikidataView view = null;
+		Optional<Resource> result = udm.read(Resource.Type.SERIALIZED_OBJECT).byUri(uri);
+		if (result.isPresent()){
+			SerializedObject serializedObject = (SerializedObject) result.get();
+			view = (WikidataView) serializedObject.getInstance();
+		}
+		LOG.debug("Wikidata view: " + uri +" read: " + view);
+		return view;
 	}
 
 

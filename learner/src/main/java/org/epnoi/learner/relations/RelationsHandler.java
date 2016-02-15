@@ -53,12 +53,7 @@ public class RelationsHandler {
 		this.consideredDomains = (List<Domain>) this.parameters
 				.getParameterValue(RelationsHandlerParameters.CONSIDERED_DOMAINS);
 
-		try {
-			this.knowledgeBase = helper.getKnowledgeBaseHandler().getKnowledgeBase();
-		} catch (EpnoiResourceAccessException e) {
-			
-			throw new EpnoiInitializationException(e.getMessage());
-		}
+		this.knowledgeBase = helper.getKnowledgeBase();
 
 		_initDomainsRelationsTables();
 

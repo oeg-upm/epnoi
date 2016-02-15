@@ -5,37 +5,33 @@ import org.epnoi.knowledgebase.wordnet.WordNetHandler;
 import org.epnoi.model.RelationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+@Component
 public class KnowledgeBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(KnowledgeBase.class);
 
     private static Set<String> ambiguousTerms = new HashSet<String>(Arrays.asList("film", "taxon", "band", "song", "album","episode","magazine","human"));
     
+    @Value("${epnoi.knowledgeBase.wordnet.considered}")
+    Boolean considerWordNet;
+
+    @Value("${epnoi.knowledgeBase.wikidata.considered}")
+    Boolean considerWikidata;
+
+    @Autowired
     WordNetHandler wordNetHandler;
+
+    @Autowired
     WikidataHandler wikidataHandler;
 
-    boolean considerWordNet;
-    boolean considerWikidata;
-
-
-
-    public KnowledgeBase(WordNetHandler wordNetHandler, WikidataHandler wikidataHandler) {
-        this.wordNetHandler = wordNetHandler;
-        this.wikidataHandler = wikidataHandler;
-        this.considerWordNet = true;
-        this.considerWikidata = true;
-    }
-
-
-    public void init(boolean wikidataEnabled, boolean wordNetEnabled) {
-        this.considerWikidata = wikidataEnabled;
-        this.considerWordNet = wordNetEnabled;
-    }
 
     public boolean areRelated(String source, String target, String type) {
         LOG.info("Wordnet " + this.considerWordNet + " Wikidata " + this.considerWikidata);

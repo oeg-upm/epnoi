@@ -2,6 +2,7 @@ package org.epnoi.storage.system.document.repository;
 
 import org.apache.commons.lang.WordUtils;
 import org.epnoi.model.domain.Resource;
+import org.epnoi.storage.exception.RepositoryNotFound;
 import org.epnoi.storage.system.Repository;
 import org.epnoi.model.domain.ResourceUtils;
 import org.slf4j.Logger;
@@ -27,9 +28,11 @@ public class UnifiedDocumentRepository implements Repository<Resource,Resource.T
 
     @Override
     public void save(Resource resource, Resource.Type type){
-        try{
+        try {
             factory.repositoryOf(type).save(ResourceUtils.map(resource, factory.mappingOf(type)));
-        }catch (RuntimeException e){
+        } catch (RepositoryNotFound e){
+            LOG.debug(e.getMessage());
+        } catch (RuntimeException e){
             LOG.warn(e.getMessage());
         }
     }
@@ -97,7 +100,9 @@ public class UnifiedDocumentRepository implements Repository<Resource,Resource.T
     public void delete(Resource.Type type, String uri){
         try{
             factory.repositoryOf(type).delete(uri);
-        }catch (RuntimeException e){
+        } catch (RepositoryNotFound e){
+            LOG.debug(e.getMessage());
+        } catch (RuntimeException e){
             LOG.warn(e.getMessage());
         }
     }
@@ -106,7 +111,9 @@ public class UnifiedDocumentRepository implements Repository<Resource,Resource.T
     public void deleteAll(Resource.Type type) {
         try{
             factory.repositoryOf(type).deleteAll();
-        }catch (RuntimeException e){
+        } catch (RepositoryNotFound e){
+            LOG.debug(e.getMessage());
+        } catch (RuntimeException e){
             LOG.warn(e.getMessage());
         }
     }

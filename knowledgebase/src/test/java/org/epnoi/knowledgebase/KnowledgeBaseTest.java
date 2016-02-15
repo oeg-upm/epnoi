@@ -1,6 +1,7 @@
 package org.epnoi.knowledgebase;
 
 import es.cbadenes.lab.test.IntegrationTest;
+import org.epnoi.model.RelationHelper;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 import org.epnoi.model.exceptions.EpnoiResourceAccessException;
 import org.junit.Test;
@@ -25,7 +26,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
         "epnoi.knowledgeBase.wikidata.considered = true",
         "epnoi.knowledgeBase.wikidata.timeout = 100",
         "epnoi.knowledgeBase.wikidata.offline = true",
-        "epnoi.knowledgeBase.wikidata.mode = create",
+        "epnoi.knowledgeBase.wikidata.mode = load",
         "epnoi.knowledgeBase.wikidata.inMemory = false",
         "epnoi.knowledgeBase.wikidata.dump.mode = json",
         "epnoi.knowledgeBase.wikidata.dump.path = /Users/cbadenes/Tools/drinventor/wikidata",
@@ -35,7 +36,23 @@ public class KnowledgeBaseTest {
     private static final Logger LOG = LoggerFactory.getLogger(KnowledgeBaseTest.class);
 
     @Autowired
-    KnowledgeBaseHandler knowledgeBaseHandler;
+    KnowledgeBase knowledgeBase;
+
+    @Test
+    public void dogs() throws EpnoiInitializationException {
+        LOG.info("Starting the Knowledge Base test!!");
+
+        LOG.info("Testing for dog-canine-------------------------------------------------------");
+        LOG.info(""+knowledgeBase.areRelated("dog", "canrine", RelationHelper.HYPERNYMY));
+
+        LOG.info("Testing for dogs-canine-------------------------------------------------------");
+        LOG.info(""+knowledgeBase.areRelated("dogs", "canine",RelationHelper.HYPERNYMY));
+
+        LOG.info("Testing for dog-canines-------------------------------------------------------");
+        LOG.info(""+knowledgeBase.areRelated("dog", "canines ",RelationHelper.HYPERNYMY));
+
+        LOG.info("Starting the CuratedRelationsTableCreator test!!");
+    }
 
     @Test
     public void basic() {

@@ -22,7 +22,16 @@ import java.util.Set;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = Config.class)
 @TestPropertySource(properties = {
-        "epnoi.knowledgeBase.wordnet.dictionaryPath = /epnoi/epnoideployment/wordnet/dictWN40K/dict"})
+        "epnoi.knowledgeBase.wordnet.considered = true",
+        "epnoi.knowledgeBase.wordnet.dictionaryPath = /Users/cbadenes/Tools/drinventor/wordnet/dictWN3.1",
+        "epnoi.knowledgeBase.wikidata.considered = true",
+        "epnoi.knowledgeBase.wikidata.timeout = 100",
+        "epnoi.knowledgeBase.wikidata.offline = true",
+        "epnoi.knowledgeBase.wikidata.mode = load",
+        "epnoi.knowledgeBase.wikidata.inMemory = true",
+        "epnoi.knowledgeBase.wikidata.dump.mode = json",
+        "epnoi.knowledgeBase.wikidata.dump.path = /Users/cbadenes/Tools/drinventor/wikidata",
+        "epnoi.knowledgeBase.wikidata.uri = http://www.epnoi.org/wikidataView"})
 public class WordNetHandlerTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(WordNetHandlerTest.class);

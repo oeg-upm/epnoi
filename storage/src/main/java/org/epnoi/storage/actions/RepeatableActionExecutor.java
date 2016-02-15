@@ -39,7 +39,7 @@ public abstract class RepeatableActionExecutor {
         try {
             return Optional.of(function.run());
         }catch (RepositoryNotFound e){
-            LOG.warn(e.getMessage());
+            LOG.debug(e.getMessage());
             return Optional.empty();
         }catch (Exception e){
             if (retries > MAX_RETRIES){

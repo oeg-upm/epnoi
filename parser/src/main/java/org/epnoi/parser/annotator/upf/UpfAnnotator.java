@@ -2,6 +2,7 @@ package org.epnoi.parser.annotator.upf;
 
 import edu.upf.taln.dri.lib.Factory;
 import edu.upf.taln.dri.lib.exception.DRIexception;
+import edu.upf.taln.dri.lib.loader.PDFloaderImpl;
 import edu.upf.taln.dri.lib.model.Document;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -27,6 +28,9 @@ public class UpfAnnotator {
     public void setup() throws DRIexception {
 
         LOG.info("Initializing UPF Text Mining Framework from: " + driConfigPath + " ..");
+
+        // Enable the PDFX proxy service
+        PDFloaderImpl.PDFXproxyEnabled = true;
 
         // Set property file path
         Factory.setDRIPropertyFilePath(driConfigPath);

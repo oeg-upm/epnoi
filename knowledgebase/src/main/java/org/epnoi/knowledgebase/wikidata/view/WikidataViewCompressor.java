@@ -2,17 +2,19 @@ package org.epnoi.knowledgebase.wikidata.view;
 
 import org.epnoi.model.RelationHelper;
 import org.epnoi.model.WikidataView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Logger;
 
 public class WikidataViewCompressor {
-	private static final Logger logger = Logger
-			.getLogger(WikidataViewCompressor.class.getName());
+
+	private static final Logger LOG = LoggerFactory.getLogger(WikidataViewCompressor.class);
+
 	private String URI;
 	private Map<String, Set<String>> labelsDictionary;
 	private Map<String, Set<String>> labelsReverseDictionary;
@@ -24,11 +26,10 @@ public class WikidataViewCompressor {
 	private Set<String> validTargetIRIs = new HashSet<String>();
 
 	public WikidataView compress(WikidataView wikidataView) {
-		//logger.info("Compressing: " + wikidataView);
+		LOG.info("Compressing wikidata view: " + wikidataView);
 		this.URI = wikidataView.getUri();
 		this.labelsDictionary = wikidataView.getLabelsDictionary();
-		this.labelsReverseDictionary = wikidataView
-				.getLabelsReverseDictionary();
+		this.labelsReverseDictionary = wikidataView.getLabelsReverseDictionary();
 		this.relations = wikidataView.getRelations();
 
 		this._generateValidTargetIRIs();
@@ -44,8 +45,7 @@ public class WikidataViewCompressor {
 	// --------------------------------------------------------------------------------------
 
 	private void _generateValidTargetIRIs() {
-		for (Set<String> targetIRIs : this.relations.get(
-				RelationHelper.HYPERNYMY).values()) {
+		for (Set<String> targetIRIs : this.relations.get(RelationHelper.HYPERNYMY).values()) {
 			for (String targetIRI : targetIRIs) {
 				this.validTargetIRIs.add(targetIRI);
 			}
@@ -55,14 +55,11 @@ public class WikidataViewCompressor {
 	// --------------------------------------------------------------------------------------
 
 	private void _generateDictionaries() {
-		for (Entry<String, Set<String>> reverseDictionaryEntry : labelsReverseDictionary
-				.entrySet()) {
+		for (Entry<String, Set<String>> reverseDictionaryEntry : labelsReverseDictionary.entrySet()) {
 			if (isValidIRI(reverseDictionaryEntry.getKey())) {
 				for (String label : reverseDictionaryEntry.getValue()) {
-					_addToDictionary(label, reverseDictionaryEntry.getKey(),
-							compressedDictionary);
-					_addToDictionary(reverseDictionaryEntry.getKey(), label,
-							compressedlabelsReverseDictionary);
+					_addToDictionary(label, reverseDictionaryEntry.getKey(), compressedDictionary);
+					_addToDictionary(reverseDictionaryEntry.getKey(), label, compressedlabelsReverseDictionary);
 				}
 			}
 		}
@@ -73,8 +70,7 @@ public class WikidataViewCompressor {
 	private boolean isValidIRI(String IRI) {
 		// We consider valid only those IRIs that either the source or the
 		// target of some relation
-		return (this.validTargetIRIs.contains(IRI) || this.relations
-				.get(RelationHelper.HYPERNYMY).keySet().contains(IRI));
+		return (this.validTargetIRIs.contains(IRI) || this.relations.get(RelationHelper.HYPERNYMY).keySet().contains(IRI));
 	}
 
 	private void _addToDictionary(String key, String value,
