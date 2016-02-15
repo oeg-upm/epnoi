@@ -12,6 +12,9 @@ create index on research.sources (protocol);
 create index on research.sources (url);
 create index on research.sources (domain);
 
+create table if not exists research.serializations(uri text, creationTime text, instance blob, primary key (uri));
+create index on research.serializations (creationTime);
+
 create table if not exists research.domains(uri text, creationTime text, name text, description text, primary key (uri));
 create index on research.domains (creationTime);
 create index on research.domains (name);

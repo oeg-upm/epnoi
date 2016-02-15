@@ -36,6 +36,9 @@ public class UnifiedColumnRepositoryFactory {
     @Autowired
     WordColumnRepository wordColumnRepository;
 
+    @Autowired
+    SerializedObjectColumnRepository serializedObjectColumnRepository;
+
     public BaseColumnRepository repositoryOf(Resource.Type type) throws RepositoryNotFound {
         switch (type){
             case ANALYSIS: return analysisColumnRepository;
@@ -46,6 +49,7 @@ public class UnifiedColumnRepositoryFactory {
             case SOURCE: return sourceColumnRepository;
             case TOPIC: return topicColumnRepository;
             case WORD: return wordColumnRepository;
+            case SERIALIZED_OBJECT: return serializedObjectColumnRepository;
         }
         throw new RepositoryNotFound("Column Repository not found for " + type);
     }
@@ -60,6 +64,7 @@ public class UnifiedColumnRepositoryFactory {
             case SOURCE: return SourceColumn.class;
             case TOPIC: return TopicColumn.class;
             case WORD: return WordColumn.class;
+            case SERIALIZED_OBJECT: return SerializedObjectColumn.class;
         }
         throw new RuntimeException("Mapping not found for " + type);
     }

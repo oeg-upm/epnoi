@@ -17,6 +17,7 @@ public class Resource extends LinkableElement {
 		WORD("word","words", Word.class),
 		ANALYSIS("analysis","analyses", Analysis.class),
 		TOPIC("topic","topics", Topic.class),
+		SERIALIZED_OBJECT("object","objects",SerializedObject.class),
 		ANY("*","*", Resource.class);
 
 		String plural;

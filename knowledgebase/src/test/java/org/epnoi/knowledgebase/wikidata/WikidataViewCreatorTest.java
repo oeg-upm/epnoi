@@ -21,12 +21,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = Config.class)
 @TestPropertySource(properties = {
+        "epnoi.knowledgeBase.wordnet.considered = true",
+        "epnoi.knowledgeBase.wordnet.dictionaryPath = /Users/cbadenes/Tools/drinventor/wordnet/dictWN3.1",
         "epnoi.knowledgeBase.wikidata.timeout = 100",
         "epnoi.knowledgeBase.wikidata.offline = true",
         "epnoi.knowledgeBase.wikidata.mode = create",
         "epnoi.knowledgeBase.wikidata.inMemory = false",
         "epnoi.knowledgeBase.wikidata.dump.mode = json",
-        "epnoi.knowledgeBase.wikidata.dump.path = /opt/epnoi/epnoideployment/wikidata",
+        "epnoi.knowledgeBase.wikidata.dump.path = /Users/cbadenes/Tools/drinventor/wikidata",
         "epnoi.knowledgeBase.wikidata.uri = http://www.epnoi.org/wikidataView"})
 public class WikidataViewCreatorTest {
 
