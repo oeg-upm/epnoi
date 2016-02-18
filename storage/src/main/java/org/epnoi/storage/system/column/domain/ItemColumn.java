@@ -3,8 +3,7 @@ package org.epnoi.storage.system.column.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.epnoi.model.domain.Item;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Item;
 import org.springframework.data.cassandra.mapping.PrimaryKey;
 import org.springframework.data.cassandra.mapping.Table;
 

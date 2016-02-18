@@ -3,10 +3,10 @@ package org.epnoi.storage.system.graph.domain.nodes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.epnoi.model.domain.Relation;
-import org.epnoi.storage.system.graph.domain.edges.DocumentBundlesItem;
-import org.epnoi.storage.system.graph.domain.edges.DocumentSimilarToDocument;
-import org.epnoi.storage.system.graph.domain.edges.DocumentDealsWithTopic;
+import org.epnoi.storage.system.graph.domain.edges.BundlesEdge;
+import org.epnoi.storage.system.graph.domain.edges.Edge;
+import org.epnoi.storage.system.graph.domain.edges.SimilarToDocumentsEdge;
+import org.epnoi.storage.system.graph.domain.edges.DealsWithFromDocumentEdge;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
@@ -23,56 +23,43 @@ import java.util.Set;
 public class DocumentNode extends Node {
 
     @Relationship(type = "SIMILAR_TO", direction="UNDIRECTED")
-    private Set<DocumentSimilarToDocument> documents = new HashSet<>();
+    private Set<SimilarToDocumentsEdge> documents = new HashSet<>();
 
     @Relationship(type = "DEALS_WITH", direction="OUTGOING")
-    private Set<DocumentDealsWithTopic> topics = new HashSet<>();
+    private Set<DealsWithFromDocumentEdge> topics = new HashSet<>();
 
     @Relationship(type = "BUNDLES", direction="OUTGOING")
-    private Set<DocumentBundlesItem> items = new HashSet<>();
-
-
-    public void addSimilarDocument(DocumentSimilarToDocument similarDocument){
-        documents.add(similarDocument);
-    }
-
-    public void addTopicDealtByDocument(DocumentDealsWithTopic topicDealtByDocument){
-        topics.add(topicDealtByDocument);
-    }
-
-    public void addItemBundledByDocument(DocumentBundlesItem itemBundledByDocument){
-        items.add(itemBundledByDocument);
-    }
+    private Set<BundlesEdge> items = new HashSet<>();
 
     @Override
-    public void add(Relation relation, Relation.Type type) {
-        switch (type){
-            case DOCUMENT_BUNDLES_ITEM:
-                items.add((DocumentBundlesItem) relation);
+    public void add(Edge edge) {
+        switch (edge.getType()){
+            case BUNDLES:
+                items.add((BundlesEdge) edge);
                 break;
-            case DOCUMENT_DEALS_WITH_TOPIC:
-                topics.add((DocumentDealsWithTopic) relation);
+            case DEALS_WITH_FROM_DOCUMENT:
+                topics.add((DealsWithFromDocumentEdge) edge);
                 break;
-            case DOCUMENT_SIMILAR_TO_DOCUMENT:
-                documents.add((DocumentSimilarToDocument) relation);
+            case SIMILAR_TO_DOCUMENTS:
+                documents.add((SimilarToDocumentsEdge) edge);
                 break;
-            default: throw new RuntimeException( "Relation " + type + " not handled from Document Node");
+            default: throw new RuntimeException( "Relation " + edge + " not handled from Document Node");
         }
     }
 
     @Override
-    public void remove(Relation relation, Relation.Type type) {
-        switch (type){
-            case DOCUMENT_BUNDLES_ITEM:
-                items.remove((DocumentBundlesItem) relation);
+    public void remove(Edge edge) {
+        switch (edge.getType()){
+            case BUNDLES:
+                items.remove((BundlesEdge) edge);
                 break;
-            case DOCUMENT_DEALS_WITH_TOPIC:
-                topics.remove((DocumentDealsWithTopic) relation);
+            case DEALS_WITH_FROM_DOCUMENT:
+                topics.remove((DealsWithFromDocumentEdge) edge);
                 break;
-            case DOCUMENT_SIMILAR_TO_DOCUMENT:
-                documents.remove((DocumentSimilarToDocument) relation);
+            case SIMILAR_TO_DOCUMENTS:
+                documents.remove((SimilarToDocumentsEdge) edge);
                 break;
-            default: throw new RuntimeException( "Relation " + type + " not handled from Document Node");
+            default: throw new RuntimeException( "Relation " + edge + " not handled from Document Node");
         }
     }
 }

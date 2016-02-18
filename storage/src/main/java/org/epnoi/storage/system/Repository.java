@@ -1,26 +1,26 @@
 package org.epnoi.storage.system;
 
 import org.epnoi.model.domain.LinkableElement;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 
 import java.util.Optional;
 
 /**
  * Created by cbadenes on 03/02/16.
  */
-public interface  Repository<R extends LinkableElement,T> {
+public interface  Repository<L extends LinkableElement,T> {
 
-    void save(R resource, T type);
+    void save(L linkableElement);
 
     Boolean exists(T type, String uri);
 
-    Optional<R> read(T type, String uri);
+    Optional<L> read(T type, String uri);
 
-    Iterable<R> findAll(T type);
+    Iterable<L> findAll(T type);
 
-    Iterable<R> findBy(T resultType,String field, String value);
+    Iterable<L> findBy(T resultType, String field, String value);
 
-    Iterable<R> findIn(T resultType,Resource.Type referenceType,String referenceURI);
+    Iterable<L> findIn(T resultType, Resource.Type referenceType, String referenceURI);
 
     void deleteAll(T type);
 

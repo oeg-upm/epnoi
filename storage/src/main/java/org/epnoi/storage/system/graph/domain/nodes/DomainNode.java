@@ -3,9 +3,8 @@ package org.epnoi.storage.system.graph.domain.nodes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.epnoi.model.domain.Relation;
-import org.epnoi.storage.system.graph.domain.edges.DomainContainsDocument;
-import org.epnoi.storage.system.graph.domain.edges.SimilarDomain;
+import org.epnoi.storage.system.graph.domain.edges.ContainsEdge;
+import org.epnoi.storage.system.graph.domain.edges.Edge;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
@@ -21,38 +20,26 @@ import java.util.Set;
 @ToString(callSuper = true)
 public class DomainNode extends Node {
 
-    @Relationship(type = "SIMILAR_TO", direction="UNDIRECTED")
-    private Set<SimilarDomain> domains = new HashSet<>();
-
     @Relationship(type = "CONTAINS", direction="OUTGOING")
-    private Set<DomainContainsDocument> documents = new HashSet<>();
-
-
-    public void addSimilarDomain(SimilarDomain similarDomain){
-        domains.add(similarDomain);
-    }
-
-    public void addContainedDocument(DomainContainsDocument containedDocument){
-        documents.add(containedDocument);
-    }
+    private Set<ContainsEdge> documents = new HashSet<>();
 
     @Override
-    public void add(Relation relation, Relation.Type type) {
-        switch(type){
-            case DOMAIN_CONTAINS_DOCUMENT:
-                documents.add((DomainContainsDocument) relation);
+    public void add(Edge edge) {
+        switch(edge.getType()){
+            case CONTAINS:
+                documents.add((ContainsEdge) edge);
                 break;
-            default: throw new RuntimeException( "Relation " + type + " not handled from Domain Node");
+            default: throw new RuntimeException( "Relation " + edge + " not handled from Domain Node");
         }
     }
 
     @Override
-    public void remove(Relation relation, Relation.Type type) {
-        switch(type){
-            case DOMAIN_CONTAINS_DOCUMENT:
-                documents.remove((DomainContainsDocument) relation);
+    public void remove(Edge edge) {
+        switch(edge.getType()){
+            case CONTAINS:
+                documents.remove((ContainsEdge) edge);
                 break;
-            default: throw new RuntimeException( "Relation " + type + " not handled from Domain Node");
+            default: throw new RuntimeException( "Relation " + edge + " not handled from Domain Node");
         }
     }
 }

@@ -3,7 +3,7 @@ package org.epnoi.storage.system.column;
 import org.epnoi.storage.system.column.domain.WordColumn;
 import org.epnoi.storage.system.column.repository.BaseColumnRepository;
 import org.epnoi.storage.system.column.repository.WordColumnRepository;
-import org.epnoi.model.domain.ResourceUtils;
+import org.epnoi.model.utils.ResourceUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,7 +3,7 @@ package org.epnoi.storage.system.column.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.epnoi.model.domain.Word;
+import org.epnoi.model.domain.resources.Word;
 import org.springframework.data.cassandra.mapping.PrimaryKey;
 import org.springframework.data.cassandra.mapping.Table;
 

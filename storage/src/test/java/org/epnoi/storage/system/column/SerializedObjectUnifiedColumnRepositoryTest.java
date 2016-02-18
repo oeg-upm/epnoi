@@ -2,7 +2,6 @@ package org.epnoi.storage.system.column;
 
 import org.epnoi.model.domain.LinkableElement;
 import org.epnoi.storage.system.column.domain.SerializedObjectColumn;
-import org.epnoi.storage.system.column.domain.WordColumn;
 import org.epnoi.storage.system.column.repository.BaseColumnRepository;
 import org.epnoi.storage.system.column.repository.SerializedObjectColumnRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,12 +1,14 @@
 package org.epnoi.storage.system.graph.repository.edges;
 
 import org.apache.commons.lang.WordUtils;
-import org.epnoi.model.domain.Relation;
-import org.epnoi.model.domain.Resource;
-import org.epnoi.model.domain.ResourceUtils;
+import org.epnoi.model.domain.relations.Relation;
+import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.utils.ResourceUtils;
+import org.epnoi.storage.actions.RepeatableActionExecutor;
 import org.epnoi.storage.system.Repository;
 import org.epnoi.storage.system.graph.domain.edges.Edge;
-import org.epnoi.storage.actions.RepeatableActionExecutor;
+import org.epnoi.storage.system.graph.domain.nodes.Node;
+import org.epnoi.storage.system.graph.repository.nodes.UnifiedNodeGraphRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +25,29 @@ import java.util.Optional;
 public class UnifiedEdgeGraphRepository extends RepeatableActionExecutor implements Repository<Relation,Relation.Type>  {
 
     @Autowired
+    UnifiedNodeGraphRepository nodeRepository;
+
+    @Autowired
     UnifiedEdgeGraphRepositoryFactory factory;
 
     private static final Logger LOG = LoggerFactory.getLogger(UnifiedEdgeGraphRepository.class);
 
     @Override
-    public void save(Relation relation, Relation.Type type){
-        performRetries(0, "save " + type + "[" + relation + "]", () ->
-                factory.repositoryOf(type).save(ResourceUtils.map(relation, factory.mappingOf(type))));
+    public void save(Relation relation){
+
+        Optional<Resource> sn = nodeRepository.read(relation.getStartType(), relation.getStartUri());
+        if (!sn.isPresent()) throw new RuntimeException("Start Node with uri: " + relation.getStartUri() + " not found");
+
+        Optional<Resource> en = nodeRepository.read(relation.getEndType(), relation.getEndUri());
+        if (!en.isPresent()) throw new RuntimeException("End Node with uri: " + relation.getStartUri() + " not found");
+
+
+        // Build the edge between nodes
+        Edge edge = (Edge) ResourceUtils.map(relation, factory.mappingOf(relation.getType()));
+        edge.setStart((Node) sn.get());
+        edge.setEndNode((Node) en.get());
+
+        performRetries(0, "save " + relation.getType() + "[" + relation + "]", () -> factory.repositoryOf(relation.getType()).save(edge));
     }
 
     @Override
@@ -91,7 +108,7 @@ public class UnifiedEdgeGraphRepository extends RepeatableActionExecutor impleme
     public void delete(Relation.Type type, String uri) {
         performRetries(0,"delete " + type + "["+uri+"]", () -> {
             Relation relation = factory.repositoryOf(type).findOneByUri(uri);
-            if (relation != null) factory.repositoryOf(type).delete( factory.mappingOf(type).cast(relation) );
+            if (relation != null) factory.repositoryOf(type).delete(factory.mappingOf(type).cast(relation) );
             return 1;
         });
     }

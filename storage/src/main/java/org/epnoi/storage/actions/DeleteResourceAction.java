@@ -1,7 +1,7 @@
 package org.epnoi.storage.actions;
 
 import org.epnoi.model.Event;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.modules.RoutingKey;
 import org.epnoi.storage.Helper;
 import org.epnoi.storage.session.UnifiedTransaction;
@@ -72,9 +72,9 @@ public class DeleteResourceAction {
             LOG.info("Deleted: "+type.name()+"[" + uri+"]");
 
             //Publish the event
-            Resource resource = new Resource();
-            resource.setUri(uri);
-            helper.getEventBus().post(Event.from(resource), RoutingKey.of(type, Resource.State.DELETED));
+
+            //TODO
+            //helper.getEventBus().post(Event.from(resource), RoutingKey.of(type, Resource.State.DELETED));
 
         }catch (Exception e){
             LOG.error("Unexpected error during delete of '"+uri,e);

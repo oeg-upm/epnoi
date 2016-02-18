@@ -1,6 +1,7 @@
 package org.epnoi.storage.system.graph.repository.edges;
 
-import org.epnoi.model.domain.Relation;
+import org.epnoi.model.domain.relations.Relation;
+import org.epnoi.storage.system.graph.domain.edges.Edge;
 import org.springframework.data.neo4j.repository.GraphRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 

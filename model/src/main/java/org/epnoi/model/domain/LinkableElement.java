@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
 
@@ -12,7 +13,7 @@ import java.io.Serializable;
  */
 @ToString
 @EqualsAndHashCode(of={"uri"})
-public class LinkableElement implements Serializable {
+public class LinkableElement implements Serializable, Comparable {
 
     public static final String URI="uri";
     @Getter
@@ -24,4 +25,12 @@ public class LinkableElement implements Serializable {
     @Setter
     String creationTime;
 
+    @Override
+    public int compareTo(Object o) {
+        return this.uri.compareTo(((LinkableElement)o).getUri());
+    }
+
+    public boolean isValid(){
+        return !StringUtils.isEmpty(uri) && !StringUtils.isEmpty(creationTime);
+    }
 }

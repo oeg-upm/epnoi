@@ -2,6 +2,7 @@ package org.epnoi.storage;
 
 import lombok.Getter;
 import org.epnoi.model.modules.EventBus;
+import org.epnoi.storage.generator.URIGenerator;
 import org.epnoi.storage.session.UnifiedSession;
 import org.epnoi.storage.system.column.repository.UnifiedColumnRepository;
 import org.epnoi.storage.system.document.repository.UnifiedDocumentRepository;
@@ -33,5 +34,8 @@ public class Helper {
 
     @Autowired @Getter
     EventBus eventBus;
+
+    @Autowired @Getter
+    URIGenerator uriGenerator;
 
 }

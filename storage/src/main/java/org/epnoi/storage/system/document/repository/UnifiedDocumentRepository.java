@@ -1,10 +1,10 @@
 package org.epnoi.storage.system.document.repository;
 
 import org.apache.commons.lang.WordUtils;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.storage.exception.RepositoryNotFound;
 import org.epnoi.storage.system.Repository;
-import org.epnoi.model.domain.ResourceUtils;
+import org.epnoi.model.utils.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +27,9 @@ public class UnifiedDocumentRepository implements Repository<Resource,Resource.T
     private static final Logger LOG = LoggerFactory.getLogger(UnifiedDocumentRepository.class);
 
     @Override
-    public void save(Resource resource, Resource.Type type){
+    public void save(Resource resource){
         try {
-            factory.repositoryOf(type).save(ResourceUtils.map(resource, factory.mappingOf(type)));
+            factory.repositoryOf(resource.getResourceType()).save(ResourceUtils.map(resource, factory.mappingOf(resource.getResourceType())));
         } catch (RepositoryNotFound e){
             LOG.debug(e.getMessage());
         } catch (RuntimeException e){
@@ -52,7 +52,7 @@ public class UnifiedDocumentRepository implements Repository<Resource,Resource.T
         Optional<Resource> result = Optional.empty();
         try{
             Resource document = (Resource) factory.repositoryOf(type).findOne(uri);
-            if (document != null) result = Optional.of((Resource) ResourceUtils.map(document, type.classOf()));
+            if (document != null) result = Optional.of((Resource) ResourceUtils.map(document, factory.mappingOf(type)));
         }catch (RuntimeException e){
             LOG.warn(e.getMessage());
         }

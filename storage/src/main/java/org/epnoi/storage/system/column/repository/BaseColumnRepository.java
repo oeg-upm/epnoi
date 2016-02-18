@@ -1,7 +1,7 @@
 package org.epnoi.storage.system.column.repository;
 
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 

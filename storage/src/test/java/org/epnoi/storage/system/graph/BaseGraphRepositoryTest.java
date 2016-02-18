@@ -1,7 +1,7 @@
 package org.epnoi.storage.system.graph;
 
 import es.cbadenes.lab.test.IntegrationTest;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.storage.system.graph.repository.nodes.ResourceGraphRepository;
 import org.junit.Assert;
 import org.junit.Test;

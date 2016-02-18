@@ -1,7 +1,12 @@
 package org.epnoi.storage.system.graph;
 
 import es.cbadenes.lab.test.IntegrationTest;
-import org.epnoi.model.domain.*;
+import org.epnoi.model.domain.relations.Provides;
+import org.epnoi.model.domain.relations.Relation;
+import org.epnoi.model.domain.resources.Document;
+import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.domain.resources.Source;
+import org.epnoi.storage.system.graph.repository.edges.UnifiedEdgeGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.UnifiedNodeGraphRepository;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -29,6 +34,9 @@ public class UnifiedGraphRelationalRepositoryTest {
     @Autowired
     UnifiedNodeGraphRepository unifiedNodeGraphRepository;
 
+    @Autowired
+    UnifiedEdgeGraphRepository unifiedEdgeGraphRepository;
+
     @Test
     public void sourceProvidesDocument(){
 
@@ -37,16 +45,18 @@ public class UnifiedGraphRelationalRepositoryTest {
 
         Source source = new Source();
         source.setUri("sources/01");
-        unifiedNodeGraphRepository.save(source,Resource.Type.SOURCE);
+        unifiedNodeGraphRepository.save(source);
 
         Document document = new Document();
         document.setUri("documents/01");
-        unifiedNodeGraphRepository.save(document,Resource.Type.DOCUMENT);
+        unifiedNodeGraphRepository.save(document);
 
-        unifiedNodeGraphRepository.attach(source.getUri(),document.getUri(),Relation.Type.SOURCE_PROVIDES_DOCUMENT,RelationProperties.builder().date("2017").build());
 
-        unifiedNodeGraphRepository.detach(source.getUri(),document.getUri(),Relation.Type.SOURCE_PROVIDES_DOCUMENT);
+        Provides provides = Relation.newProvides(source.getUri(), document.getUri());
+        provides.setUri("provision/1");
+        unifiedEdgeGraphRepository.save(provides);
 
+        unifiedEdgeGraphRepository.delete(Relation.Type.PROVIDES,provides.getUri());
 
     }
 
@@ -58,13 +68,15 @@ public class UnifiedGraphRelationalRepositoryTest {
 
         Source source = new Source();
         source.setUri("sources/01");
-        unifiedNodeGraphRepository.save(source,Resource.Type.SOURCE);
+        unifiedNodeGraphRepository.save(source);
 
         Document document = new Document();
         document.setUri("documents/01");
-        unifiedNodeGraphRepository.save(document,Resource.Type.DOCUMENT);
+        unifiedNodeGraphRepository.save(document);
 
-        unifiedNodeGraphRepository.attach(source.getUri(),document.getUri(),Relation.Type.SOURCE_PROVIDES_DOCUMENT,RelationProperties.builder().date("2017").build());
+        Provides provides = Relation.newProvides(source.getUri(), document.getUri());
+        provides.setUri("provision/1");
+        unifiedEdgeGraphRepository.save(provides);
 
         Iterable<Resource> result = unifiedNodeGraphRepository.findIn(Resource.Type.DOCUMENT,Resource.Type.SOURCE,source.getUri());
         System.out.println("Documents: " + result);

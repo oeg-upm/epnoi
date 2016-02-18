@@ -17,7 +17,4 @@ public interface TopicGraphRepository extends ResourceGraphRepository<TopicNode>
     @Query("match (topic)-[:EMERGES_IN]->(domain{uri:{0}}) return topic")
     Iterable<TopicNode> findByDomain(String uri);
 
-//    @Query("match (topic{uri:{0}}) detach delete topic")
-//    void deleteAndDetach(String uri);
-
 }

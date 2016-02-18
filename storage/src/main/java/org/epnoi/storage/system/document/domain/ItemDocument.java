@@ -3,8 +3,8 @@ package org.epnoi.storage.system.document.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.epnoi.model.domain.Item;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Item;
+import org.epnoi.model.domain.resources.Resource;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
@@ -16,6 +16,9 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class ItemDocument extends Resource{
+
+    @Override
+    public Resource.Type getResourceType() {return Type.ITEM;}
 
     @Id
     private String uri;

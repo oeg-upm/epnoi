@@ -1,7 +1,7 @@
 package org.epnoi.storage.system.graph;
 
 import es.cbadenes.lab.test.IntegrationTest;
-import org.epnoi.model.domain.*;
+import org.epnoi.model.domain.resources.*;
 import org.epnoi.storage.system.graph.repository.nodes.DomainGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.UnifiedNodeGraphRepository;
 import org.junit.Assert;
@@ -43,7 +43,7 @@ public class UnifiedGraphRepositoryTest {
         source.setUri("sources/01");
         source.setName("test01");
         source.setDescription("testing purposes");
-        test(source,Resource.Type.SOURCE);
+        test(source, Resource.Type.SOURCE);
     }
 
     @Test
@@ -119,7 +119,7 @@ public class UnifiedGraphRepositoryTest {
 
         Assert.assertFalse(repository.exists(type,resource.getUri()));
 
-        repository.save(resource, type);
+        repository.save(resource);
 
         Assert.assertTrue(repository.exists(type,resource.getUri()));
         Optional<Resource> result = repository.read(type,resource.getUri());

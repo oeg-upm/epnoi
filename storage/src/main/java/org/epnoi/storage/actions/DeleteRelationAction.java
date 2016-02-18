@@ -1,7 +1,9 @@
 package org.epnoi.storage.actions;
 
-import org.epnoi.model.domain.Relation;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.Event;
+import org.epnoi.model.domain.relations.Relation;
+import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.modules.RoutingKey;
 import org.epnoi.storage.Helper;
 import org.epnoi.storage.session.UnifiedTransaction;
 import org.slf4j.Logger;
@@ -74,16 +76,14 @@ public class DeleteRelationAction {
             Iterable<Relation> pairs = helper.getUnifiedEdgeGraphRepository().findIn(type,refType, uri);
             if (pairs != null){
                 for (Relation pair : pairs) {
-                    helper.getUnifiedNodeGraphRepository().detach(pair.getStart().getUri(),pair.getEnd().getUri(),type);
+                    helper.getUnifiedEdgeGraphRepository().delete(pair.getType(),pair.getUri());
+                    helper.getEventBus().post(Event.from(pair), RoutingKey.of(pair.getType(), Relation.State.DELETED));
                 }
             }
 
             transaction.commit();
 
             LOG.info("Deleted: "+type.name()+" in " + refType + "[" + uri+"]");
-
-            //Publish the event
-            //TODO
         }catch (Exception e){
             LOG.error("Unexpected error during delete of relations '"+ type + " in " + type +" by uri "+uri,e);
         }

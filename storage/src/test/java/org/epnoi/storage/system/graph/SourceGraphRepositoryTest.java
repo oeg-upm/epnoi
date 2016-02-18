@@ -1,13 +1,9 @@
 package org.epnoi.storage.system.graph;
 
 import org.epnoi.storage.system.graph.domain.nodes.SourceNode;
-import org.epnoi.storage.system.graph.domain.edges.SourceProvidesDocument;
 import org.epnoi.storage.system.graph.repository.nodes.ResourceGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.SourceGraphRepository;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Set;
 
 /**
  * Created by cbadenes on 22/12/15.

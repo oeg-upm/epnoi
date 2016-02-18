@@ -1,7 +1,7 @@
 package org.epnoi.storage.system.column;
 
 import es.cbadenes.lab.test.IntegrationTest;
-import org.epnoi.model.domain.*;
+import org.epnoi.model.domain.resources.*;
 import org.epnoi.storage.system.column.repository.UnifiedColumnRepository;
 import org.junit.Assert;
 import org.junit.Test;
@@ -41,7 +41,7 @@ public class UnifiedUnifiedColumnRepositoryTest {
         source.setUri("sources/01");
         source.setName("test01");
         source.setDescription("testing purposes");
-        test(source,Resource.Type.SOURCE);
+        test(source, Resource.Type.SOURCE);
     }
 
     @Test
@@ -117,7 +117,7 @@ public class UnifiedUnifiedColumnRepositoryTest {
 
         Assert.assertFalse(unifiedColumnRepository.exists(type,resource.getUri()));
 
-        unifiedColumnRepository.save(resource, type);
+        unifiedColumnRepository.save(resource);
 
         Assert.assertTrue(unifiedColumnRepository.exists(type,resource.getUri()));
         Optional<Resource> result = unifiedColumnRepository.read(type,resource.getUri());
@@ -138,7 +138,7 @@ public class UnifiedUnifiedColumnRepositoryTest {
         Document document = new Document();
         document.setUri("documents/01");
         document.setTitle("This is a title");
-        unifiedColumnRepository.save(document,Resource.Type.DOCUMENT);
+        unifiedColumnRepository.save(document);
 
         Iterable<Resource> documents = unifiedColumnRepository.findBy(Resource.Type.DOCUMENT, "title", document.getTitle());
         System.out.println("Documents: " + documents);

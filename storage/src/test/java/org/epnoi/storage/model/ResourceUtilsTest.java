@@ -1,7 +1,7 @@
 package org.epnoi.storage.model;
 
-import org.epnoi.model.domain.Analysis;
-import org.epnoi.model.domain.ResourceUtils;
+import org.epnoi.model.domain.resources.Analysis;
+import org.epnoi.model.utils.ResourceUtils;
 import org.epnoi.storage.system.column.domain.AnalysisColumn;
 import org.junit.Test;
 

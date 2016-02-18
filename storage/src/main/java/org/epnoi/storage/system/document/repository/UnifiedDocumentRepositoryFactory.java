@@ -1,6 +1,6 @@
 package org.epnoi.storage.system.document.repository;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.storage.exception.RepositoryNotFound;
 import org.epnoi.storage.system.document.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;

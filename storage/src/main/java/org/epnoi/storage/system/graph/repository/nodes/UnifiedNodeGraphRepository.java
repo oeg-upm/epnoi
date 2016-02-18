@@ -1,13 +1,11 @@
 package org.epnoi.storage.system.graph.repository.nodes;
 
 import org.apache.commons.lang.WordUtils;
-import org.epnoi.model.domain.Relation;
-import org.epnoi.model.domain.RelationProperties;
-import org.epnoi.model.domain.Resource;
-import org.epnoi.model.domain.ResourceUtils;
+import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.utils.ResourceUtils;
+import org.epnoi.storage.actions.RepeatableActionExecutor;
 import org.epnoi.storage.system.Repository;
 import org.epnoi.storage.system.graph.domain.nodes.Node;
-import org.epnoi.storage.actions.RepeatableActionExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +28,9 @@ public class UnifiedNodeGraphRepository extends RepeatableActionExecutor impleme
 
 
     @Override
-    public void save(Resource resource, Resource.Type type){
-        performRetries(0,"saving a " + type, () ->
-                factory.repositoryOf(type).save(ResourceUtils.map(resource, factory.mappingOf(type))));
+    public void save(Resource resource){
+        performRetries(0,"saving a " + resource.getResourceType(), () ->
+                factory.repositoryOf(resource.getResourceType()).save(ResourceUtils.map(resource, factory.mappingOf(resource.getResourceType()))));
     }
 
     @Override
@@ -46,8 +44,8 @@ public class UnifiedNodeGraphRepository extends RepeatableActionExecutor impleme
     public Optional<Resource> read(Resource.Type type, String uri) {
         Optional<Object> result = performRetries(0, "read " + type + "[" + uri + "]", () -> {
             Optional<Resource> resource = Optional.empty();
-            Node node = (Node) factory.repositoryOf(type).findOneByUri(uri);
-            if (node != null) resource = Optional.of((Resource) ResourceUtils.map(node, type.classOf()));
+            Resource node = factory.repositoryOf(type).findOneByUri(uri);
+            if (node != null) resource = Optional.of((Resource) ResourceUtils.map(node, factory.mappingOf(type)));
             return resource;
         });
         return (result.isPresent())? (Optional<Resource>) result.get() : Optional.empty();
@@ -81,7 +79,6 @@ public class UnifiedNodeGraphRepository extends RepeatableActionExecutor impleme
         return (result.isPresent())? (Iterable<Resource>) result.get() : Collections.EMPTY_LIST;
     }
 
-
     @Override
     public void deleteAll(Resource.Type type) {
         performRetries(0, "delete all " + type, () -> {
@@ -91,52 +88,11 @@ public class UnifiedNodeGraphRepository extends RepeatableActionExecutor impleme
         });
     }
 
-
     public void delete(Resource.Type type, String uri){
         performRetries(0,"delete " + type + "["+uri+"]", () -> {
             Resource resource = factory.repositoryOf(type).findOneByUri(uri);
             if (resource != null) factory.repositoryOf(type).delete( factory.mappingOf(type).cast(resource) );
             return 1;
         });
-    }
-
-
-    public Resource attach(String uri1, String uri2, Relation.Type type, RelationProperties properties){
-        Optional<Object> result = performRetries(0, "attach " + type + " btw [" + uri1 + "] and [" + uri2 + "]", () -> {
-            Node startingNode = (Node)  factory.repositoryOf(type.getStart()).findOneByUri(uri1);
-            Node endingNode = (Node) factory.repositoryOf(type.getEnd()).findOneByUri(uri2);
-
-            Relation relation = factory.relationOf(type);
-            relation.setStart(startingNode);
-            relation.setEnd(endingNode);
-            relation.setProperties(properties);
-
-            startingNode.add(relation, type);
-            LOG.debug("Saving relation: " + relation);
-
-            Node node = (Node) factory.repositoryOf(type.getStart()).save(startingNode);
-            LOG.info("Related: " + type.getStart().name() + "[" + uri1 + "] to " + type.getEnd().name() + "[" + uri2 + "] -> id:" + node.getId() + " with: " + properties);
-            return node;
-        });
-        return (result.isPresent())? (Resource) result.get() : new Resource();
-    }
-
-    public Resource detach(String uri1, String uri2, Relation.Type type){
-        Optional<Object> result = performRetries(0, "detach " + type + " btw [" + uri1 + "] and [" + uri2 + "]", () -> {
-            Node startingNode = (Node) factory.repositoryOf(type.getStart()).findOneByUri(uri1);
-            Node endingNode = (Node) factory.repositoryOf(type.getEnd()).findOneByUri(uri2);
-
-            Relation relation = factory.relationOf(type);
-            relation.setStart(startingNode);
-            relation.setEnd(endingNode);
-
-            startingNode.remove(relation, type);
-            LOG.debug("Removing relation: " + type);
-
-            Node node = (Node) factory.repositoryOf(type.getStart()).save(startingNode);
-            LOG.info("Unrelated: " + type.getStart().name() + "[" + uri1 + "] and " + type.getEnd().name() + "[" + uri2 + "] -> id:" + node.getId());
-            return node;
-        });
-        return (result.isPresent())? (Resource) result.get() : new Resource();
     }
 }

@@ -17,7 +17,4 @@ public interface TermGraphRepository extends ResourceGraphRepository<TermNode> {
     @Query("match (t:Term)-[:APPEARED_IN]->(domain{uri:{0}}) return t")
     Iterable<TermNode> findByDomain(String uri);
 
-    @Query("match (in:Domain)-[e:APPEARED_IN]->(domain{uri:{0}}) delete e")
-    void deleteAppearedInDomain(String uri);
-
 }

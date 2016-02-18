@@ -3,9 +3,9 @@ package org.epnoi.storage.system.graph.domain.nodes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.epnoi.model.domain.Relation;
-import org.epnoi.storage.system.graph.domain.edges.SourceProvidesDocument;
-import org.epnoi.storage.system.graph.domain.edges.SourceComposesDomain;
+import org.epnoi.storage.system.graph.domain.edges.ComposesEdge;
+import org.epnoi.storage.system.graph.domain.edges.Edge;
+import org.epnoi.storage.system.graph.domain.edges.ProvidesEdge;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
@@ -22,43 +22,34 @@ import java.util.Set;
 public class SourceNode extends Node {
 
     @Relationship(type = "COMPOSES", direction="OUTGOING")
-    private Set<SourceComposesDomain> domains =  new HashSet<>();
+    private Set<ComposesEdge> domains =  new HashSet<>();
 
     @Relationship(type = "PROVIDES", direction="OUTGOING")
-    private Set<SourceProvidesDocument> documents =  new HashSet<>();
-
-    public void addDocumentProvidedBySource(SourceProvidesDocument documentProvidedBySource){
-        documents.add(documentProvidedBySource);
-    }
-
-    public void addDomainComposedBySource(SourceComposesDomain domainComoposedBySource){
-        domains.add(domainComoposedBySource);
-    }
-
+    private Set<ProvidesEdge> documents =  new HashSet<>();
 
     @Override
-    public void add(Relation relation, Relation.Type type) {
-        switch(type){
-            case SOURCE_COMPOSES_DOMAIN:
-                domains.add((SourceComposesDomain) relation);
+    public void add(Edge edge) {
+        switch(edge.getType()){
+            case COMPOSES:
+                domains.add((ComposesEdge) edge);
                 break;
-            case SOURCE_PROVIDES_DOCUMENT:
-                documents.add((SourceProvidesDocument) relation);
+            case PROVIDES:
+                documents.add((ProvidesEdge) edge);
                 break;
-            default: throw new RuntimeException( "Relation " + type + " not handled from Source Node");
+            default: throw new RuntimeException( "Relation " + edge + " not handled from Source Node");
         }
     }
 
     @Override
-    public void remove(Relation relation, Relation.Type type) {
-        switch(type){
-            case SOURCE_COMPOSES_DOMAIN:
-                domains.remove((SourceComposesDomain) relation);
+    public void remove(Edge edge) {
+        switch(edge.getType()){
+            case COMPOSES:
+                domains.remove((ComposesEdge) edge);
                 break;
-            case SOURCE_PROVIDES_DOCUMENT:
-                documents.remove((SourceProvidesDocument) relation);
+            case PROVIDES:
+                documents.remove((ProvidesEdge) edge);
                 break;
-            default: throw new RuntimeException( "Relation " + type + " not handled from Source Node");
+            default: throw new RuntimeException( "Relation " + edge + " not handled from Source Node");
         }
     }
 

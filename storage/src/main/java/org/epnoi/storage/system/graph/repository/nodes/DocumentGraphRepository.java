@@ -20,10 +20,4 @@ public interface DocumentGraphRepository extends ResourceGraphRepository<Documen
     @Query("match (document)<-[:PROVIDES]-(source{uri:{0}}) return document")
     Iterable<DocumentNode> findBySource(String uri);
 
-    @Query("match (in:Document)-[s{domain:{0}}]-(out:Document) delete s")
-    void deleteSimilarToInDomain(String uri);
-
-    @Query("match (in:Document)-[s:SIMILAR_TO]-(out:Document) delete s")
-    void deleteAllSimilarTo();
-
 }

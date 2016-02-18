@@ -3,9 +3,9 @@ package org.epnoi.storage.system.graph.domain.nodes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.epnoi.model.domain.Relation;
-import org.epnoi.storage.system.graph.domain.edges.TopicEmergesInDomain;
-import org.epnoi.storage.system.graph.domain.edges.TopicMentionsWord;
+import org.epnoi.storage.system.graph.domain.edges.Edge;
+import org.epnoi.storage.system.graph.domain.edges.EmergesInEdge;
+import org.epnoi.storage.system.graph.domain.edges.MentionsFromTopicEdge;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
@@ -22,42 +22,34 @@ import java.util.Set;
 public class TopicNode extends Node {
 
     @Relationship(type = "EMERGES_IN", direction="OUTGOING")
-    private Set<TopicEmergesInDomain> domains = new HashSet<>();
+    private Set<EmergesInEdge> domains = new HashSet<>();
 
     @Relationship(type = "MENTIONS", direction="OUTGOING")
-    private Set<TopicMentionsWord> words = new HashSet<>();
-
-    public void addDomainInTopic(TopicEmergesInDomain domainInTopic){
-        domains.add(domainInTopic);
-    }
-
-    public void addWordMentionedByTopic(TopicMentionsWord wordMentionedByTopic){
-        words.add(wordMentionedByTopic);
-    }
+    private Set<MentionsFromTopicEdge> words = new HashSet<>();
 
     @Override
-    public void add(Relation relation, Relation.Type type) {
-        switch(type){
-            case TOPIC_EMERGES_IN_DOMAIN:
-                domains.add((TopicEmergesInDomain) relation);
+    public void add(Edge edge) {
+        switch(edge.getType()){
+            case EMERGES_IN:
+                domains.add((EmergesInEdge) edge);
                 break;
-            case TOPIC_MENTIONS_WORD:
-                words.add((TopicMentionsWord) relation);
+            case MENTIONS_FROM_TOPIC:
+                words.add((MentionsFromTopicEdge) edge);
                 break;
-            default: throw new RuntimeException( "Relation " + type + " not handled from Topic Node");
+            default: throw new RuntimeException( "Relation " + edge + " not handled from Topic Node");
         }
     }
 
     @Override
-    public void remove(Relation relation, Relation.Type type) {
-        switch(type){
-            case TOPIC_EMERGES_IN_DOMAIN:
-                domains.remove((TopicEmergesInDomain) relation);
+    public void remove(Edge edge) {
+        switch(edge.getType()){
+            case EMERGES_IN:
+                domains.remove((EmergesInEdge) edge);
                 break;
-            case TOPIC_MENTIONS_WORD:
-                words.remove((TopicMentionsWord) relation);
+            case MENTIONS_FROM_TOPIC:
+                words.remove((MentionsFromTopicEdge) edge);
                 break;
-            default: throw new RuntimeException( "Relation " + type + " not handled from Topic Node");
+            default: throw new RuntimeException( "Relation " + edge + " not handled from Topic Node");
         }
     }
 }

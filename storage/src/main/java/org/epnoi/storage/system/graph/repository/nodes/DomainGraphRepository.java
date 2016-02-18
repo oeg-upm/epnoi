@@ -17,9 +17,6 @@ public interface DomainGraphRepository extends ResourceGraphRepository<DomainNod
     @Query("match (domain{uri:{0}}) return domain")
     Iterable<DomainNode> findByDomain(String uri);
 
-    @Query("match (in:Domain)-[s{domain:{0}}]-(out:Domain) delete s")
-    void deleteSimilarRelations(String uri);
-
     @Query("match (source{uri:{0}})-[:COMPOSES]->(d:Domain) return d")
     Iterable<DomainNode> findBySource(String source);
 

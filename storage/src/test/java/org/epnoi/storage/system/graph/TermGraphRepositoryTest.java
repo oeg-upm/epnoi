@@ -30,10 +30,11 @@ public class TermGraphRepositoryTest extends BaseGraphRepositoryTest<TermNode> {
     }
 
     @Test
-    public void deleteAppearedInRelations(){
+    public void findByDomain(){
 
         String domain = "http://epnoi.org/domains/d4a5f93d-fc90-453e-a2d5-7ca27dfb4e29";
 
-        repository.deleteAppearedInDomain(domain);
+        Iterable<TermNode> res = repository.findByDomain(domain);
+        System.out.println(res);
     }
 }

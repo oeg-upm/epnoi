@@ -1,7 +1,6 @@
 package org.epnoi.storage.system.graph.repository.nodes;
 
 import org.epnoi.storage.system.graph.domain.nodes.ItemNode;
-import org.epnoi.storage.system.graph.domain.edges.ItemDealsWithTopic;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.stereotype.Repository;
 
@@ -23,11 +22,5 @@ public interface ItemGraphRepository extends ResourceGraphRepository<ItemNode> {
 
     @Query("match (part{uri:{0}})-[:DESCRIBES]->(item) return item")
     Iterable<ItemNode> findByPart(String uri);
-
-    @Query("match (item{uri:{0}})-[d:DEALS_WITH]->(topic)-[e:EMERGES_IN]->(domain{uri:{1}}) return d")
-    Iterable<ItemDealsWithTopic> dealsInDomain(String item, String domain);
-
-    @Query("match (in:Item)-[s{domain:{0}}]-(out:Item) delete s")
-    void deleteSimilarRelationsInDomain(String uri);
 
 }

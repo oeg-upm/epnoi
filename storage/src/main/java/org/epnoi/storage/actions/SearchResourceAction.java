@@ -1,6 +1,6 @@
 package org.epnoi.storage.actions;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.storage.Helper;
 import org.epnoi.storage.session.UnifiedTransaction;
 import org.neo4j.ogm.session.result.ResultProcessingException;

@@ -1,9 +1,9 @@
 package org.epnoi.storage.system.column.repository;
 
 import org.apache.commons.lang.WordUtils;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.utils.ResourceUtils;
 import org.epnoi.storage.system.Repository;
-import org.epnoi.model.domain.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +27,9 @@ public class UnifiedColumnRepository implements Repository<Resource,Resource.Typ
     private static final Logger LOG = LoggerFactory.getLogger(UnifiedColumnRepository.class);
 
     @Override
-    public void save(Resource resource, Resource.Type type){
+    public void save(Resource resource){
         try{
-            factory.repositoryOf(type).save(ResourceUtils.map(resource, factory.mappingOf(type)));
+            factory.repositoryOf(resource.getResourceType()).save(ResourceUtils.map(resource, factory.mappingOf(resource.getResourceType())));
             LOG.debug("Resource: " + resource + " saved");
         }catch (RuntimeException e){
             LOG.warn(e.getMessage());
@@ -52,7 +52,7 @@ public class UnifiedColumnRepository implements Repository<Resource,Resource.Typ
         Optional<Resource> result = Optional.empty();
         try{
             Resource column = (Resource) factory.repositoryOf(type).findOne(BasicMapId.id(ResourceUtils.URI, uri));
-            if (column != null) result = Optional.of((Resource) ResourceUtils.map(column, type.classOf()));
+            if (column != null) result = Optional.of((Resource) ResourceUtils.map(column, factory.mappingOf(type)));
             LOG.debug("Resource read: " + column );
         }catch (RuntimeException e){
             LOG.warn(e.getMessage());
@@ -113,7 +113,7 @@ public class UnifiedColumnRepository implements Repository<Resource,Resource.Typ
     public void deleteAll(Resource.Type type){
         try{
             factory.repositoryOf(type).deleteAll();
-            LOG.debug("All " + type.plural() + " have been deleted");
+            LOG.debug("All " + type.route() + " have been deleted");
         }catch (RuntimeException e){
             LOG.warn(e.getMessage());
         }

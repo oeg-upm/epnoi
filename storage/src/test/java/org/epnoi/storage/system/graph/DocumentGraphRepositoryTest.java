@@ -1,7 +1,7 @@
 package org.epnoi.storage.system.graph;
 
 import org.epnoi.storage.system.graph.domain.nodes.DocumentNode;
-import org.epnoi.storage.system.graph.repository.edges.DocumentDealsWithTopicGraphRepository;
+import org.epnoi.storage.system.graph.repository.edges.DealsWithFromDocumentEdgeRepository;
 import org.epnoi.storage.system.graph.repository.nodes.DocumentGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.DomainGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.ResourceGraphRepository;
@@ -22,7 +22,7 @@ public class DocumentGraphRepositoryTest extends BaseGraphRepositoryTest<Documen
     DocumentGraphRepository repository;
 
     @Autowired
-    DocumentDealsWithTopicGraphRepository documentDealsWithTopicGraphRepository;
+    DealsWithFromDocumentEdgeRepository dealsWithFromDocumentEdgeRepository;
 
     @Autowired
     DomainGraphRepository domainRepository;
@@ -41,12 +41,6 @@ public class DocumentGraphRepositoryTest extends BaseGraphRepositoryTest<Documen
         node.setUri("documents/72ce5395-6268-439a-947e-802229e7f022");
         node.setCreationTime("2015-12-21T16:18:59Z");
         return node;
-    }
-
-
-    @Test
-    public void similar(){
-        repository.deleteSimilarToInDomain("http://epnoi.org/domains/1f02ae0b-7d96-42c6-a944-25a3050bf1e2");
     }
 
 }
