@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 
 import java.util.ArrayList;
 
@@ -85,4 +85,8 @@ public class Pack extends Resource {
 		this.uploaderURI = uploaderURI;
 	}
 
+	@Override
+	public Type getResourceType() {
+		return null;
+	}
 }

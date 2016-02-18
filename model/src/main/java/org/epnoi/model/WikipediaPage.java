@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -110,6 +110,11 @@ public class WikipediaPage extends Resource {
 		return "WikipediaPage [uri=" + uri + ", term=" + term
 				+ ", termDefinition=" + termDefinition + ", sections="
 				+ sections + ", sectionsContent=" + sectionsContent + "]";
+	}
+
+	@Override
+	public Type getResourceType() {
+		return null;
 	}
 
 	// --------------------------------------------------------------------------------

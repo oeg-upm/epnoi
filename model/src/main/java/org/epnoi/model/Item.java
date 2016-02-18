@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 
 public class Item extends Resource {
 
@@ -117,6 +117,11 @@ public class Item extends Resource {
 
 	public String getURI() {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Type getResourceType() {
 		return null;
 	}
 

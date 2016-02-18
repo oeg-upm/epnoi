@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +65,11 @@ public class RelationalSentencesCorpus extends Resource {
 		return "RelationalSentencesCorpus [URI=" + uri + ", description="
 				+ description + ", type=" + type + ", #sentences=" + sentences.size()
 				+ "]";
+	}
+
+	@Override
+	public Type getResourceType() {
+		return null;
 	}
 
 	// --------------------------------------------------------------------------------------------

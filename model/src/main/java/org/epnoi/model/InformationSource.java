@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 
 public class InformationSource extends Resource {
 	String uri;
@@ -67,6 +67,11 @@ public class InformationSource extends Resource {
 		return "InformationSource [URI=" + uri + ", URL=" + URL + ", name="
 				+ name + ", type=" + type + ", informationUnitType="
 				+ informationUnitType + "]";
+	}
+
+	@Override
+	public Type getResourceType() {
+		return null;
 	}
 
 	// -----------------------------------------------------------------------------

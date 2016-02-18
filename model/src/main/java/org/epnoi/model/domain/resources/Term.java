@@ -9,6 +9,9 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "uri", callSuper = true)
 public class Term extends Resource {
 
+	@Override
+	public Resource.Type getResourceType() {return Type.TERM;}
+
 	//private String[] words;
 	public static final String CONTENT="content";
 	private String content = "";

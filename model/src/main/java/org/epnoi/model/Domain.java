@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 
 public class Domain extends Resource {
 
@@ -85,7 +85,12 @@ public class Domain extends Resource {
 				+ ", expression=" + expression + ", resources=" + resources
 				+ "]";
 	}
-	
+
+	@Override
+	public Type getResourceType() {
+		return null;
+	}
+
 	// -------------------------------------------------------------------------------------------
 
 }

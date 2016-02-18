@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang.StringUtils;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 
 @Data
 @ToString(callSuper = true)
@@ -27,4 +27,8 @@ public class Source extends Resource {
 		return StringUtils.substringBefore(url, "?");
 	}
 
+	@Override
+	public Type getResourceType() {
+		return null;
+	}
 }

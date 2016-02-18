@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 
 public class ExternalResource extends Resource {
 
@@ -36,4 +36,8 @@ public class ExternalResource extends Resource {
 				+ "]";
 	}
 
+	@Override
+	public Type getResourceType() {
+		return null;
+	}
 }

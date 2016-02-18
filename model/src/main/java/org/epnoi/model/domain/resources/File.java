@@ -12,6 +12,10 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "uri", callSuper = true)
 public class File extends Resource {
 
+    @Override
+    //TODO to be included in Resource.Type
+    public Resource.Type getResourceType() {return Type.ANY;}
+
     public static final String URL="url";
     private String url = "";
 

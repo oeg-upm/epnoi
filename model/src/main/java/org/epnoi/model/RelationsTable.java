@@ -1,7 +1,10 @@
 package org.epnoi.model;
 
-import org.epnoi.model.domain.Resource;
-import org.epnoi.model.domain.Term;
+import org.epnoi.model.domain.relations.Relation;
+import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.domain.relations.ProvenanceRelation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -9,23 +12,19 @@ import java.util.*;
 
 public class RelationsTable extends Resource {
 
-	private String uri;
-	private Map<String, Relation> relations;
-	private Map<Relation, String> orderedRelations;
-	private Map<String, List<Relation>> relationsBySource;
+	private static final Logger LOG = LoggerFactory.getLogger(RelationsTable.class);
 
-	// --------------------------------------------------------------------
+	private String uri;
+	private Map<String, ProvenanceRelation> relations;
+	private Map<ProvenanceRelation, String> orderedRelations;
+	private Map<String, List<ProvenanceRelation>> relationsBySource;
+
 
 	public RelationsTable() {
-
-		this.orderedRelations = new TreeMap<Relation, String>(
-				new RelationsComparator());
+		this.orderedRelations = new TreeMap<ProvenanceRelation, String>(new RelationsComparator());
 		this.relations = new HashMap<>();
 		this.relationsBySource = new HashMap<>();
-
 	}
-
-	// --------------------------------------------------------------------
 
 	/**
 	 * 
@@ -33,52 +32,41 @@ public class RelationsTable extends Resource {
 	 * @param expansionProbabilityThreshold
 	 * @return
 	 */
-
-	public List<Relation> getRelations(String sourceURI,
-			double expansionProbabilityThreshold) {
+	public List<Relation> getRelations(String sourceURI, double expansionProbabilityThreshold) {
 		List<Relation> relations = new ArrayList<>();
-		for (Relation relationFromSource : this.relationsBySource
-				.get(sourceURI)) {
-			if (relationFromSource.calculateRelationhood() >= expansionProbabilityThreshold) {
+		for (Relation relationFromSource : this.relationsBySource.get(sourceURI)) {
+			if (relationFromSource.getWeight() >= expansionProbabilityThreshold) {
 				relations.add(relationFromSource);
 			}
 		}
 		return relations;
 	}
 
-	// --------------------------------------------------------------------
-
 	/**
 	 * 
 	 * @param sourceURI
 	 * @param expansionProbabilityThreshold
 	 * @return
 	 */
-
 	public List<Relation> getRelations(String sourceURI, String type,
 			double expansionProbabilityThreshold) {
-		System.out.println("size> " + this.orderedRelations.size());
+		LOG.info("size> " + this.orderedRelations.size());
 		List<Relation> relations = new ArrayList<>();
-		for (Relation relationFromSource : this.relationsBySource
-				.get(sourceURI)) {
+		for (Relation relationFromSource : this.relationsBySource.get(sourceURI)) {
 			if (type.equals(relationFromSource.getType())
-					&& relationFromSource.calculateRelationhood() >= expansionProbabilityThreshold) {
+					&& relationFromSource.getWeight() >= expansionProbabilityThreshold) {
 				relations.add(relationFromSource);
 			}
 		}
 		return relations;
 	}
 
-	// --------------------------------------------------------------------
-
-	public List<Relation> getMostProbable(int initialNumberOfRelations) {
-		List<Relation> mostProblableRelations = new ArrayList<Relation>();
-		Iterator<Relation> relationsIt = this.orderedRelations.keySet()
-				.iterator();
+	public List<ProvenanceRelation> getMostProbable(int initialNumberOfRelations) {
+		List<ProvenanceRelation> mostProblableRelations = new ArrayList<ProvenanceRelation>();
+		Iterator<ProvenanceRelation> relationsIt = this.orderedRelations.keySet().iterator();
 		int i = 0;
 		while (i < initialNumberOfRelations && relationsIt.hasNext()) {
-
-			Relation relation = relationsIt.next();
+			ProvenanceRelation relation = relationsIt.next();
 			mostProblableRelations.add(relation);
 			i++;
 		}
@@ -86,16 +74,19 @@ public class RelationsTable extends Resource {
 		return mostProblableRelations;
 	}
 
-	// --------------------------------------------------------------------
+	@Override
+	public Type getResourceType() {
+		return null;
+	}
 
-	class RelationsComparator implements Comparator<Relation> {
+	class RelationsComparator implements Comparator<ProvenanceRelation> {
 		public RelationsComparator() {
 			// TODO Auto-generated constructor stub
 		}
 
 		@Override
-		public int compare(Relation relationA, Relation relationB) {
-			if (relationA.calculateRelationhood() < relationB.calculateRelationhood()) {
+		public int compare(ProvenanceRelation relationA, ProvenanceRelation relationB) {
+			if (relationA.getWeight() < relationB.getWeight()) {
 				return 1;
 			} else {
 				return -1;
@@ -103,91 +94,60 @@ public class RelationsTable extends Resource {
 		}
 	}
 
-	// --------------------------------------------------------------------
+	public void introduceRelation(ProvenanceRelation relation) {
 
-	public void introduceRelation(String domain, Term sourceTerm,
-			Term targetTerm, String type, String provenanceSentence,
-			double relationhood) {
 
-		String relationURI = Relation.buildURI(sourceTerm.getContent(), targetTerm.getContent(), type,
-				domain);
-		System.out.println("RelationURI > " + relationURI);
+		String relationURI = relation.getUri();
+
+		LOG.info("RelationURI > " + relationURI);
 		if (this.hasRelation(relationURI)) {
 			// If the relation is already in the Relations Table, we have to
 			// update just
 			// add the new provenance sentence along with its relationhood
-			Relation storedRelation = this.getRelation(relationURI);
-			storedRelation.addProvenanceSentence(provenanceSentence,
-					relationhood);
+			ProvenanceRelation storedRelation = this.getRelation(relationURI);
+			storedRelation.addAll(relation.getProvenances());
 
 			// Since the relationhood of the relation has been update, we must
 			// update its position in the ordered MapTree
-			this.orderedRelations.remove(storedRelation);
 			this.orderedRelations.put(storedRelation, relationURI);
-			System.out
-					.println("ME SALE QUE ESTABA! " + orderedRelations.size());
 
 		} else {
-			// If the relation is not already stored, we simply add it
-			Relation relation = new Relation();
-			relation.setUri(relationURI);
-			relation.setSource(sourceTerm.getUri());
-			relation.setTarget(targetTerm.getUri());
-			relation.setType(type);
-			relation.addProvenanceSentence(provenanceSentence, relationhood);
-
-		
-			
-			
 			this.orderedRelations.put(relation, relation.getUri());
 			this.relations.put(relation.getUri(), relation);
-			List<Relation> relations = this.relationsBySource.get(relation
-					.getSource());
+			List<ProvenanceRelation> relations = this.relationsBySource.get(relation.getStartUri());
 			if (relations == null) {
 				relations = new ArrayList<>();
-				this.relationsBySource.put(relation.getSource(), relations);
+				this.relationsBySource.put(relation.getStartUri(), relations);
 			}
 
 			relations.add(relation);
-			System.out.println("NO ESTABA " + orderedRelations.size());
-
 		}
 	}
 
-	// --------------------------------------------------------------------
-
-	public void addRelation(Relation relation) {
+	public void addRelation(ProvenanceRelation relation) {
 
 		this.orderedRelations.put(relation, relation.getUri());
 		this.relations.put(relation.getUri(), relation);
 
-		List<Relation> relations = this.relationsBySource.get(relation
-				.getSource());
+		List<ProvenanceRelation> relations = this.relationsBySource.get(relation.getStartUri());
 		if (relations == null) {
 			relations = new ArrayList<>();
-			this.relationsBySource.put(relation.getSource(), relations);
+			this.relationsBySource.put(relation.getStartUri(), relations);
 		}
 		relations.add(relation);
-
 	}
 
-	// --------------------------------------------------------------------
-
-	public Relation getRelation(String URI) {
+	public ProvenanceRelation getRelation(String URI) {
 		return this.relations.get(URI);
 	}
 
-	// --------------------------------------------------------------------
-
-	public Collection<Relation> getRelations() {
+	public Collection<ProvenanceRelation> getRelations() {
 		return this.relations.values();
 	}
 
-	// --------------------------------------------------------------------
-
-	public Collection<Relation> getRelations(String type) {
-		List<Relation> relations = new ArrayList<>();
-		for (Relation relation : this.relations.values()) {
+	public Collection<ProvenanceRelation> getRelations(String type) {
+		List<ProvenanceRelation> relations = new ArrayList<>();
+		for (ProvenanceRelation relation : this.relations.values()) {
 			if (type.equals(relation.getType())) {
 				relations.add(relation);
 			}
@@ -195,68 +155,50 @@ public class RelationsTable extends Resource {
 		return relations;
 	}
 
-	// --------------------------------------------------------------------
-
 	public boolean hasRelation(String URI) {
 		return (this.relations.get(URI) != null);
 	}
-
-	// --------------------------------------------------------------------
 
 	public int size() {
 		return this.relations.size();
 	}
 
-	// --------------------------------------------------------------------
-
 	public String getUri() {
 		return uri;
 	}
 
-	// --------------------------------------------------------------------
-
 	public void setUri(String uRI) {
 		uri = uRI;
 	}
-
-	// --------------------------------------------------------------------
 
 	@Override
 	public String toString() {
 		return "RelationsTable [uri= " + uri + ", relations=" + relations + "]";
 	}
 
-	// --------------------------------------------------------------------
-
 	public void show(int numberOfDeatiledTerms) {
 
-		System.out
-				.println("=====================================================================================================================");
-		System.out.println("Terms Table");
+		LOG.info("=====================================================================================================================");
+		LOG.info("Terms Table");
 
-		System.out
-				.println("=====================================================================================================================");
+		LOG.info("=====================================================================================================================");
 
-		System.out.println("# of candidate relations: " + this.size());
-		System.out.println("The top most " + numberOfDeatiledTerms
+		LOG.info("# of candidate relations: " + this.size());
+		LOG.info("The top most " + numberOfDeatiledTerms
 				+ " probable relations are: ");
 		int i = 1;
-		for (Relation term : this.getMostProbable(numberOfDeatiledTerms)) {
-			System.out.println("(" + i++ + ")" + term.getSource() + " > "
-					+ term.getType() + " > " + term.getTarget());
+		for (Relation relation : this.getMostProbable(numberOfDeatiledTerms)) {
+			LOG.info("(" + i++ + ")" + relation.getStartUri() + " > "
+					+ relation.getType() + " > " + relation.getEndUri());
 
-			System.out
-					.println("------------------------------------------------------");
-			System.out.println(term);
-			System.out
-					.println("------------------------------------------------------");
+			LOG.info("------------------------------------------------------");
+			LOG.info(""+relation);
+			LOG.info("------------------------------------------------------");
 
 		}
 
-		System.out
-				.println("=====================================================================================================================");
-		System.out
-				.println("=====================================================================================================================");
+		LOG.info("=====================================================================================================================");
+		LOG.info("=====================================================================================================================");
 	}
 
 }

@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 
 public class File extends Resource {
 	Long id;
@@ -48,8 +48,10 @@ public class File extends Resource {
 	public void setUploaderURI(String uploaderURI) {
 		this.uploaderURI = uploaderURI;
 	}
-	
-	
 
-	
+
+	@Override
+	public Type getResourceType() {
+		return null;
+	}
 }

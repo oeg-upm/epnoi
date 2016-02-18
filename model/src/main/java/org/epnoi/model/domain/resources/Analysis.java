@@ -12,6 +12,9 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "uri", callSuper = true)
 public class Analysis extends Resource {
 
+    @Override
+    public Resource.Type getResourceType() {return Type.ANALYSIS;}
+
     public static final String TYPE="type";
     private String type;
 

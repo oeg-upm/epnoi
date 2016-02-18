@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 
 import java.util.ArrayList;
 
@@ -92,4 +92,8 @@ public class Workflow extends Resource {
 		this.id = id;
 	}
 
+	@Override
+	public Type getResourceType() {
+		return null;
+	}
 }

@@ -7,6 +7,7 @@ import java.io.Serializable;
 /**
  * Created by cbadenes on 07/01/16.
  */
+//TODO This class should be removed
 @Data
 public class MetaInformation implements Serializable{
 

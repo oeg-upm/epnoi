@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 
 import java.util.List;
 
@@ -45,4 +45,8 @@ public class AnnotationSet extends Resource {
 		this.items = items;
 	}
 
+	@Override
+	public Type getResourceType() {
+		return null;
+	}
 }

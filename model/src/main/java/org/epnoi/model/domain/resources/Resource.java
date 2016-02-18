@@ -2,57 +2,38 @@ package org.epnoi.model.domain.resources;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.epnoi.model.domain.LinkableElement;
 
 @ToString(callSuper = true)
 @EqualsAndHashCode(of={"uri"})
-public class Resource extends LinkableElement {
+public abstract class Resource extends LinkableElement {
 
+	public abstract Type getResourceType();
 
 	public enum Type{
-		SOURCE("source","sources", Source.class),
-		DOMAIN("domain","domains",Domain.class),
-		DOCUMENT("document","documents",Document.class),
-		ITEM("item","items", Item.class),
-		PART("part","parts", Part.class),
-		WORD("word","words", Word.class),
-		ANALYSIS("analysis","analyses", Analysis.class),
-		TOPIC("topic","topics", Topic.class),
-		SERIALIZED_OBJECT("object","objects",SerializedObject.class),
-		TERM("term","terms",Term.class),
-		ANY("*","*", Resource.class);
+		SOURCE("source","sources"),
+		DOMAIN("domain","domains"),
+		DOCUMENT("document","documents"),
+		ITEM("item","items"),
+		PART("part","parts"),
+		WORD("word","words"),
+		ANALYSIS("analysis","analyses"),
+		TOPIC("topic","topics"),
+		SERIALIZED_OBJECT("object","objects"),
+		TERM("term","terms"),
+		ANY("*","*");
 
 		String plural;
 		String key;
 
-		Class classOf;
-
-		Type(String key, String plural, Class classOf){
+		Type(String key, String plural){
 			this.key = key;
-			this.classOf = classOf;
 			this.plural = plural;
 		}
 
 		public String key(){ return key;}
 
-		public String plural(){ return plural;}
-
-		public Class classOf(){
-			return this.classOf;
-		}
-
-		public static Type from(Class clazz){
-			List<Type> types = Arrays.stream(values()).filter(x -> x.getClass().equals(clazz)).collect(Collectors.toList());
-
-			if (types == null || types.size() > 1) throw new IllegalArgumentException("No type found for class: " + clazz);
-
-			return types.get(0);
-
-		}
-
+		public String route(){ return plural;}
 	}
 
 	public enum State {
@@ -66,6 +47,86 @@ public class Resource extends LinkableElement {
 		State(String key){ keyValue = key;}
 
 		public String key(){ return keyValue;}
+	}
+
+	public static Analysis newAnalysis(){
+		return new Analysis();
+	}
+
+	public static Document newDocument(){
+		return new Document();
+	}
+
+	public static Domain newDomain(){
+		return new Domain();
+	}
+
+	public static Item newItem(){
+		return new Item();
+	}
+
+	public static Part newPart(){
+		return new Part();
+	}
+
+	public static SerializedObject newSerializedObject(){
+		return new SerializedObject();
+	}
+
+	public static Source newSource(){
+		return new Source();
+	}
+
+	public static Term newTerm(){
+		return new Term();
+	}
+
+	public static Topic newTopic(){
+		return new Topic();
+	}
+
+	public static Word newWord(){
+		return new Word();
+	}
+
+	public Analysis asAnalysis(){
+		return Analysis.class.cast(this);
+	}
+
+	public Document asDocument(){
+		return Document.class.cast(this);
+	}
+
+	public Domain asDomain(){
+		return Domain.class.cast(this);
+	}
+
+	public Item asItem(){
+		return Item.class.cast(this);
+	}
+
+	public Part asPart(){
+		return Part.class.cast(this);
+	}
+
+	public SerializedObject asSerializedObject(){
+		return SerializedObject.class.cast(this);
+	}
+
+	public Source asSource(){
+		return Source.class.cast(this);
+	}
+
+	public Term asTerm(){
+		return Term.class.cast(this);
+	}
+
+	public Topic asTopic(){
+		return Topic.class.cast(this);
+	}
+
+	public Word asWord(){
+		return Word.class.cast(this);
 	}
 
 }

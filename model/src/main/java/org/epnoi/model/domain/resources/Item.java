@@ -12,6 +12,9 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "uri", callSuper = true)
 public class Item extends Resource {
 
+    @Override
+    public Resource.Type getResourceType() {return Type.ITEM;}
+
     public static final String AUTHORED_ON="authoredOn";
     private String authoredOn;
 

@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -143,6 +143,11 @@ public class WikidataView extends Resource {
 			}
 		}
 		return targetLabels;
+	}
+
+	@Override
+	public Type getResourceType() {
+		return null;
 	}
 /*FOR_TEST
 	public static void main(String[] args) {

@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +59,11 @@ public class InformationSourceSubscription extends Resource {
 		return "InformationSourceSubscription [URI=" + uri
 				+ ", informationSource=" + informationSource + ", keywords="
 				+ keywords + ", numberOfResults=" + numberOfItems + "]";
+	}
+
+	@Override
+	public Type getResourceType() {
+		return null;
 	}
 
 	// -----------------------------------------------------------------------------

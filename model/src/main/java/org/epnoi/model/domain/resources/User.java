@@ -12,6 +12,10 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "uri", callSuper = true)
 public class User extends Resource {
 
+    @Override
+    //TODO to be included in Resource.Type
+    public Resource.Type getResourceType() {return Type.ANY;}
+
     String name;
 
     String surname;

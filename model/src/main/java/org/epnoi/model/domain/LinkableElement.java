@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.lang.StringUtils;
+import org.epnoi.model.utils.TimeUtils;
 
 import java.io.Serializable;
 
@@ -23,14 +24,14 @@ public class LinkableElement implements Serializable, Comparable {
     public static final String CREATION_TIME="creationTime";
     @Getter
     @Setter
-    String creationTime;
+    String creationTime = TimeUtils.asISO();
 
     @Override
     public int compareTo(Object o) {
         return this.uri.compareTo(((LinkableElement)o).getUri());
     }
 
-    public boolean isValid(){
-        return !StringUtils.isEmpty(uri) && !StringUtils.isEmpty(creationTime);
+    public boolean hasUri(){
+        return !StringUtils.isEmpty(uri);
     }
 }

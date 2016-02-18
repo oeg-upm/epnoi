@@ -1,7 +1,7 @@
 package org.epnoi.model.modules;
 
 import org.epnoi.model.Context;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.Selector;
 import org.epnoi.model.parameterization.InformationStoreParameters;
 import org.epnoi.model.search.SearchContext;

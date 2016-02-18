@@ -12,6 +12,9 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "uri", callSuper = true)
 public class SerializedObject extends Resource {
 
+    @Override
+    public Resource.Type getResourceType() {return Type.SERIALIZED_OBJECT;}
+
     public static final String INSTANCE="instance";
     protected Object instance = "";
 

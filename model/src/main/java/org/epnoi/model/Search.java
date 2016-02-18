@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
@@ -82,4 +82,8 @@ public class Search extends Resource {
 				+ description + ", expressions=" + expressions + "]";
 	}
 
+	@Override
+	public Type getResourceType() {
+		return null;
+	}
 }

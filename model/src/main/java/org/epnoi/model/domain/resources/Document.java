@@ -12,6 +12,9 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "uri", callSuper = true)
 public class Document extends Resource {
 
+    @Override
+    public Resource.Type getResourceType() {return Type.DOCUMENT;}
+
     public static final String PUBLISHED_ON="publishedOn";
     private String publishedOn;
 

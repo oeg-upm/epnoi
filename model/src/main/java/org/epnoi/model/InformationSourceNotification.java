@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -66,4 +66,8 @@ public class InformationSourceNotification extends Resource {
 		this.informationSource = informationSource;
 	}
 
+	@Override
+	public Type getResourceType() {
+		return null;
+	}
 }

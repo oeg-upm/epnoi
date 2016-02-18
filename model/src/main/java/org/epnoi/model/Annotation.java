@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 
 public class Annotation extends Resource {
 	private String uri;
@@ -107,4 +107,8 @@ public class Annotation extends Resource {
 				+ ", predicate=" + predicate + ", label=" + label + "]";
 	}
 
+	@Override
+	public Type getResourceType() {
+		return null;
+	}
 }

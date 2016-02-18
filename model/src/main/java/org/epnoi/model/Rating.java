@@ -1,6 +1,6 @@
 package org.epnoi.model;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 
 public class Rating extends Resource {
 	public static final String WORKFLOW_RATING ="WORKFLOW";
@@ -101,5 +101,9 @@ public class Rating extends Resource {
 	public String toString() {
 		return "Rating[ "+this.getUri()+" ]";
 	}
-	
+
+	@Override
+	public Type getResourceType() {
+		return null;
+	}
 }

@@ -21,16 +21,16 @@ public class Event {
         }
     }
 
-    public static <T> Event from( T resource ){
+    public static <T> Event from( T element ){
         try {
-            if (resource instanceof String){
-                return new Event(((String) resource).getBytes());
-            } else if (resource instanceof byte[]){
-                return new Event((byte[])resource);
+            if (element instanceof String){
+                return new Event(((String) element).getBytes());
+            } else if (element instanceof byte[]){
+                return new Event((byte[])element);
             }
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutput out = new ObjectOutputStream(bos);
-            out.writeObject(resource);
+            out.writeObject(element);
             return new Event(bos.toByteArray());
         } catch (IOException e) {
             throw new RuntimeException(e);
