@@ -1,7 +1,7 @@
 package org.epnoi.api.services;
 
-import org.epnoi.model.domain.Part;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Part;
+import org.epnoi.model.domain.resources.Resource;
 import org.springframework.stereotype.Component;
 
 /**

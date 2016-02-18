@@ -1,6 +1,6 @@
 package org.epnoi.learner.modules;
 
-import org.epnoi.learner.LearningParameters;
+import org.epnoi.learner.LearningHelper;
 import org.epnoi.learner.terms.TermsTable;
 import org.epnoi.model.RelationsTable;
 
@@ -10,7 +10,7 @@ import org.epnoi.model.RelationsTable;
 public interface Learner {
     Trainer getTrainer();
 
-    LearningParameters getParameters();
+    LearningHelper getParameters();
 
     void learn(String domainUri);
 

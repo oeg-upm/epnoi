@@ -11,7 +11,7 @@ import org.epnoi.learner.terms.TermsTable;
 import org.epnoi.model.Domain;
 import org.epnoi.model.Relation;
 import org.epnoi.model.RelationsTable;
-import org.epnoi.model.domain.Term;
+import org.epnoi.model.domain.resources.Term;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 
 import java.util.HashSet;
@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class OntologyLearningWorkflow {
 	private static final Logger logger = Logger
 			.getLogger(OntologyLearningWorkflow.class.getName());
-	private LearningParameters learningParameters;
+	private LearningHelper learningHelper;
 	private TermsExtractor termExtractor;
 	private TermsRetriever termsRetriever;
 	private TermsTable termsTable;
@@ -39,22 +39,22 @@ public class OntologyLearningWorkflow {
 	public static final String DOMAIN_URI = "http://www.epnoi.org/CGTestCorpusDomain";
 	// ---------------------------------------------------------------------------------------------------------
 
-	public void init(LearningParameters learningParameters)
+	public void init(LearningHelper learningHelper)
 			throws EpnoiInitializationException {
 
 		logger.info("Initializing the OntologyLearningWorlow with the following parameters: ");
-		logger.info(learningParameters.toString());
+		logger.info(learningHelper.toString());
 
-		this.learningParameters = learningParameters;
-		this.hypernymRelationsThreshold = (double) this.learningParameters
-				.getParameterValue(LearningParameters.HYPERNYM_RELATION_EXPANSION_THRESHOLD);
-		this.extractTerms = (boolean) this.learningParameters
-				.getParameterValue(LearningParameters.EXTRACT_TERMS);
+		this.learningHelper = learningHelper;
+		this.hypernymRelationsThreshold = (double) this.learningHelper
+				.getParameterValue(LearningHelper.HYPERNYM_RELATION_EXPANSION_THRESHOLD);
+		this.extractTerms = (boolean) this.learningHelper
+				.getParameterValue(LearningHelper.EXTRACT_TERMS);
 
-		this.learningParameters = learningParameters;
+		this.learningHelper = learningHelper;
 
 		this.domainsTableCreator = new DomainsTableCreator();
-		this.domainsTableCreator.init(learningParameters);
+		this.domainsTableCreator.init(learningHelper);
 		this.domainsTable = this.domainsTableCreator.create();
 
 		this.termExtractor = new TermsExtractor();
@@ -65,7 +65,7 @@ public class OntologyLearningWorkflow {
 		
 		
 		this.relationsTableExtractor = new RelationsExtractor();
-		this.relationsTableExtractor.init(this.domainsTable, learningParameters);
+		this.relationsTableExtractor.init(this.domainsTable, learningHelper);
 
 		this.relationsTableRetriever = new RelationsRetriever();
 		
@@ -97,7 +97,7 @@ public class OntologyLearningWorkflow {
 		System.out.println("end");
 		System.exit(0);
 		OntologyGraph ontologyNoisyGraph = OntologyGraphFactory.build(
-				this.learningParameters, this.termsTable,
+				this.learningHelper, this.termsTable,
 				this.relationsTable);
 
 		Set<TermVertice> visitedTerms = new HashSet<TermVertice>();

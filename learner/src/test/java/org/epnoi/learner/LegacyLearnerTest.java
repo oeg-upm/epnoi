@@ -29,7 +29,7 @@ public class LegacyLearnerTest {
 
 
     @Autowired
-    LearningParameters learnerProperties;
+    LearningHelper learnerProperties;
 
     @Autowired
     @Value("${learner.demo.harvester.uri}")

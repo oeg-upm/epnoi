@@ -2,12 +2,12 @@ package org.epnoi.learner.relations;
 
 import org.epnoi.model.Domain;
 import org.epnoi.model.RelationsTable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.logging.Logger;
 
 public class RelationsRetriever {
-	private static final Logger logger = Logger
-			.getLogger(RelationsRetriever.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(RelationsRetriever.class);
 
 
 	// ------------------------------------------------------------------------------------------------------------

@@ -3,11 +3,10 @@ package org.epnoi.knowledgebase.wikidata.view;
 import org.epnoi.knowledgebase.wikidata.WikidataDumpProcessor;
 import org.epnoi.model.RelationHelper;
 import org.epnoi.model.WikidataView;
-import org.epnoi.model.domain.Resource;
-import org.epnoi.model.domain.SerializedObject;
+import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.domain.resources.SerializedObject;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 import org.epnoi.storage.UDM;
-import org.epnoi.storage.generator.TimeGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +32,6 @@ public class WikidataViewCreator {
 
 	@Autowired
 	UDM udm;
-
-	@Autowired
-	TimeGenerator timeGenerator;
 
 	private Map<String, Set<String>> labelsDictionary = new HashMap<>();
 
@@ -79,12 +75,10 @@ public class WikidataViewCreator {
 
 		LOG.info("Saving wikidataview: " + wikidataView.getUri() + " by using UDM..");
 
-		SerializedObject serializedObject = new SerializedObject();
+		SerializedObject serializedObject = Resource.newSerializedObject();
 		serializedObject.setUri(wikidataView.getUri());
-		serializedObject.setCreationTime(timeGenerator.asISO());
 		serializedObject.setInstance(wikidataView);
-
-		udm.save(Resource.Type.SERIALIZED_OBJECT).with(serializedObject);
+		udm.save(serializedObject);
 	}
 
 

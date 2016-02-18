@@ -3,7 +3,7 @@ package org.epnoi.eventbus.rabbitmq;
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.eventbus.Config;
 import org.epnoi.model.Event;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.modules.BindingKey;
 import org.epnoi.model.modules.EventBus;
 import org.epnoi.model.modules.RoutingKey;

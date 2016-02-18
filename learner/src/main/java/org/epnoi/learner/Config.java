@@ -6,7 +6,6 @@ import io.swagger.jaxrs.listing.SwaggerSerializers;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.epnoi.learner.filesystem.FilesystemHarvesterParameters;
-import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.learner.relations.corpus.RelationalSentencesCorpusCreationParameters;
 import org.epnoi.learner.relations.patterns.*;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
@@ -27,7 +26,7 @@ public class Config {
     private static final Logger logger = LoggerFactory.getLogger(Config.class.getName());
 
     @Autowired
-    LearningHelper helper;
+    org.epnoi.learner.helper.LearningHelper helper;
 
     @Autowired
     @Qualifier("lexicalPatternsModelCreationParameters")
@@ -181,83 +180,6 @@ public class Config {
         parameters.setParameter(RelationalSentencesCorpusCreationParameters.THRIFT_PORT, thriftPort);
         //parameters.setParameter(RelationalSentencesCorpusCreationParameters.REST_PORT, 8082);
         return parameters;
-    }
-
-    @Bean
-    @Profile(Profiles.DEVELOP)
-    public LearningParameters learningParameters(
-            @Value("${learner.task.terms}") Boolean obtainTerms,
-            @Value("${learner.task.terms.extract}") Boolean extractTerms,
-            @Value("${learner.task.terms.store}") Boolean storeTerms,
-            @Value("${learner.task.terms.initialterms}") Integer numberInitialTerms,
-            @Value("${learner.task.relations}") Boolean obtainRelations,
-            @Value("${learner.task.relations.extract}") Boolean extractRelations,
-            @Value("${learner.task.relations.store}") Boolean storeRelations,
-            @Value("${learner.task.relations.parallel}") Boolean parallelRelations,
-            @Value("${learner.task.relations.maxdistance}") Integer maxSourceTargetDistance,
-            @Value("${learner.task.relations.hypernyms.lexical.path}") String hypernymsLexicalModelPath,
-            @Value("${learner.task.relations.hypernyms.threshold.expansion}") Double hyperymExpansionMinimumThreshold,
-            @Value("${learner.task.relations.hypernyms.threshold.extraction}") Double hypernymExtractionMinimumThresohold,
-            @Value("${learner.task.relations.thrift.port}") Integer thriftPort
-            ) {
-        LearningParameters learningParameters = new LearningParameters();
-        //    System.out.println("=======================================================================================> bean");
-/*
-    learningParameters.setParameter(
-            LearningParameters.CONSIDERED_DOMAINS,
-            consideredDomains);
-
-    learningParameters.setParameter(
-            LearningParameters.TARGET_DOMAIN_URI, targetDomain);
-            */
-
-//Term related parameters
-        learningParameters.setParameter(LearningParameters.OBTAIN_TERMS, obtainTerms);
-        learningParameters.setParameter(
-                LearningParameters.EXTRACT_TERMS, extractTerms);
-        learningParameters.setParameter(
-                LearningParameters.STORE_TERMS, storeTerms);
-        learningParameters.setParameter(
-                LearningParameters.NUMBER_INITIAL_TERMS,
-                numberInitialTerms);
-
-        //Relation related parameters
-        learningParameters.setParameter(LearningParameters.OBTAIN_RELATIONS, obtainRelations);
-        learningParameters.setParameter(LearningParameters.EXTRACT_RELATIONS, extractRelations);
-        learningParameters.setParameter(LearningParameters.EXTRACT_RELATIONS_PARALLEL, parallelRelations);
-        learningParameters.setParameter(LearningParameters.STORE_RELATIONS, storeRelations);
-        learningParameters
-                .setParameter(
-                        LearningParameters.HYPERNYM_RELATION_EXPANSION_THRESHOLD,
-                        hyperymExpansionMinimumThreshold);
-
-        learningParameters
-                .setParameter(
-                        LearningParameters.HYPERNYM_RELATION_EXTRACTION_THRESHOLD,
-                        hypernymExtractionMinimumThresohold);
-
-
-        learningParameters.setParameter(
-                LearningParameters.HYPERNYM_MODEL_PATH,
-                hypernymsLexicalModelPath);
-
-
-        learningParameters.setParameter(LearningParameters.MAX_SOURCE_TARGET_DISTANCE, maxSourceTargetDistance);
-
-        try {
-
-
-            RelationalPatternsModel softPatternModel = RelationalPatternsModelSerializer
-                    .deserialize(hypernymsLexicalModelPath);
-            learningParameters.setParameter(LearningParameters.HYPERNYM_MODEL, softPatternModel);
-
-        } catch (EpnoiResourceAccessException e) {
-            logger.error(e.getMessage());
-        }
-
-        learningParameters.setParameter(LearningParameters.CONSIDER_KNOWLEDGE_BASE, false);
-        learningParameters.setParameter(RelationalSentencesCorpusCreationParameters.THRIFT_PORT, thriftPort);
-        return learningParameters;
     }
 
 

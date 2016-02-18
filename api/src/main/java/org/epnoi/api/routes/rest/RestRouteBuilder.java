@@ -3,7 +3,7 @@ package org.epnoi.api.routes.rest;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.epnoi.api.model.SourceI;
-import org.epnoi.model.domain.*;
+import org.epnoi.model.domain.resources.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

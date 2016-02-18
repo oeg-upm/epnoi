@@ -1,7 +1,7 @@
 package org.epnoi.comparator.helper;
 
 import lombok.Data;
-import org.epnoi.storage.generator.TimeGenerator;
+import org.epnoi.model.utils.TimeUtils;
 import org.epnoi.storage.UDM;
 import org.epnoi.storage.generator.URIGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,6 @@ public class ComparatorHelper {
 
     @Autowired
     UDM udm;
-
-    @Autowired
-    TimeGenerator timeGenerator;
 
     @Autowired
     URIGenerator uriGenerator;

@@ -1,7 +1,7 @@
 package org.epnoi.learner.terms;
 
 import org.epnoi.model.AnnotatedWord;
-import org.epnoi.model.TermMetadata;
+import org.epnoi.model.domain.resources.Term;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,8 +28,7 @@ public class ResourcesIndex {
 
 	// -------------------------------------------------------------------------------------------------------
 
-	public void updateTerm(String domain, String resourceURI,
-			AnnotatedWord<TermMetadata> term) {
+	public void updateTerm(String domain, String resourceURI, Term term) {
 
 		Map<String, AnnotatedWord<ResourceMetadata>> domainResources = this.resources
 				.get(domain);
@@ -51,13 +50,13 @@ public class ResourcesIndex {
 		resource.getAnnotation().setNumberOfTerms(
 				resource.getAnnotation().getNumberOfTerms() + 1);
 		Long ocurrences = resource.getAnnotation().getTermsOcurrences()
-				.get(term.getWord());
+				.get(term.getContent());
 		if (ocurrences == null) {
 			resource.getAnnotation().getTermsOcurrences()
-					.put(term.getWord(), 1L);
+					.put(term.getContent(), 1L);
 		} else {
 			resource.getAnnotation().getTermsOcurrences()
-					.put(term.getWord(), ocurrences + 1);
+					.put(term.getContent(), ocurrences + 1);
 		}
 
 	}

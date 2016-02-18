@@ -1,7 +1,6 @@
 package org.epnoi.learner;
 
 import es.cbadenes.lab.test.IntegrationTest;
-import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.model.Domain;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 import org.junit.Test;
@@ -9,7 +8,6 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -54,37 +52,37 @@ public class OntologyLearningWorkflowTest {
         Integer numberInitialTerms = 10;
         String hypernymsModelPath = "/opt/epnoi/epnoideployment/firstReviewResources/lexicalModel/model.bin";
 
-        LearningParameters learningParameters = new LearningParameters();
-        learningParameters.setParameter(
-                LearningParameters.CONSIDERED_DOMAINS,
+        LearningHelper learningHelper = new LearningHelper();
+        learningHelper.setParameter(
+                LearningHelper.CONSIDERED_DOMAINS,
                 consideredDomains);
 
-        learningParameters.setParameter(
-                LearningParameters.TARGET_DOMAIN_URI, targetDomain);
-        learningParameters
+        learningHelper.setParameter(
+                LearningHelper.TARGET_DOMAIN_URI, targetDomain);
+        learningHelper
                 .setParameter(
-                        LearningParameters.HYPERNYM_RELATION_EXPANSION_THRESHOLD,
+                        LearningHelper.HYPERNYM_RELATION_EXPANSION_THRESHOLD,
                         hyperymExpansionMinimumThreshold);
 
-        learningParameters
+        learningHelper
                 .setParameter(
-                        LearningParameters.HYPERNYM_RELATION_EXTRACTION_THRESHOLD,
+                        LearningHelper.HYPERNYM_RELATION_EXTRACTION_THRESHOLD,
                         hypernymExtractionMinimumThresohold);
-        learningParameters.setParameter(
-                LearningParameters.EXTRACT_TERMS, extractTerms);
-        learningParameters.setParameter(
-                LearningParameters.NUMBER_INITIAL_TERMS,
+        learningHelper.setParameter(
+                LearningHelper.EXTRACT_TERMS, extractTerms);
+        learningHelper.setParameter(
+                LearningHelper.NUMBER_INITIAL_TERMS,
                 numberInitialTerms);
 
-        learningParameters.setParameter(
-                LearningParameters.HYPERNYM_MODEL_PATH,
+        learningHelper.setParameter(
+                LearningHelper.HYPERNYM_MODEL_PATH,
                 hypernymsModelPath);
-        learningParameters.setParameter(LearningParameters.CONSIDER_KNOWLEDGE_BASE, false);
+        learningHelper.setParameter(LearningHelper.CONSIDER_KNOWLEDGE_BASE, false);
 
         OntologyLearningWorkflow ontologyLearningProcess = new OntologyLearningWorkflow();
 
         try {
-            ontologyLearningProcess.init(learningParameters);
+            ontologyLearningProcess.init(learningHelper);
         } catch (EpnoiInitializationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

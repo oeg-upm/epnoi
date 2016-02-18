@@ -5,10 +5,10 @@ import org.epnoi.comparator.helper.ComparatorHelper;
 import org.epnoi.comparator.model.TopicDistribution;
 import org.epnoi.comparator.model.WeightedPair;
 import org.epnoi.comparator.similarity.RelationalSimilarity;
-import org.epnoi.model.domain.Analysis;
-import org.epnoi.model.domain.Relation;
-import org.epnoi.model.domain.RelationProperties;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.relations.SimilarTo;
+import org.epnoi.model.domain.resources.Analysis;
+import org.epnoi.model.domain.relations.Relation;
+import org.epnoi.model.domain.resources.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.Tuple2;
@@ -46,7 +46,7 @@ public abstract class SimilarityTask implements Runnable,Serializable {
         LOG.debug("deleting existing " + similarityType + " : " + existingSimilarities);
         if (existingSimilarities != null){
             for (Relation existingSimilarity : existingSimilarities) {
-                helper.getUdm().detachFrom(existingSimilarity.getStart().getUri()).to(existingSimilarity.getEnd().getUri()).by(similarityType);
+                helper.getUdm().delete(existingSimilarity.getType()).byUri(existingSimilarity.getUri());
             }
         }
 
@@ -55,13 +55,34 @@ public abstract class SimilarityTask implements Runnable,Serializable {
         LOG.debug("Read "+dealsType+": " + relations);
 
         // Calculate Similarities
-        List<WeightedPair> similarities = compute(StreamSupport.stream(relations.spliterator(), false).map(rel -> new WeightedPair(rel.getStart().getUri(), rel.getEnd().getUri(), rel.getWeight())).collect(Collectors.toList()));
+        List<WeightedPair> similarities = compute(StreamSupport.stream(relations.spliterator(), false).map(rel -> new WeightedPair(rel.getStartUri(), rel.getEndUri(), rel.getWeight())).collect(Collectors.toList()));
 
         // Save similarities in ddbb
         for (WeightedPair pair: similarities){
             LOG.info("Attaching "+similarityType+" based on " + pair);
-            helper.getUdm().attachFrom(pair.getUri1()).to(pair.getUri2()).by(similarityType, RelationProperties.builder().weight(pair.getWeight()).domain(analysis.getDomain()).build());
-            helper.getUdm().attachFrom(pair.getUri2()).to(pair.getUri1()).by(similarityType, RelationProperties.builder().weight(pair.getWeight()).domain(analysis.getDomain()).build());
+
+            SimilarTo simRel1 = null;
+            SimilarTo simRel2 = null;
+            switch(similarityType){
+                case SIMILAR_TO_DOCUMENTS:
+                    simRel1 = Relation.newSimilarToDocuments(pair.getUri1(),pair.getUri2());
+                    simRel2 = Relation.newSimilarToDocuments(pair.getUri2(),pair.getUri1());
+                    break;
+                case SIMILAR_TO_ITEMS:
+                    simRel1 = Relation.newSimilarToItems(pair.getUri1(),pair.getUri2());
+                    simRel2 = Relation.newSimilarToItems(pair.getUri2(),pair.getUri1());
+                    break;
+                case SIMILAR_TO_PARTS:
+                    simRel1 = Relation.newSimilarToParts(pair.getUri1(),pair.getUri2());
+                    simRel2 = Relation.newSimilarToParts(pair.getUri2(),pair.getUri1());
+                    break;
+            }
+            simRel1.setWeight(pair.getWeight());
+            simRel1.setDomain(analysis.getDomain());
+            simRel2.setWeight(pair.getWeight());
+            simRel2.setDomain(analysis.getDomain());
+            helper.getUdm().save(simRel1);
+            helper.getUdm().save(simRel2);
         }
 
     }

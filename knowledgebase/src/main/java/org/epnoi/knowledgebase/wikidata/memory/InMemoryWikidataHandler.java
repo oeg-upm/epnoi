@@ -5,8 +5,6 @@ import org.epnoi.knowledgebase.wikidata.WikidataStemmer;
 import org.epnoi.knowledgebase.wikidata.ddbb.WikidataViewStorer;
 import org.epnoi.knowledgebase.wikidata.view.WikidataViewCreator;
 import org.epnoi.model.WikidataView;
-import org.epnoi.model.domain.Resource;
-import org.epnoi.model.domain.SerializedObject;
 import org.epnoi.storage.UDM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +14,6 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.Optional;
 import java.util.Set;
 
 /**

@@ -2,7 +2,7 @@ package org.epnoi.api;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.api.services.SourceService;
-import org.epnoi.model.domain.Source;
+import org.epnoi.model.domain.resources.Source;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;

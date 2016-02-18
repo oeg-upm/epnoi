@@ -3,12 +3,12 @@ package org.epnoi.harvester.routes.rss;
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.harvester.Config;
 import org.epnoi.model.Event;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.Source;
 import org.epnoi.model.modules.EventBus;
 import org.epnoi.model.modules.RoutingKey;
 import org.epnoi.storage.UDM;
-import org.epnoi.model.domain.ResourceUtils;
+import org.epnoi.model.utils.ResourceUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -44,7 +44,7 @@ public class RssTest {
         source.setUrl("rss://rss.slashdot.org/Slashdot/slashdot");
 
         if (!udm.exists(Resource.Type.SOURCE).withUri(source.getUri())){
-            udm.save(Resource.Type.SOURCE).with(ResourceUtils.map(source, org.epnoi.model.domain.Source.class));
+            udm.save(ResourceUtils.map(source, org.epnoi.model.domain.resources.Source.class));
         }
 
 

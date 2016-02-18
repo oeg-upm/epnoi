@@ -3,7 +3,7 @@ package org.epnoi.learner.modules;
 
 import org.apache.spark.api.java.JavaSparkContext;
 import org.epnoi.learner.Config;
-import org.epnoi.learner.LearningParameters;
+import org.epnoi.learner.LearningHelper;
 import org.epnoi.learner.OntologyLearningTask;
 import org.epnoi.learner.relations.RelationsRetriever;
 import org.epnoi.learner.terms.TermsRetriever;
@@ -11,7 +11,6 @@ import org.epnoi.learner.terms.TermsTable;
 import org.epnoi.model.Domain;
 import org.epnoi.model.RelationsTable;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
-import org.epnoi.model.rdf.RDFHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +31,7 @@ public class LearnerImpl implements Learner {
     Trainer trainer;
 
     @Autowired
-    LearningParameters learningParameters;
+    LearningHelper learningHelper;
 
     @Autowired
     JavaSparkContext sparkContext;
@@ -54,8 +53,8 @@ public class LearnerImpl implements Learner {
     }
 
     @Override
-    public LearningParameters getParameters() {
-        return this.learningParameters;
+    public LearningHelper getParameters() {
+        return this.learningHelper;
     }
 
     @Override
@@ -70,7 +69,7 @@ public class LearnerImpl implements Learner {
 
             if (domain != null) {
                 OntologyLearningTask ontologyLearningTask = new OntologyLearningTask();
-                ontologyLearningTask.init(this.learningParameters, this.sparkContext);
+                ontologyLearningTask.init(this.learningHelper, this.sparkContext);
                 try {
                     ontologyLearningTask.perform(domain);
                     _storeLearningResults(ontologyLearningTask, domain);
@@ -90,13 +89,13 @@ public class LearnerImpl implements Learner {
     }
 
     private void _storeLearningResults(OntologyLearningTask ontologyLearningTask, Domain domain) {
-        if (((boolean) learningParameters.getParameterValue(LearningParameters.OBTAIN_TERMS))
-                && ((boolean) learningParameters.getParameterValue(LearningParameters.STORE_TERMS))) {
+        if (((boolean) learningHelper.getParameterValue(LearningHelper.OBTAIN_TERMS))
+                && ((boolean) learningHelper.getParameterValue(LearningHelper.STORE_TERMS))) {
             this.termsRetriever.store(domain, ontologyLearningTask.getTermsTable());
         }
 
-        if (((boolean) learningParameters.getParameterValue(LearningParameters.OBTAIN_RELATIONS)
-                && ((boolean) learningParameters.getParameterValue(LearningParameters.STORE_RELATIONS)))) {
+        if (((boolean) learningHelper.getParameterValue(LearningHelper.OBTAIN_RELATIONS)
+                && ((boolean) learningHelper.getParameterValue(LearningHelper.STORE_RELATIONS)))) {
             this.relationsRetriever.store(ontologyLearningTask.getRelationsTable());
         }
     }

@@ -1,7 +1,9 @@
 package org.epnoi.comparator;
 
 import es.cbadenes.lab.test.IntegrationTest;
-import org.epnoi.model.domain.*;
+import org.epnoi.model.domain.relations.DealsWithFromDocument;
+import org.epnoi.model.domain.relations.Relation;
+import org.epnoi.model.domain.resources.*;
 import org.epnoi.model.modules.EventBus;
 import org.epnoi.storage.UDM;
 import org.junit.Test;
@@ -40,12 +42,12 @@ public class ComparisonTest {
         udm.delete(Resource.Type.ANY).all();
 
         // Domain
-        Domain domain = new Domain();
+        Domain domain = Resource.newDomain();
         domain.setUri("domain/1");
-        udm.save(Resource.Type.DOMAIN).with(domain);
+        udm.save(domain);
 
         // Analysis
-        Analysis analysis = new Analysis();
+        Analysis analysis = Resource.newAnalysis();
         analysis.setUri("analysis/1");
         analysis.setType("Topic-Model");
         analysis.setDomain(domain.getUri());
@@ -61,11 +63,13 @@ public class ComparisonTest {
         for (int i = 0; i < 5 ; i ++){
             Document document = createDocument("document/"+i,domain.getUri());
             for (Topic topic: topics){
-                udm.attachFrom(document.getUri()).to(topic.getUri()).by(Relation.Type.DOCUMENT_DEALS_WITH_TOPIC,RelationProperties.builder().weight(Double.valueOf(1.0/topics.size())).build());
+                DealsWithFromDocument deals = Relation.newDealsWithFromDocument(document.getUri(), topic.getUri());
+                deals.setWeight(Double.valueOf(1.0/topics.size()));
+                udm.save(deals);
             }
         }
 
-        udm.save(Resource.Type.ANALYSIS).with(analysis);
+        udm.save(analysis);
         //eventBus.post(Event.from(analysis), RoutingKey.of(Resource.Type.ANALYSIS, Resource.State.CREATED));
 
         LOG.info("Sleeping..");
@@ -78,18 +82,17 @@ public class ComparisonTest {
     private Topic createTopic(String uri,String domain,String analysis){
         Topic topic = new Topic();
         topic.setUri(uri);
-        udm.save(Resource.Type.TOPIC).with(topic);
+        udm.save(topic);
 
-        udm.attachFrom(topic.getUri()).to(domain).by(Relation.Type.TOPIC_EMERGES_IN_DOMAIN,RelationProperties.builder().date("2016").description(analysis).build());
+        udm.save(Relation.newEmergesIn(topic.getUri(),domain));
         return topic;
     }
 
     private Document createDocument(String uri, String domain){
         Document document = new Document();
         document.setUri(uri);
-        udm.save(Resource.Type.DOCUMENT).with(document);
-
-        udm.attachFrom(domain).to(document.getUri()).by(Relation.Type.DOMAIN_CONTAINS_DOCUMENT,RelationProperties.builder().date("2016").build());
+        udm.save(document);
+        udm.save(Relation.newContains(domain,document.getUri()));
         return document;
     }
 

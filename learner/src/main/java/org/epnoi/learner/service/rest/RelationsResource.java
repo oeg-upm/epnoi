@@ -2,7 +2,7 @@ package org.epnoi.learner.service.rest;
 
 import io.swagger.annotations.*;
 import org.epnoi.model.RelationHelper;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;

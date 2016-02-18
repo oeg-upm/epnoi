@@ -5,7 +5,7 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.broadcast.Broadcast;
 import org.epnoi.learner.DomainsTable;
-import org.epnoi.learner.LearningParameters;
+import org.epnoi.learner.LearningHelper;
 import org.epnoi.learner.relations.corpus.parallel.DocumentToSentencesFlatMapper;
 import org.epnoi.learner.relations.corpus.parallel.RelationalSentenceCandidate;
 import org.epnoi.learner.relations.corpus.parallel.Sentence;
@@ -24,7 +24,7 @@ public class ParallelRelationsExtractor {
             .getLogger(ParallelRelationsExtractor.class.getName());
     private static final long MAX_DISTANCE = 20;
 
-    LearningParameters parameters;
+    LearningHelper parameters;
 
     JavaSparkContext sparkContext;
 
@@ -34,7 +34,7 @@ public class ParallelRelationsExtractor {
     private static final String JOB_NAME = "RELATIONS_EXTRACTION";
     // --------------------------------------------------------------------------------------
 
-    public void init(LearningParameters parameters, DomainsTable domainsTable, JavaSparkContext sparkContext) {
+    public void init(LearningHelper parameters, DomainsTable domainsTable, JavaSparkContext sparkContext) {
         logger.info("Initializing the Relations Extractor with the following parameters");
         logger.info(parameters.toString());
         this.parameters = parameters;
@@ -77,7 +77,7 @@ public class ParallelRelationsExtractor {
                 targetDomainUri);
 
 
-        Broadcast<LearningParameters> parametersBroadcast = sparkContext.broadcast((LearningParameters) this.parameters);
+        Broadcast<LearningHelper> parametersBroadcast = sparkContext.broadcast((LearningHelper) this.parameters);
 
         // First we must create the RDD with the URIs of the resources to be
         // included in the creation of the corpus

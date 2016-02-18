@@ -1,6 +1,9 @@
 package org.epnoi.learner;
 
-import org.epnoi.model.Domain;
+
+import org.epnoi.model.domain.resources.Domain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 public class DomainsTable {
+
+	private static Logger LOG = LoggerFactory.getLogger(DomainsTable.class);
+
 	Map<String, Domain> domains; // Map that stores the domains (their URI is
 									// used as the key)
 	Map<String, List<String>> domainResources; // Map that stores the list of
@@ -69,7 +75,7 @@ public class DomainsTable {
 	// ------------------------------------------------------------------------------------------
 
 	public void addDomain(Domain domain) {
-		System.out.println(domain);
+		LOG.info("adding domain: " + domain);
 		this.domains.put(domain.getUri(), domain);
 	}
 	

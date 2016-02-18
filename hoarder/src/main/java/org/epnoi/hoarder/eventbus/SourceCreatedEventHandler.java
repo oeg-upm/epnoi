@@ -2,8 +2,8 @@ package org.epnoi.hoarder.eventbus;
 
 import org.epnoi.hoarder.services.SourceService;
 import org.epnoi.model.Event;
-import org.epnoi.model.domain.Resource;
-import org.epnoi.model.domain.Source;
+import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.domain.resources.Source;
 import org.epnoi.model.modules.RoutingKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

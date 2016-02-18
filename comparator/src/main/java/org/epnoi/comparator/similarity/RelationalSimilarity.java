@@ -1,7 +1,7 @@
 package org.epnoi.comparator.similarity;
 
 import es.upm.oeg.epnoi.matching.metrics.similarity.JensenShannonSimilarity;
-import org.epnoi.model.domain.Relationship;
+import org.epnoi.model.domain.relations.Relationship;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

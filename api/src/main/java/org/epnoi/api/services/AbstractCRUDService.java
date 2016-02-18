@@ -1,9 +1,9 @@
 package org.epnoi.api.services;
 
 import com.google.common.base.Strings;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.storage.UDM;
-import org.epnoi.storage.generator.TimeGenerator;
+import org.epnoi.model.utils.TimeUtils;
 import org.epnoi.storage.generator.URIGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +29,6 @@ public abstract class  AbstractCRUDService<T extends Resource> {
     @Autowired
     URIGenerator uriGenerator;
 
-    @Autowired
-    TimeGenerator timeGenerator;
-
     public AbstractCRUDService(Resource.Type type){
         this.type = type;
     }
@@ -46,10 +43,10 @@ public abstract class  AbstractCRUDService<T extends Resource> {
         }
 
         if (Strings.isNullOrEmpty(resource.getCreationTime())){
-            resource.setCreationTime(timeGenerator.asISO());
+            resource.setCreationTime(TimeUtils.asISO());
         }
 
-        udm.save(type).with(resource);
+        udm.save(resource);
         return resource;
     }
 
@@ -62,7 +59,7 @@ public abstract class  AbstractCRUDService<T extends Resource> {
         }
         T original = (T) result.get();
         BeanUtils.copyProperties(resource,original);
-        udm.save(type).with(original);
+        udm.save(original);
         return original;
     }
 

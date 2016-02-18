@@ -3,8 +3,11 @@ package org.epnoi.harvester.services;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.SpringCamelContext;
 import org.epnoi.harvester.routes.RouteDefinitionFactory;
-import org.epnoi.model.domain.*;
-import org.epnoi.storage.generator.TimeGenerator;
+import org.epnoi.model.domain.relations.Relation;
+import org.epnoi.model.domain.resources.Domain;
+import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.domain.resources.Source;
+import org.epnoi.model.utils.ResourceUtils;
 import org.epnoi.storage.UDM;
 import org.epnoi.storage.generator.URIGenerator;
 import org.slf4j.Logger;
@@ -36,9 +39,6 @@ public class SourceService {
     @Autowired
     URIGenerator uriGenerator;
 
-    @Autowired
-    TimeGenerator timeGenerator;
-
     public SourceService(){
 
     }
@@ -68,13 +68,13 @@ public class SourceService {
         Domain domain;
         if (domains == null || domains.isEmpty()){
             LOG.info("creating a new domain associated to source: " + source);
-            domain = new Domain();
+            domain = Resource.newDomain();
             domain.setUri(uriGenerator.newFor(Resource.Type.DOMAIN));
             domain.setName(source.getName());
             domain.setDescription("attached to source: " + source.getUri());
-            udm.save(Resource.Type.DOMAIN).with(domain);
+            udm.save(domain);
             LOG.info("Domain: " + domain + " attached to source: " + source);
-            udm.attachFrom(source.getUri()).to(domain.getUri()).by(Relation.Type.SOURCE_COMPOSES_DOMAIN, RelationProperties.builder().date(timeGenerator.asISO()).build());
+            udm.save(Relation.newComposes(source.getUri(),domain.getUri()));
 
         }else{
             domain = ResourceUtils.map(udm.read(Resource.Type.DOMAIN).byUri(domains.get(0)).get(),Domain.class);

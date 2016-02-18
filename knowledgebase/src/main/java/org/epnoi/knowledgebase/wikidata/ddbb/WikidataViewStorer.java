@@ -1,8 +1,8 @@
 package org.epnoi.knowledgebase.wikidata.ddbb;
 
 import org.epnoi.model.WikidataView;
-import org.epnoi.model.domain.Resource;
-import org.epnoi.model.domain.SerializedObject;
+import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.domain.resources.SerializedObject;
 import org.epnoi.storage.UDM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,10 +111,10 @@ public class WikidataViewStorer {
     }
 
     private void saveObject(String uri,Object instace){
-        SerializedObject serializedObject = new SerializedObject();
+        SerializedObject serializedObject = Resource.newSerializedObject();
         serializedObject.setUri(uri);
         serializedObject.setInstance(instace);
-        udm.save(Resource.Type.SERIALIZED_OBJECT).with(serializedObject);
+        udm.save(serializedObject);
     }
 
 

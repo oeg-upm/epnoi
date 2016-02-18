@@ -1,13 +1,11 @@
 package org.epnoi.comparator.model;
 
 import lombok.Getter;
-import org.epnoi.model.domain.Relationship;
+import org.epnoi.model.domain.relations.Relationship;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.StreamSupport;
 
 /**
  * Created by cbadenes on 05/02/16.

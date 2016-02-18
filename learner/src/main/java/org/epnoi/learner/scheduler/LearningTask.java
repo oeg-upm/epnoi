@@ -1,17 +1,11 @@
 package org.epnoi.learner.scheduler;
 
 import org.epnoi.learner.helper.LearningHelper;
-import org.epnoi.learner.relations.corpus.RelationalSentencesCorpusCreationParameters;
-import org.epnoi.learner.relations.patterns.RelationalPatternsModelCreationParameters;
-import org.epnoi.model.commons.Parameters;
-import org.epnoi.model.domain.Analysis;
-import org.epnoi.model.domain.Domain;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Analysis;
+import org.epnoi.model.domain.resources.Domain;
+import org.epnoi.model.domain.resources.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.ws.rs.core.UriBuilder;
-import java.net.URI;
 
 /**
  * Created by cbadenes on 10/02/16.

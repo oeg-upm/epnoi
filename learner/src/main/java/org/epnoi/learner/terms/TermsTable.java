@@ -1,6 +1,6 @@
 package org.epnoi.learner.terms;
 
-import org.epnoi.model.domain.Term;
+import org.epnoi.model.domain.resources.Term;
 
 import java.util.*;
 

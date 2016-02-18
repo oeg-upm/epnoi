@@ -6,7 +6,7 @@ import org.epnoi.hoarder.routes.Expressions;
 import org.epnoi.hoarder.routes.RouteMaker;
 import org.epnoi.hoarder.routes.common.CommonRouteBuilder;
 import org.epnoi.model.Record;
-import org.epnoi.model.domain.Source;
+import org.epnoi.model.domain.resources.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

@@ -3,15 +3,18 @@ package org.epnoi.learner.terms;
 import gate.Annotation;
 import gate.AnnotationSet;
 import gate.Document;
-import org.epnoi.model.AnnotatedWord;
+import org.apache.commons.lang.StringUtils;
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.model.OffsetRangeSelector;
-import org.epnoi.model.TermMetadata;
+import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.domain.resources.Term;
 import org.epnoi.nlp.gate.NLPAnnotationsConstants;
 
 import java.util.*;
 
 public class TermCandidateBuilder {
     private final String symbolPatter = "[^\\w\\s]";
+    private final LearningHelper helper;
 
     private Document document;
 
@@ -24,48 +27,47 @@ public class TermCandidateBuilder {
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public TermCandidateBuilder(Document document) {
+    public TermCandidateBuilder(LearningHelper helper, Document document) {
+        this.helper = helper;
         this.document = document;
     }
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public AnnotatedWord<TermMetadata> buildTermCandidate(Annotation annotation) {
+    public Term buildTermCandidate(Annotation annotation) {
 
         Long startOffset = annotation.getStartNode().getOffset();
         Long endOffset = annotation.getEndNode().getOffset();
 
-        AnnotatedWord<TermMetadata> termCandidate = _buildTermCandidateFromRange(startOffset, endOffset);
+        Term termCandidate = _buildTermCandidateFromRange(startOffset, endOffset);
 
         return termCandidate;
     }
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public AnnotatedWord<TermMetadata> buildTermCandidate(OffsetRangeSelector range) {
+    public Term buildTermCandidate(OffsetRangeSelector range) {
 
 
         Long startOffset = range.getStart();
         Long endOffset = range.getEnd();
 
 
-        AnnotatedWord<TermMetadata> termCandidate = _buildTermCandidateFromRange(startOffset, endOffset);
+        Term termCandidate = _buildTermCandidateFromRange(startOffset, endOffset);
 
         return termCandidate;
     }
 
-    private AnnotatedWord<TermMetadata> _buildTermCandidateFromRange(Long startOffset, Long endOffset) {
-        AnnotatedWord<TermMetadata> termCandidate = new AnnotatedWord<TermMetadata>(
-                new TermMetadata());
+    private Term _buildTermCandidateFromRange(Long startOffset, Long endOffset) {
 
+        Term termCandidate = new Term();
 
         AnnotationSet annotations = this.document.getAnnotations();
 
         ArrayList<String> words = new ArrayList<String>();
 
         List<Annotation> tokenAnnotations = new ArrayList<Annotation>();
-        for (Annotation tokenAnnotation : annotations.get(NLPAnnotationsConstants.TOKEN, startOffset,
-                endOffset)) {
+        for (Annotation tokenAnnotation : annotations.get(NLPAnnotationsConstants.TOKEN, startOffset, endOffset)) {
             tokenAnnotations.add(tokenAnnotation);
         }
 
@@ -78,13 +80,10 @@ public class TermCandidateBuilder {
             }
         }
 
-        termCandidate.getAnnotation().setWords(
-                Arrays.copyOf(words.toArray(), words.size(), String[].class));
-        termCandidate.getAnnotation().setLength(words.size());
+        termCandidate.setContent(StringUtils.join(words," "));
+        termCandidate.setLength(words.size());
 
-        String word = this._generateWord(words);
-
-        termCandidate.setWord(word);
+        termCandidate.setContent(StringUtils.join(words," "));
         return termCandidate;
     }
 
@@ -93,39 +92,21 @@ public class TermCandidateBuilder {
         return surfaceForm.matches(this.symbolPatter);
     }
 
-    // ------------------------------------------------------------------------------------------------------------
-
-    private String _generateWord(List<String> words) {
-        String word = "";
-        Iterator<String> wordsIt = words.iterator();
-        while (wordsIt.hasNext()) {
-            word += wordsIt.next();
-            if (wordsIt.hasNext()) {
-                word += " ";
-            }
-        }
-        return word;
-    }
-
-    // ------------------------------------------------------------------------------------------------------------
-
-    public AnnotatedWord<TermMetadata> generateSubTermCandidate(String[] words) {
-        AnnotatedWord<TermMetadata> termCandidate = new AnnotatedWord<TermMetadata>(
-                new TermMetadata());
-        termCandidate.getAnnotation().setLength(words.length);
-        termCandidate.getAnnotation().setWords(words);
-        termCandidate.setWord(this._generateWord(Arrays.asList(words)));
-
+    public Term generateSubTermCandidate(String[] words) {
+        Term termCandidate = new Term();
+        termCandidate.setUri(helper.getUriGenerator().newFor(Resource.Type.TERM));
+        termCandidate.setCreationTime(helper.getTimeGenerator().asISO());
+        termCandidate.setLength(words.length);
+        termCandidate.setContent(StringUtils.join(words," "));
         return termCandidate;
     }
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public List<AnnotatedWord<TermMetadata>> splitTermCandidate(
-            AnnotatedWord<TermMetadata> termCandidate) {
-        List<AnnotatedWord<TermMetadata>> termCandidates = new ArrayList<AnnotatedWord<TermMetadata>>();
+    public List<Term> splitTermCandidate(Term termCandidate) {
+        List<Term> termCandidates = new ArrayList<Term>();
 
-        String[] words = termCandidate.getAnnotation().getWords();
+        String[] words = termCandidate.getContent().split(" ");
         List<String[]> listSubtermsWords = _generateSubtermsWords(words);
         for (String[] subtermWords : listSubtermsWords) {
             termCandidates.add(generateSubTermCandidate(subtermWords));
@@ -138,13 +119,13 @@ public class TermCandidateBuilder {
 
     private List<String[]> _generateSubtermsWords(String[] words) {
         ArrayList<String[]> subtermWords = new ArrayList<String[]>();
-        int lenght = words.length;
+        int length = words.length;
 
-        for (int i = 0; i < lenght; i++) {
-            for (int j = i; j < lenght; j++) {
+        for (int i = 0; i < length; i++) {
+            for (int j = i; j < length; j++) {
 
                 String[] aux = Arrays.copyOfRange(words, i, j + 1);
-                if (aux.length < lenght) {
+                if (aux.length < length) {
                     subtermWords.add(aux);
                 }
             }
@@ -152,20 +133,5 @@ public class TermCandidateBuilder {
         }
 
         return subtermWords;
-    }
-
-    // ------------------------------------------------------------------------------------------------------------
-
-    public static void main(String[] args) {
-        TermCandidateBuilder termBuilder = new TermCandidateBuilder(null);
-        AnnotatedWord<TermMetadata> termCandidate = new AnnotatedWord<TermMetadata>(
-                new TermMetadata());
-        termCandidate.getAnnotation().setWords(
-                new String[]{"a", "b", "c", "d"});
-        System.out.println(termBuilder.splitTermCandidate(termCandidate));
-
-        for (int i = 0; i < 100; i++) {
-            System.out.println(i + "->" + (Math.log(i) / Math.log(2)));
-        }
     }
 }

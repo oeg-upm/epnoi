@@ -5,7 +5,7 @@ import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.learner.terms.TermsRetriever;
 import org.epnoi.learner.terms.TermsTable;
 import org.epnoi.model.*;
-import org.epnoi.model.domain.Term;
+import org.epnoi.model.domain.resources.Term;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 
 import java.util.*;

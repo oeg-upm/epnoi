@@ -2,24 +2,24 @@ package org.epnoi.learner.terms;
 
 import gate.Annotation;
 import gate.Document;
+import gate.Factory;
+import gate.Utils;
+import gate.creole.ResourceInstantiationException;
 import org.epnoi.learner.DomainsTable;
-import org.epnoi.learner.LearningParameters;
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.model.*;
-import org.epnoi.model.domain.Term;
-import org.epnoi.model.rdf.RDFHelper;
+import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.domain.resources.Term;
 import org.epnoi.nlp.gate.NLPAnnotationsConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 public class TermsExtractor {
 
-	private static final Logger logger = Logger.getLogger(TermsExtractor.class
-			.getName());
+	private static final Logger logger = LoggerFactory.getLogger(TermsExtractor.class);
 	private static final List<String> stopwords = Arrays.asList(new String[] {
 			"comment", "comments", "proceedings", "example", "examples",
 			"symposium", "conference", "copyright", "approach", "figure",
@@ -34,34 +34,29 @@ public class TermsExtractor {
 	private DomainsIndex domainsIndex;
 	private double cValueWeight = 0.5;
 	private final double domainPertinenceWeight = 0.2;
-	private final double domainConsensusWeight = 1 - cValueWeight
-			- domainPertinenceWeight;
+	private final double domainConsensusWeight = 1 - cValueWeight- domainPertinenceWeight;
 
-	LearningParameters parameters;
+	LearningHelper helper;
 
 	private DomainsTable domainsTable;
 
-	// -----------------------------------------------------------------------------------
-
-	public void init(DomainsTable domainsTable,
-			LearningParameters parameters) {
-		logger.info("Initializing the TermExtractor with the following parameters");
-		logger.info(parameters.toString());
-		this.parameters = parameters;
+	public void init(DomainsTable domainsTable,LearningHelper helper) {
+		logger.info("Initializing the TermExtractor with the following parameters: " + helper);
+		this.helper = helper;
 
 		this.domainsTable = domainsTable;
 
-		this.targetDomain = (String) parameters
-				.getParameterValue(LearningParameters.TARGET_DOMAIN_URI);
+		this.targetDomain = domainsTable.getTargetDomain().getUri();
+
 		this.termsIndex = new TermsIndex();
 		this.termsIndex.init();
+
 		this.resourcesIndex = new ResourcesIndex();
 		this.resourcesIndex.init();
+
 		this.domainsIndex = new DomainsIndex();
 		this.domainsIndex.init();
 	}
-
-	// -----------------------------------------------------------------------------------
 
 	public void indexResources() {
 
@@ -73,8 +68,6 @@ public class TermsExtractor {
 		}
 
 	}
-
-	// -----------------------------------------------------------------------------------
 
 	private void _indexDomainResoures(String domain) {
 
@@ -98,73 +91,55 @@ public class TermsExtractor {
 		}
 	}
 
-	// -----------------------------------------------------------------------------------
+	private void _indexResource(String domainUri, String documentUri) {
+		Document annotatedDocument = (Document) retrieveAnnotatedDocument(documentUri).getContent();
 
-	private void _indexResource(String domain, String URI) {
-		Document annotatedDocument = (Document) retrieveAnnotatedDocument(URI)
-				.getContent();
-		TermCandidateBuilder termCandidateBuilder = new TermCandidateBuilder(
-				annotatedDocument);
+		TermCandidateBuilder termCandidateBuilder = new TermCandidateBuilder(helper,annotatedDocument);
 
-		for (Annotation annotation : annotatedDocument.getAnnotations().get(
-				NLPAnnotationsConstants.TERM_CANDIDATE)) {
+		for (Annotation annotation : annotatedDocument.getAnnotations().get(NLPAnnotationsConstants.TERM_CANDIDATE)) {
 
-			AnnotatedWord<TermMetadata> termCandidate = termCandidateBuilder
-					.buildTermCandidate(annotation);
-			String word = termCandidate.getWord();
+			Term termCandidate = termCandidateBuilder.buildTermCandidate(annotation);
+			String word = termCandidate.getContent();
 
 			if ((word.length() > MIN_TERM_LENGTH) && !stopwords.contains(word)) {
-				this.termsIndex.updateTerm(domain, termCandidate);
-				this.resourcesIndex.updateTerm(domain, URI, termCandidate);
+				this.termsIndex.updateTerm(domainUri, termCandidate);
+				this.resourcesIndex.updateTerm(domainUri, documentUri, termCandidate);
 
-				for (AnnotatedWord<TermMetadata> subTerm : termCandidateBuilder
-						.splitTermCandidate(termCandidate)) {
-					this.resourcesIndex.updateTerm(domain, URI, subTerm);
+				for (Term subTerm : termCandidateBuilder.splitTermCandidate(termCandidate)) {
+					this.resourcesIndex.updateTerm(domainUri, documentUri, subTerm);
 				}
 
-				this.domainsIndex.updateTerm(domain, URI);
+				this.domainsIndex.updateTerm(domainUri, documentUri);
 			}
 		}
 	}
 
-	// -----------------------------------------------------------------------------------
+	private Document retrieveAnnotatedDocument(String documentUri) {
 
-	private Content<Object> retrieveAnnotatedDocument(String URI) {
 
-//		Selector selector = new Selector();
-//		selector.setProperty(SelectorHelper.URI, URI);
-//		selector.setProperty(SelectorHelper.TYPE, RDFHelper.PAPER_CLASS);
-//		selector.setProperty(SelectorHelper.ANNOTATED_CONTENT_URI, URI + "/"
-//				+ AnnotatedContentHelper.CONTENT_TYPE_OBJECT_XML_GATE);
+		Optional<Resource> res = helper.getUdm().read(Resource.Type.DOCUMENT).byUri(documentUri);
 
-		// TODO
-		logger.severe("Pending to implement by using UDM");
-//		Content<Object> annotatedContent = core.getInformationHandler()
-//				.getAnnotatedContent(selector);
-		Content<Object> annotatedContent = null;
+		if (!res.isPresent()){
+			throw new RuntimeException("No document found in DDBB by uri: " + documentUri);
+		}
 
-		/*
-		 * Document document = null; try { document = (Document) Factory
-		 * .createResource( "gate.corpora.DocumentImpl", Utils.featureMap(
-		 * gate.Document.DOCUMENT_STRING_CONTENT_PARAMETER_NAME,
-		 * (String)annotatedContent.getContent(),
-		 * gate.Document.DOCUMENT_MIME_TYPE_PARAMETER_NAME, "text/xml"));
-		 * 
-		 * } catch (ResourceInstantiationException e) { // TODO Auto-generated
-		 * logger.severe(
-		 * "Couldn't retrieve the GATE document that represents the annotated content of "
-		 * + URI); logger.severe(e.getMessage()); }
-		 */
-		return annotatedContent;
+		// TODO Store annotated document previously in DDBB
+		Document document = null;
+		try {
+			document = (Document) Factory.createResource( "gate.corpora.DocumentImpl",
+					Utils.featureMap(gate.Document.DOCUMENT_STRING_CONTENT_PARAMETER_NAME, ((org.epnoi.model.domain.resources.Document) res.get()).getContent(), gate.Document.DOCUMENT_MIME_TYPE_PARAMETER_NAME, "text/plain")); //text/xml
+
+		  } catch (ResourceInstantiationException e) {
+		  	logger.error("Couldn't retrieve the GATE document that represents the annotated content of " + documentUri,e);
+		}
+
+		return document;
 	}
-
-	// -----------------------------------------------------------------------------------
 
 	public void extractTerms() {
 
 		this.indexResources();
-		if (!this.domainsTable.getDomainResources().get(this.targetDomain)
-				.isEmpty()) {
+		if (!this.domainsTable.getDomainResources().get(this.targetDomain).isEmpty()) {
 			this.calculateCValues();
 			this.calculateDomainConsensus();
 			this.calculateDomainPertinence();
@@ -172,31 +147,24 @@ public class TermsExtractor {
 		}
 	}
 
-	// -----------------------------------------------------------------------------------
-
 	private void normalizeAnDeriveMeasures() {
 
 		logger.info("Starting the normalization of cValue and Domain Consensus values");
 		for (String domain : this.domainsTable.getConsideredDomains()) {
-			double maxCValue = this.domainsIndex.lookUp(domain).getAnnotation()
-					.getMaxCValue();
-			double minCValue = this.domainsIndex.lookUp(domain).getAnnotation()
-					.getMinCValue();
+			double maxCValue = this.domainsIndex.lookUp(domain).getAnnotation().getMaxCValue();
+			double minCValue = this.domainsIndex.lookUp(domain).getAnnotation().getMinCValue();
 
 			double maxDomainConsesus = this.domainsIndex.lookUp(domain)
 					.getAnnotation().getMaxDomainConsensus();
 			double minDomainConsesus = this.domainsIndex.lookUp(domain)
 					.getAnnotation().getMinDomainConsensus();
 
-			for (AnnotatedWord<TermMetadata> termCandidate : this.termsIndex
-					.getTermCandidates(domain)) {
+			for (Term termCandidate : this.termsIndex.getTermCandidates(domain)) {
 
-				termCandidate.getAnnotation().setCValue(
-						_normalize(termCandidate.getAnnotation().getCValue(),
-								minCValue, maxCValue));
-				termCandidate.getAnnotation().setDomainConsensus(
-						_normalize(termCandidate.getAnnotation()
-								.getDomainConsensus(), minDomainConsesus,
+				termCandidate.setCvalue(
+						_normalize(termCandidate.getCvalue(), minCValue, maxCValue));
+				termCandidate.setConsensus(
+						_normalize(termCandidate.getConsensus(), minDomainConsesus,
 								maxDomainConsesus));
 
 				//
@@ -207,125 +175,29 @@ public class TermsExtractor {
 		}
 	}
 
-	// -----------------------------------------------------------------------------------
-
-	private void _termhoodCalculation(AnnotatedWord<TermMetadata> termCandidate) {
-		termCandidate.getAnnotation().setTermhood(
-				termCandidate.getAnnotation().getCValue() * cValueWeight
-						+ termCandidate.getAnnotation().getDomainConsensus()
+	private void _termhoodCalculation(Term termCandidate) {
+		termCandidate.setTermhood(
+				termCandidate.getCvalue() * cValueWeight
+						+ termCandidate.getConsensus()
 						* domainConsensusWeight
-						+ termCandidate.getAnnotation().getDomainPertinence()
+						+ termCandidate.getPertinence()
 						* domainPertinenceWeight);
 
 	}
-
-	// -----------------------------------------------------------------------------------
 
 	private double _normalize(double value, double min, double max) {
 		return (value - min) / (max - min);
 	}
 
-	// -----------------------------------------------------------------------------------
-
-	private void showResult() {
-		for (String domain : this.domainsTable.getConsideredDomains()) {
-
-			System.out
-					.println("Domains----------------------------------------------------------");
-
-			for (AnnotatedWord<DomainMetadata> aDomain : this.domainsIndex
-					.getDomains()) {
-				System.out.println("domain> " + aDomain.getWord()
-						+ "  #resources "
-						+ aDomain.getAnnotation().getResources().size()
-						+ "  #terms "
-						+ aDomain.getAnnotation().getNumberOfTerms());
-
-				System.out.println("---> "
-						+ aDomain.getAnnotation().getResources());
-			}
-
-			System.out
-					.println("=========================================================================================================================");
-
-			System.out.println("Domain (" + domain + ")> " + domain);
-
-			System.out
-					.println("=========================================================================================================================");
-
-			for (AnnotatedWord<TermMetadata> term : this.termsIndex
-					.getTerms(domain)) {
-
-				System.out.println("term(" + term.getWord() + ")> " + term);
-
-			}
-			System.out
-					.println("=========================================================================================================================");
-
-		}
-	}
-
-	// -----------------------------------------------------------------------------------
-/*
-	private void storeResult() {
-		System.out.println("Storing the Term Extraction result");
-
-		for (AnnotatedWord<DomainMetadata> aDomain : this.domainsIndex
-				.getDomains()) {
-
-			System.out
-					.println("=========================================================================================================================");
-			System.out
-					.println("=========================================================================================================================");
-
-			for (AnnotatedWord<TermMetadata> term : this.termsIndex
-					.getTerms(aDomain.getWord())) {
-
-
-
-				Term newTerm = new Term();
-				// The term URI is obtained using an auxiliary function
-				newTerm.setUri(Term.buildURI(term.getWord(), aDomain.getWord()));
-				newTerm.setAnnotatedTerm(term);
-
-				core.getInformationHandler().put(newTerm,
-						Context.getEmptyContext());
-
-				core.getAnnotationHandler().label(newTerm.getUri(),
-						aDomain.getWord());
-			}
-			System.out
-					.println("=========================================================================================================================");
-		}
-	}
-
-
-
-	public void storeTable(TermsTable termsTable) {
-		System.out.println("Storing a Terms Table");
-
-		for (Term term : termsTable.getTerms()) {
-			System.out.println("Storing " + term);
-			core.getInformationHandler().put(term, Context.getEmptyContext());
-
-			core.getAnnotationHandler().label(term.getUri(), this.targetDomain);
-		}
-		System.out
-				.println("=========================================================================================================================");
-	}
-*/
-
-
 	private void calculateCValues() {
 
 		logger.info("Starting the calculation of the cValues");
 		for (String domain : this.domainsTable.getConsideredDomains()) {
-			TermCandidateBuilder termCandidateBuilder = new TermCandidateBuilder(
-					null);
-			for (AnnotatedWord<TermMetadata> termCandidate : this.termsIndex
+			TermCandidateBuilder termCandidateBuilder = new TermCandidateBuilder(helper,null);
+			for (Term termCandidate : this.termsIndex
 					.getTermCandidates(domain)) {
 
-				for (AnnotatedWord<TermMetadata> subTerm : termCandidateBuilder
+				for (Term subTerm : termCandidateBuilder
 						.splitTermCandidate(termCandidate)) {
 					this.termsIndex.updateSubTerm(domain, termCandidate,
 							subTerm);
@@ -334,11 +206,11 @@ public class TermsExtractor {
 
 			}
 
-			for (AnnotatedWord<TermMetadata> termCandidate : this.termsIndex
+			for (Term termCandidate : this.termsIndex
 					.getTermCandidates(domain)) {
 
 				double cValue = CValueCalculator.calculateCValue(termCandidate);
-				termCandidate.getAnnotation().setCValue(cValue);
+				termCandidate.setCvalue(cValue);
 				// System.out.println("el cvalue es " + cValue);
 				if (cValue > this.domainsIndex.getDomain(domain)
 						.getAnnotation().getMaxCValue()) {
@@ -355,32 +227,27 @@ public class TermsExtractor {
 		}
 	}
 
-	// -----------------------------------------------------------------------------------
-
 	private void calculateDomainPertinence() {
 		logger.info("Calculating the domain pertinence");
 		for (String domain : this.domainsTable.getConsideredDomains()) {
 			long totalOcurrences = this.domainsIndex.lookUp(domain)
 					.getAnnotation().getNumberOfTerms();
 
-			for (AnnotatedWord<TermMetadata> termCandidate : this.termsIndex
+			for (Term termCandidate : this.termsIndex
 					.getTermCandidates(domain)) {
 
-				termCandidate.getAnnotation()
-						.setTermProbability(
-								((double) termCandidate.getAnnotation()
-										.getOcurrences())
+				termCandidate.setProbability(
+								((double) termCandidate.getOcurrences())
 										/ ((double) totalOcurrences));
 				List<Double> ocurrencesInOtherDomains = new ArrayList<>();
 				for (String otherDomain : this.domainsTable
 						.getConsideredDomains()) {
-					AnnotatedWord<TermMetadata> term = this.termsIndex.lookUp(
-							otherDomain, termCandidate.getWord());
+					Term term = this.termsIndex.lookUp(
+							otherDomain, termCandidate.getContent());
 
 					if (term != null) {
 
-						ocurrencesInOtherDomains.add(((double) term
-								.getAnnotation().getOcurrences())
+						ocurrencesInOtherDomains.add(((double) term.getOcurrences())
 								/ ((double) this.domainsIndex
 										.lookUp(otherDomain).getAnnotation()
 										.getNumberOfTerms()));
@@ -389,14 +256,12 @@ public class TermsExtractor {
 
 				double maxOcurrences = Collections
 						.max(ocurrencesInOtherDomains);
-				termCandidate.getAnnotation().setDomainPertinence(
-						termCandidate.getAnnotation().getTermProbability()
+				termCandidate.setPertinence(
+						termCandidate.getProbability()
 								/ maxOcurrences);
 			}
 		}
 	}
-
-	// -----------------------------------------------------------------------------------
 
 	private void calculateDomainConsensus() {
 		logger.info("Calculating the domain pertinence");
@@ -408,7 +273,7 @@ public class TermsExtractor {
 						.getResource(domain, resourceURI);
 				for (Entry<String, Long> termCandidateEntry : resource
 						.getAnnotation().getTermsOcurrences().entrySet()) {
-					AnnotatedWord<TermMetadata> termCandidate = this.termsIndex
+					Term termCandidate = this.termsIndex
 							.lookUp(domain, termCandidateEntry.getKey());
 					updateDomainConsensus(
 							domain,
@@ -423,135 +288,44 @@ public class TermsExtractor {
 
 	}
 
-	// -----------------------------------------------------------------------------------
-
 	private void updateDomainConsensus(String domain,
-			AnnotatedWord<TermMetadata> termCandidate, long termOcurrences,
+			Term termCandidate, long termOcurrences,
 			long resourceTermOcurrences) {
-		double probabiltyTermResource = ((double) termOcurrences)
-				/ ((double) resourceTermOcurrences);
 
-		double resourceConsensus = -probabiltyTermResource
-				* Math.log(probabiltyTermResource);
+		double probabiltyTermResource = ((double) termOcurrences) / ((double) resourceTermOcurrences);
 
-		termCandidate.getAnnotation().setDomainConsensus(
-				termCandidate.getAnnotation().getDomainConsensus()
-						+ resourceConsensus);
+		double resourceConsensus = -probabiltyTermResource * Math.log(probabiltyTermResource);
 
-		if (termCandidate.getAnnotation().getDomainConsensus() > this.domainsIndex
+		termCandidate.setConsensus(termCandidate.getConsensus() + resourceConsensus);
+
+		if (termCandidate.getConsensus() > this.domainsIndex
 				.getDomain(domain).getAnnotation().getMaxDomainConsensus()) {
 			this.domainsIndex
 					.getDomain(domain)
 					.getAnnotation()
-					.setMaxDomainConsensus(
-							termCandidate.getAnnotation().getDomainConsensus());
+					.setMaxDomainConsensus(termCandidate.getConsensus());
 		}
 
-		if (termCandidate.getAnnotation().getDomainConsensus() < this.domainsIndex
+		if (termCandidate.getConsensus() < this.domainsIndex
 				.getDomain(domain).getAnnotation().getMinDomainConsensus()) {
 			this.domainsIndex
 					.getDomain(domain)
 					.getAnnotation()
-					.setMinDomainConsensus(
-							termCandidate.getAnnotation().getDomainConsensus());
+					.setMinDomainConsensus(termCandidate.getConsensus());
 		}
 
 	}
 
-	// -----------------------------------------------------------------------------------
-
 	public TermsTable extract() {
-		logger.info("Extracting terms with the following parameters "+parameters);
+		logger.info("Extracting terms with the following parameters "+ helper);
 		this.extractTerms();
 		TermsTable termsTable = new TermsTable();
-	
-		for (AnnotatedWord<TermMetadata> term : this.termsIndex
-				.getTerms(this.targetDomain)) {
 
-			//System.out.println("term(" + term.getWord() + ")> " + term);
-
-			Term newTerm = new Term();
-			// The term URI is obtained using an auxiliary function
-			newTerm.setUri(Term.buildURI(term.getWord(), this.targetDomain));
-			newTerm.setConsensus(term.getAnnotation().getDomainConsensus());
-			newTerm.setContent(term.getWord());
-			newTerm.setCvalue(term.getAnnotation().getCValue());
-			newTerm.setLength(term.getAnnotation().getLength());
-			newTerm.setOcurrences(term.getAnnotation().getOcurrences());
-			newTerm.setPertinence(term.getAnnotation().getDomainPertinence());
-			newTerm.setProbability(term.getAnnotation().getTermProbability());
-			newTerm.setSubterms(term.getAnnotation().getOcurrencesAsSubterm());
-			newTerm.setSuperterms(term.getAnnotation().getNumberOfSuperterns());
-			newTerm.setTermhood(term.getAnnotation().getTermhood());
-			termsTable.addTerm(newTerm);
+		for (Term term : this.termsIndex.getTerms(this.targetDomain)) {
+			termsTable.addTerm(term);
 		}
 
 		return termsTable;
-	}
-
-	// -----------------------------------------------------------------------------------
-
-	public static void main(String[] args) {
-		TermsExtractor termExtractor = new TermsExtractor();
-		/*
-		 * List<String> consideredDomains = Arrays.asList("cs", "math");
-		 */
-
-		// List<String> consideredDomains = Arrays.asList("math");
-
-		/*
-		 * List<String> consideredDomains =
-		 * Arrays.asList("Physics   Biological Physics");
-		 */
-		/*
-		 * List<String> consideredDomains = Arrays.asList(
-		 * "Quantitative Biology   Populations and Evolution",
-		 * "Physics   Biological Physics",
-		 * "Nonlinear Sciences   Exactly Solvable and Integrable Systems");
-		 */
-		/*
-		 * 
-		 * List<String> consideredDomains = Arrays
-		 * .asList("Nonlinear Sciences   Exactly Solvable and Integrable Systems"
-		 * );
-		 */
-
-		// List<String> consideredDomains = Arrays.asList("cs", "math");
-/*
-		ArrayList<String> consideredDomains = new ArrayList(Arrays.asList("CGTestCorpus"));
-		String targetDomain = "CGTestCorpus";
-		Double hyperymMinimumThreshold = 0.7;
-		boolean extractTerms = true;
-		Integer numberInitialTerms = 10;
-		String consideredResources = RDFHelper.PAPER_CLASS;
-
-		LearningParameters learningParameters = new LearningParameters();
-		learningParameters.setParameter(
-				LearningParameters.CONSIDERED_DOMAINS,
-				consideredDomains);
-		learningParameters.setParameter(
-				LearningParameters.TARGET_DOMAIN_URI, targetDomain);
-		learningParameters
-				.setParameter(
-						LearningParameters.HYPERNYM_RELATION_EXPANSION_THRESHOLD,
-						hyperymMinimumThreshold);
-		learningParameters.setParameter(
-				LearningParameters.EXTRACT_TERMS, extractTerms);
-		learningParameters.setParameter(
-				LearningParameters.NUMBER_INITIAL_TERMS,
-				numberInitialTerms);
-
-		Core core = CoreUtility.getUIACore();
-		DomainsTableCreator domainGatherer = new DomainsTableCreator();
-		domainGatherer.init(core, learningParameters);
-
-		DomainsTable domainsTable = domainGatherer.create();
-
-		termExtractor.init(core, domainsTable, learningParameters);
-		// termExtractor.removeTerms();
-		TermsTable termsTable = termExtractor.extract();
-		termExtractor.storeTable(termsTable);
-*/
 	}
 
 }

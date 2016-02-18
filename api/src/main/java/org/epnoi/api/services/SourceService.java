@@ -1,8 +1,9 @@
 package org.epnoi.api.services;
 
 import org.epnoi.api.model.SourceI;
-import org.epnoi.model.domain.Resource;
-import org.epnoi.model.domain.Source;
+import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.domain.resources.Source;
+import org.epnoi.model.utils.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -27,11 +28,11 @@ public class SourceService extends AbstractCRUDService<Source> {
 
         LOG.info("Trying to create: " + resource);
 
-        Source source = new Source();
+        Source source = Resource.newSource();
         BeanUtils.copyProperties(resource,source);
         source.setUri(uriGenerator.newFor(Resource.Type.SOURCE));
-        source.setCreationTime(timeGenerator.asISO());
-        udm.save(Resource.Type.SOURCE).with(source);
+        source.setCreationTime(TimeUtils.asISO());
+        udm.save(source);
         return source;
     }
 
@@ -45,7 +46,7 @@ public class SourceService extends AbstractCRUDService<Source> {
         }
         Source original = (Source) result.get();
         BeanUtils.copyProperties(resource,original);
-        udm.save(Resource.Type.SOURCE).with(original);
+        udm.save(original);
         return original;
     }
 

@@ -1,7 +1,7 @@
 package org.epnoi.api.services;
 
-import org.epnoi.model.domain.Resource;
-import org.epnoi.model.domain.Word;
+import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.domain.resources.Word;
 import org.springframework.stereotype.Component;
 
 /**

@@ -1,77 +1,61 @@
 package org.epnoi.learner;
 
-import org.epnoi.model.Domain;
+import org.epnoi.learner.helper.LearningHelper;
+import org.epnoi.model.domain.resources.Domain;
+import org.epnoi.model.domain.resources.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.Optional;
 
 public class DomainsTableCreator {
-	private static final Logger logger = Logger.getLogger(DomainsTableCreator.class
-			.getName());
-	private List<Domain> consideredDomains;
+	private static final Logger LOG = LoggerFactory.getLogger(DomainsTableCreator.class);
+
+	private List<String> consideredDomains;
 	private String targetDomain;
 
-	private LearningParameters parameters;
+	private LearningHelper helper;
 	private DomainsTable domainsTable;
 
-	// -----------------------------------------------------------------------------------
-
-	public void init(LearningParameters parameters) {
-		logger.info("Initializing the DomainsTableCreator with the following parameters: ");
-		logger.info(parameters.toString());
-		this.parameters = parameters;
-
-		this.consideredDomains = (List<Domain>) this.parameters
-				.getParameterValue(LearningParameters.CONSIDERED_DOMAINS);
-
+	public void init(LearningHelper helper, List<String> considered, String target) {
+		LOG.info("Initializing the DomainsTableCreator for the following domains: " + considered + " and the target:" + target);
+		LOG.info(helper.toString());
+		this.helper = helper;
+		this.consideredDomains = considered;
 		this.domainsTable = new DomainsTable();
-		this.targetDomain = (String) this.parameters
-				.getParameterValue(LearningParameters.TARGET_DOMAIN_URI);
+		this.targetDomain = target;
 	}
-
-	// -----------------------------------------------------------------------------------
 
 	public DomainsTable create() {
-		logger.info("Creating the DomainsTable");
-		for (Domain domain : this.consideredDomains) {
-			this.domainsTable.addDomain(domain);
-			logger.info("Creating the domain " + domain);
-
-			// TODO
-			logger.severe("Pending to implement by using UDM");
-//			List<String> foundURIs = core.getDomainsHandler().gather(domain);
-			List<String> foundURIs = Collections.EMPTY_LIST;
-
-			logger.info("Found initially " + foundURIs.size()
-					+ " elements in the domain");
-
-			this.domainsTable.addDomainResources(domain.getUri(), foundURIs);
-
-		}
+		LOG.info("Creating the DomainsTable");
+		this.consideredDomains.forEach(this::addDomainToTable);
 		this.domainsTable.setTargetDomain(targetDomain);
 		return this.domainsTable;
 	}
-	
-	// -----------------------------------------------------------------------------------
 
-	public DomainsTable create(Domain domain) {
-		logger.info("Creating the DomainsTable");
-		this.domainsTable.addDomain(domain);
-		logger.info("Creating the domain " + domain);
-
-		// TODO
-		logger.severe("Pending to implement by using UDM");
-//		List<String> foundURIs = core.getDomainsHandler().gather(domain);
-		List<String> foundURIs = Collections.emptyList();
-
-		logger.info("Found initially " + foundURIs.size()
-				+ " elements in the domain");
-
-		this.domainsTable.addDomainResources(domain.getUri(), foundURIs);
-
+	public DomainsTable create(String domainUri) {
+		addDomainToTable(domainUri);
 		this.domainsTable.setTargetDomain(targetDomain);
 		return this.domainsTable;
+	}
+
+	private void addDomainToTable(String domainUri){
+
+		Optional<Resource> res = helper.getUdm().read(Resource.Type.DOMAIN).byUri(domainUri);
+
+		if (!res.isPresent()){
+			LOG.warn("No domain found with uri: " + domainUri);
+			return;
+		}
+
+		Domain domain = (Domain) res.get();
+		this.domainsTable.addDomain(domain);
+		LOG.info("Adding the domain " + domain);
+		List<String> foundURIs = helper.getUdm().find(Resource.Type.DOCUMENT).in(Resource.Type.DOMAIN, domain.getUri());
+		LOG.info("Found initially " + foundURIs.size() + " elements in the domain");
+		this.domainsTable.addDomainResources(domain.getUri(), foundURIs);
+
 	}
 
 }

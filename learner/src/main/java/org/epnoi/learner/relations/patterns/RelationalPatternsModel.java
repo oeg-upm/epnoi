@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 
 public interface RelationalPatternsModel extends Serializable  {
-	public double calculatePatternProbability(
-			RelationalPattern relationalPattern);
-	public void show();
+	double calculatePatternProbability(RelationalPattern relationalPattern);
+	void show();
 }

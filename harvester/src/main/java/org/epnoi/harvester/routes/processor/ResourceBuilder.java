@@ -5,7 +5,7 @@ import org.apache.camel.Processor;
 import org.apache.commons.beanutils.BeanUtils;
 import org.epnoi.harvester.model.MetaInformation;
 import org.epnoi.model.Record;
-import org.epnoi.model.domain.File;
+import org.epnoi.model.domain.resources.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -42,7 +42,7 @@ public class ResourceBuilder implements Processor {
             file.setSource(sourceUri);
             file.setUrl(path);
 
-            org.epnoi.model.domain.MetaInformation metaInformation1 = new org.epnoi.model.domain.MetaInformation();
+            org.epnoi.model.domain.resources.MetaInformation metaInformation1 = new org.epnoi.model.domain.resources.MetaInformation();
             BeanUtils.copyProperties(metaInformation1,metaInformation);
             file.setMetainformation(metaInformation1);
 

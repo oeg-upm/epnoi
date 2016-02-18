@@ -2,12 +2,10 @@ package org.epnoi.learner.relations;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.learner.Config;
-import org.epnoi.learner.LearningParameters;
-import org.epnoi.learner.helper.LearningHelper;
+import org.epnoi.learner.LearningHelper;
 import org.epnoi.model.Domain;
 import org.epnoi.model.RelationHelper;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
-import org.epnoi.model.rdf.RDFHelper;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -32,7 +30,7 @@ public class RelationsHandlerTest {
     private static final Logger LOG = LoggerFactory.getLogger(RelationsHandlerTest.class);
 
     @Autowired
-    LearningHelper helper;
+    org.epnoi.learner.helper.LearningHelper helper;
 
     @Test
     public void basic(){
@@ -78,30 +76,30 @@ public class RelationsHandlerTest {
                 RelationsHandlerParameters.CONSIDERED_DOMAINS,
                 consideredDomains);
 
-        LearningParameters learningParameters = new LearningParameters();
-        learningParameters.setParameter(
-                LearningParameters.CONSIDERED_DOMAINS,
+        LearningHelper learningHelper = new LearningHelper();
+        learningHelper.setParameter(
+                LearningHelper.CONSIDERED_DOMAINS,
                 consideredDomains);
 
-        learningParameters.setParameter(
-                LearningParameters.TARGET_DOMAIN_URI, targetDomain);
-        learningParameters
+        learningHelper.setParameter(
+                LearningHelper.TARGET_DOMAIN_URI, targetDomain);
+        learningHelper
                 .setParameter(
-                        LearningParameters.HYPERNYM_RELATION_EXPANSION_THRESHOLD,
+                        LearningHelper.HYPERNYM_RELATION_EXPANSION_THRESHOLD,
                         hyperymExpansionMinimumThreshold);
 
-        learningParameters
+        learningHelper
                 .setParameter(
-                        LearningParameters.HYPERNYM_RELATION_EXTRACTION_THRESHOLD,
+                        LearningHelper.HYPERNYM_RELATION_EXTRACTION_THRESHOLD,
                         hyperymExpansionMinimumThreshold);
-        learningParameters.setParameter(
-                LearningParameters.EXTRACT_TERMS, extractTerms);
-        learningParameters.setParameter(
-                LearningParameters.NUMBER_INITIAL_TERMS,
+        learningHelper.setParameter(
+                LearningHelper.EXTRACT_TERMS, extractTerms);
+        learningHelper.setParameter(
+                LearningHelper.NUMBER_INITIAL_TERMS,
                 numberInitialTerms);
 
-        learningParameters.setParameter(
-                LearningParameters.HYPERNYM_MODEL_PATH,
+        learningHelper.setParameter(
+                LearningHelper.HYPERNYM_MODEL_PATH,
                 hypernymsModelPath);
 
         RelationsHandler relationsHandler = new RelationsHandler();

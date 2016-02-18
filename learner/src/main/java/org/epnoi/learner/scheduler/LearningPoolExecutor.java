@@ -1,7 +1,7 @@
 package org.epnoi.learner.scheduler;
 
 import org.epnoi.learner.helper.LearningHelper;
-import org.epnoi.model.domain.Domain;
+import org.epnoi.model.domain.resources.Domain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;

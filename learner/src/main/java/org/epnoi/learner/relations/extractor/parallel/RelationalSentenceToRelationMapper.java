@@ -1,13 +1,13 @@
 package org.epnoi.learner.relations.extractor.parallel;
 
 import gate.Document;
-import org.epnoi.learner.LearningParameters;
+import org.epnoi.learner.LearningHelper;
 import org.epnoi.learner.relations.patterns.RelationalPattern;
 import org.epnoi.learner.relations.patterns.lexical.LexicalRelationalPatternGenerator;
 import org.epnoi.learner.relations.patterns.lexical.RelaxedBigramSoftPatternModel;
 import org.epnoi.learner.terms.TermCandidateBuilder;
 import org.epnoi.model.*;
-import org.epnoi.model.domain.Term;
+import org.epnoi.model.domain.resources.Term;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,10 +22,10 @@ public class RelationalSentenceToRelationMapper {
     //------------------------------------------------------------------------------------------------------------------
 
 
-    public RelationalSentenceToRelationMapper(LearningParameters parameters) {
-        this.softPatternModel = (RelaxedBigramSoftPatternModel) parameters.getParameterValue(LearningParameters.HYPERNYM_MODEL);
-        this.THRESHOLD = (double) parameters.getParameterValue(LearningParameters.HYPERNYM_RELATION_EXTRACTION_THRESHOLD);
-        this.domain = (String) parameters.getParameterValue(LearningParameters.TARGET_DOMAIN_URI);
+    public RelationalSentenceToRelationMapper(LearningHelper parameters) {
+        this.softPatternModel = (RelaxedBigramSoftPatternModel) parameters.getParameterValue(LearningHelper.HYPERNYM_MODEL);
+        this.THRESHOLD = (double) parameters.getParameterValue(LearningHelper.HYPERNYM_RELATION_EXTRACTION_THRESHOLD);
+        this.domain = (String) parameters.getParameterValue(LearningHelper.TARGET_DOMAIN_URI);
     }
     //------------------------------------------------------------------------------------------------------------------
 

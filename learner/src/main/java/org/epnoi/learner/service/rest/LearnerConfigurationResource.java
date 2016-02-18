@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.epnoi.learner.LearningParameters;
+import org.epnoi.learner.LearningHelper;
 import org.epnoi.learner.modules.Learner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,7 +42,7 @@ public class LearnerConfigurationResource {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "The relations  found in the domain has been successfully retrieved"),
             @ApiResponse(code = 500, message = "Something went wrong in the learner")})
-    @ApiOperation(value = "Returns the learner configuration", notes = "", response = LearningParameters.class)
+    @ApiOperation(value = "Returns the learner configuration", notes = "", response = LearningHelper.class)
     public Response getConfiguration() {/*
         Map<String, Map<String,String>> trainerConfiguration = new HashMap<>();
         trainerConfiguration.put("learningParameters", learner.getTrainer().getRelationalPatternsModelCreationParameters().getParametersMap());

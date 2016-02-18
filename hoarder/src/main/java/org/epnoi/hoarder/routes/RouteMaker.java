@@ -1,7 +1,7 @@
 package org.epnoi.hoarder.routes;
 
 import org.apache.camel.model.RouteDefinition;
-import org.epnoi.model.domain.Source;
+import org.epnoi.model.domain.resources.Source;
 
 /**
  * Created by cbadenes on 27/11/15.

@@ -2,8 +2,8 @@ package org.epnoi.learner.eventbus;
 
 import org.epnoi.learner.service.LearningService;
 import org.epnoi.model.Event;
-import org.epnoi.model.domain.Domain;
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Domain;
+import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.modules.RoutingKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
