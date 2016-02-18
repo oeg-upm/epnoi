@@ -1,7 +1,7 @@
 package org.epnoi.parser.eventbus;
 
 import org.epnoi.model.Event;
-import org.epnoi.model.domain.File;
+import org.epnoi.model.domain.resources.File;
 import org.epnoi.model.modules.RoutingKey;
 import org.epnoi.parser.service.ParserService;
 import org.slf4j.Logger;

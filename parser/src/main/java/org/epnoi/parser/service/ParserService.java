@@ -1,11 +1,12 @@
 package org.epnoi.parser.service;
 
 import com.google.common.base.Strings;
-import org.epnoi.model.domain.*;
+import org.epnoi.model.domain.relations.*;
+import org.epnoi.model.domain.resources.*;
+import org.epnoi.model.utils.TimeUtils;
 import org.epnoi.parser.annotator.TextAnnotator;
 import org.epnoi.parser.annotator.upf.AnnotatedDocument;
 import org.epnoi.storage.UDM;
-import org.epnoi.storage.generator.TimeGenerator;
 import org.epnoi.storage.generator.URIGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +29,6 @@ public class ParserService {
 
     @Autowired
     URIGenerator uriGenerator;
-
-    @Autowired
-    TimeGenerator timeGenerator;
 
     @Autowired
     TextAnnotator textMiner;
@@ -123,7 +121,7 @@ public class ParserService {
             //TODO
 
             // Relate it to Domain
-            udm.attachFrom(domainUri).to(document.getUri()).by(Relation.Type.DOMAIN_CONTAINS_DOCUMENT,RelationProperties.builder().date(document.getCreationTime()).build());
+            udm.save(Relation.newContains(domainUri,document.getUri()));
 
         }catch (RuntimeException e){
             LOG.error("Error creating resources", e);
@@ -157,16 +155,15 @@ public class ParserService {
 
     private Document createAndSaveDocument(MetaInformation metaInformation, String rawContent, String sourceUri, String domainUri){
         // Document
-        Document document = new Document();
+        Document document = Resource.newDocument();
         document.setUri(uriGenerator.newFor(Resource.Type.DOCUMENT)); // Maybe better using PUBLICATION_URI
-        document.setCreationTime(timeGenerator.asISO());
         document.setPublishedOn(metaInformation.getPublished());
         document.setPublishedBy(metaInformation.getSourceUri());
         document.setAuthoredOn(metaInformation.getAuthored());
         document.setAuthoredBy(metaInformation.getCreators());
         document.setContributedBy(metaInformation.getContributors());
         document.setRetrievedFrom(metaInformation.getSourceUrl());
-        document.setRetrievedOn(timeGenerator.asISO()); //TODO hoarding time
+        document.setRetrievedOn(TimeUtils.asISO()); //TODO hoarding time
         document.setFormat(metaInformation.getPubFormat());
         document.setLanguage(metaInformation.getLanguage());
         document.setTitle(metaInformation.getTitle());
@@ -179,16 +176,15 @@ public class ParserService {
         String tokens   = textMiner.parse(rawContent).stream().filter(token -> token.isValid()).map(token -> token.getLemma()).collect(Collectors.joining(" "));
         document.setTokens(tokens);
 
-        udm.save(Resource.Type.DOCUMENT).with(document);
-        udm.attachFrom(sourceUri).to(document.getUri()).by(Relation.Type.SOURCE_PROVIDES_DOCUMENT,RelationProperties.builder().date(timeGenerator.asISO()).build());
+        udm.save(document);
+        udm.save(Relation.newProvides(sourceUri,document.getUri()));
 
         return document;
     }
 
     private Item createAndSaveItem(MetaInformation metaInformation, AnnotatedDocument document, String documentUri){
-        Item item = new Item();
+        Item item = Resource.newItem();
         item.setUri(uriGenerator.newFor(Resource.Type.ITEM));
-        item.setCreationTime(timeGenerator.asISO());
         item.setAuthoredOn(metaInformation.getAuthored());
         item.setAuthoredBy(metaInformation.getCreators());
         item.setContributedBy(metaInformation.getContributors());
@@ -204,24 +200,23 @@ public class ParserService {
         String tokens   = textMiner.parse(item.getContent()).stream().filter(token -> token.isValid()).map(token -> token.getLemma()).collect(Collectors.joining(" "));
         item.setTokens(tokens);
 
-        udm.save(Resource.Type.ITEM).with(item);
-        udm.attachFrom(documentUri).to(item.getUri()).by(Relation.Type.DOCUMENT_BUNDLES_ITEM,RelationProperties.builder().date(timeGenerator.asISO()).build());
+        udm.save(item);
+        udm.save(Relation.newBundles(documentUri,item.getUri()));
 
         return item;
     }
 
     private Part createAndSavePart(String sense, String rawContent, String itemUri) {
-        Part part = new Part();
+        Part part = Resource.newPart();
         part.setUri(uriGenerator.newFor(Resource.Type.PART));
-        part.setCreationTime(timeGenerator.asISO());
         part.setSense(sense);
         part.setContent(rawContent);
 
         String tokens   = textMiner.parse(rawContent).stream().filter(token -> token.isValid()).map(token -> token.getLemma()).collect(Collectors.joining(" "));
         part.setTokens(tokens);
 
-        udm.save(Resource.Type.PART).with(part);
-        udm.attachFrom(part.getUri()).to(itemUri).by(Relation.Type.PART_DESCRIBES_ITEM,RelationProperties.builder().date(timeGenerator.asISO()).build());
+        udm.save(part);
+        udm.save(Relation.newDescribes(part.getUri(),itemUri));
 
         return part;
     }
