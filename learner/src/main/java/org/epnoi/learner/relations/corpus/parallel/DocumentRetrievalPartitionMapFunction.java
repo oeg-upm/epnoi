@@ -6,8 +6,6 @@ import org.epnoi.model.AnnotatedContentHelper;
 import org.epnoi.model.Content;
 import org.epnoi.model.Selector;
 import org.epnoi.model.WikipediaPage;
-import org.epnoi.model.rdf.RDFHelper;
-import org.epnoi.uia.informationstore.SelectorHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,14 +40,15 @@ public class DocumentRetrievalPartitionMapFunction implements FlatMapFunction<It
 	private List<Document> _obtainSectionsAnnotatedContent(List<String> sectionsAnnotatedContentURIs) {
 
 		Selector selector = new Selector();
-		selector.setProperty(SelectorHelper.TYPE, RDFHelper.WIKIPEDIA_PAGE_CLASS);
+		// TODO
+//		selector.setProperty(SelectorHelper.TYPE, RDFHelper.WIKIPEDIA_PAGE_CLASS);
 
 		List<Document> sectionsAnnotatedContent = new ArrayList<Document>();
 		for (String uri : sectionsAnnotatedContentURIs) {
 			
-			selector.setProperty(SelectorHelper.URI, uri);
 
 			// TODO
+//			selector.setProperty(SelectorHelper.URI, uri);
 			LOG.error("Pending to implement by using UDM");
 //			Content<Object> content = core.getInformationHandler().getAnnotatedContent(selector);
 			Content<Object> content = null;

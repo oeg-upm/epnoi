@@ -16,6 +16,11 @@ public class SerializedObject extends Resource {
     public Resource.Type getResourceType() {return Type.SERIALIZED_OBJECT;}
 
     public static final String INSTANCE="instance";
-    protected Object instance = "";
+    protected Object instance;
+
+    public <T> T getInstance(Class<T> clazz){
+        if (instance == null) return null;
+        return clazz.cast(instance);
+    }
 
 }

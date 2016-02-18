@@ -4,12 +4,17 @@ import org.epnoi.knowledgebase.KnowledgeBase;
 import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.learner.terms.TermsRetriever;
 import org.epnoi.learner.terms.TermsTable;
-import org.epnoi.model.*;
+import org.epnoi.model.RelationsTable;
+import org.epnoi.model.domain.relations.ProvenanceRelation;
+import org.epnoi.model.domain.resources.Domain;
 import org.epnoi.model.domain.resources.Term;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * 
@@ -17,21 +22,31 @@ import java.util.logging.Logger;
  *
  */
 
+@Component
 public class RelationsHandler {
-	private static final Logger logger = Logger
-			.getLogger(RelationsHandler.class.getName());
+	private static final Logger LOG = LoggerFactory.getLogger(RelationsHandler.class);
+
+
+	@Autowired
+	KnowledgeBase knowledgeBase;// The curated Knowledge Base
+
+	@Autowired
+	TermsRetriever termsRetriever;
+
+	@Autowired
+	LearningHelper helper;
 
 	private Map<String, RelationsTable> relationsTable;// Map to store the
 														// RelationsTable of
 														// each domain
 	private Map<String, TermsTable> termsTable;// Map to store the TermsTable of
 												// each domain
-	private KnowledgeBase knowledgeBase;// The curated Knowledge Base
-	private RelationsHandlerParameters parameters;
 
 	private List<Domain> consideredDomains;
+
 	private Set<String> retrievedDomains;// Set of the domains which
-											// Realtions/TermsTables have been
+
+	// Realtions/TermsTables have been
 											// successfully retrieved
 
 	// ---------------------------------------------------------------------------------------------------------------------
@@ -44,17 +59,10 @@ public class RelationsHandler {
 
 	// ---------------------------------------------------------------------------------------------------------------------
 
-	public void init(LearningHelper helper, RelationsHandlerParameters parameters)
+	public void init(List<Domain> domains)
 			throws EpnoiInitializationException {
-		logger.info("Initializing the RelationsHandler with the following parameters:"
-				+ parameters);
-		this.parameters = parameters;
-
-		this.consideredDomains = (List<Domain>) this.parameters
-				.getParameterValue(RelationsHandlerParameters.CONSIDERED_DOMAINS);
-
-		this.knowledgeBase = helper.getKnowledgeBase();
-
+		LOG.info("Initializing the RelationsHandler with the following parameters:" + this);
+		this.consideredDomains = domains;
 		_initDomainsRelationsTables();
 
 	}
@@ -65,25 +73,21 @@ public class RelationsHandler {
 	 * TermsTable. If there exists any problem, the domain is
 	 */
 	private void _initDomainsRelationsTables() {
-		TermsRetriever termsRetriever = new TermsRetriever();
-		RelationsRetriever relationsRetriever = new RelationsRetriever();
 		if (consideredDomains == null) {
-			logger.info("The consideredDomains parameter was not set");
+			LOG.info("The consideredDomains parameter was not set");
 		} else if (consideredDomains.size() == 0) {
-			logger.info("The consideredDomains parameter was empty");
+			LOG.info("The consideredDomains parameter was empty");
 		} else {
 			for (Domain domain : this.consideredDomains) {
-				logger.info("Retrieving infomration from the domain "
-						+ domain.getLabel());
+				LOG.info("Retrieving information from the domain " + domain.getUri());
 				try {
 					TermsTable termsTable = termsRetriever.retrieve(domain);
 					this.termsTable.put(domain.getUri(), termsTable);
-					RelationsTable relationsTable = relationsRetriever
-							.retrieve(domain);
+					RelationsTable relationsTable = helper.getRelationsRetriever().retrieve(domain);
 					this.relationsTable.put(domain.getUri(), relationsTable);
 					this.retrievedDomains.add(domain.getUri());
 				} catch (Exception e) {
-					logger.info("There was a problem retrieving the domain "
+					LOG.info("There was a problem retrieving the domain "
 							+ domain.getUri() + " Terms/RelationsTable");
 					e.printStackTrace();
 					this.termsTable.put(domain.getUri(), null);
@@ -92,75 +96,6 @@ public class RelationsHandler {
 			}
 		}
 	}
-
-	// ---------------------------------------------------------------------------------------------------------------------
-	/*
-	 * 
-	 */
-
-	public List<Relation> getRelationsBySurfaceForm(
-			String sourceTermSurfaceForm, String domain,
-			double expansionProbabilityThreshold) {
-		logger.info("sourceTermSurfaceForm " + sourceTermSurfaceForm
-				+ ", domain " + domain + "probThreshold "
-				+ expansionProbabilityThreshold);
-		List<Relation> relations = new ArrayList<>();
-		// First we retrieve the relations that we can find in the knowledge
-		// base for the source term
-
-		for (String targetTerm : this.knowledgeBase
-				.getHypernyms(sourceTermSurfaceForm)) {
-
-			relations
-					.add(Relation.buildKnowledgeBaseRelation(
-							sourceTermSurfaceForm, targetTerm,
-							RelationHelper.HYPERNYMY));
-		}
-		// If we have been able to retrieve the Terms/RelationsTable associated
-		// with the domain, we also return these relations
-		if (this.retrievedDomains.contains(domain)) {
-			Term term = this.termsTable.get(domain).getTermBySurfaceForm(
-					sourceTermSurfaceForm);
-
-			// Afterthat we add those relations for such source term in the
-			// relations table
-			relations.addAll(relationsTable.get(domain).getRelations(
-					term.getUri(), expansionProbabilityThreshold));
-		}
-		return relations;
-	}
-
-	// ---------------------------------------------------------------------------------------------------------------------
-	/*
-	 * 
-	 */
-
-	public List<Relation> getRelationsByURI(String sourceTermURI,
-			String domain, double expansionProbabilityThreshold) {
-		List<Relation> relations = new ArrayList<>();
-		// First we retrieve the relations that we can find in the knowledge
-		// base for the source term
-		/*
-		 * FIX LATER: Integrate surface forms-> uris and viceversa in knowledge
-		 * base for (String targetTerm :
-		 * this.knowledgeBase.getHypernyms(sourceTermURI)) {
-		 * 
-		 * relations.add(Relation.buildKnowledgeBaseRelation(sourceTermURI,
-		 * targetTerm, RelationHelper.HYPERNYMY)); }
-		 */
-		// If we have been able to retrieve the Terms/RelationsTable associated
-		// with the domain, we also return these relations
-		if (this.retrievedDomains.contains(domain)) {
-
-			// Afterthat we add those relations for such source term in the
-			// relations table
-			relations.addAll(relationsTable.get(domain).getRelations(
-					sourceTermURI, expansionProbabilityThreshold));
-		}
-		return relations;
-	}
-
-	// ---------------------------------------------------------------------------------------------------------------------
 
 	/**
 	 * Method used to determine if there exists a relationship of an specific
@@ -176,7 +111,7 @@ public class RelationsHandler {
 
 	public Double areRelated(String sourceTermSurfaceForm,
 			String targetTermSurfaceForm, String type, String domain) {
-		logger.info("sourceTermSurfaceForm " + sourceTermSurfaceForm
+		LOG.info("sourceTermSurfaceForm " + sourceTermSurfaceForm
 				+ " targetTermSurfaceForm " + targetTermSurfaceForm + ", type "
 				+ type + ", domain " + domain);
 		Double existenceProbability = 0.;
@@ -192,30 +127,24 @@ public class RelationsHandler {
 						.getTermBySurfaceForm(targetTermSurfaceForm);
 				boolean found = false;
 
-				Iterator<Relation> relationsIt = this.relationsTable
+				Iterator<ProvenanceRelation> relationsIt = this.relationsTable
 						.get(domain).getRelations(sourceTerm.getUri(), 0)
 						.iterator();
 				while (!found && relationsIt.hasNext()) {
 
-					Relation relation = relationsIt.next();
+					ProvenanceRelation relation = relationsIt.next();
 
-					if (relation.getTarget().equals(targetTerm.getUri())) {
-						existenceProbability = relation.calculateRelationhood();
+					if (relation.getEndUri().equals(targetTerm.getUri())) {
+						existenceProbability = relation.getWeight();
 					}
 
 				}
 			}
 
 		}
-		System.out.println("-----------------------------> "
+		LOG.debug("-----------------------------> "
 				+ existenceProbability);
 		return existenceProbability;
-	}
-
-	// ---------------------------------------------------------------------------------------------------------------------
-
-	public static void main(String[] args) {
-
 	}
 
 }

@@ -1,77 +1,79 @@
 package org.epnoi.learner.terms;
 
-import org.epnoi.learner.helper.LearningHelper;
+import org.apache.commons.lang3.StringUtils;
+import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Domain;
 import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.domain.resources.Term;
+import org.epnoi.model.domain.resources.Word;
+import org.epnoi.storage.UDM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
+
+@Component
 public class TermsRetriever {
 
     private static final Logger LOG = LoggerFactory.getLogger(TermsRetriever.class);
 
-    private final LearningHelper helper;
+    @Autowired
+    UDM udm;
 
-    public TermsRetriever(LearningHelper helper){
-        this.helper = helper;
-    }
+    public void store(String domainUri, TermsTable termsTable) {
 
-    public void store(Domain domain, TermsTable termsTable) {
-        LOG.info("Storing the Terms Table for domain: " + domain);
-
+        LOG.info("Storing the Terms Table for domain: " + domainUri);
         for (Term term : termsTable.getTerms()) {
-            helper.getUdm().save(Resource.Type.TERM).with(term);
+            // Check if exist
+            List<String> res = udm.find(Resource.Type.TERM).by(Term.CONTENT, term.getContent());
+
+            if (res.isEmpty()){
+                // Save
+                udm.save(term);
+
+                // Relate term to words
+                LOG.debug("Trying to relate term to words: " + term.getContent());
+                for (String word : StringUtils.split(term.getContent(), " ")){
+                    List<String> uris = udm.find(Resource.Type.WORD).by(Word.CONTENT, word);
+                    if ((uris != null) && (!uris.isEmpty())){
+                        udm.save(Relation.newMentionsFromTerm(term.getUri(),uris.get(0)));
+                    }
+                }
+            }else{
+                LOG.debug("Term already exists: " + term + " with uri: " + res.get(0));
+                term.setUri(res.get(0));
+            }
+
+            // Relate to domain
+            udm.save(Relation.newAppearedIn(term.getUri(),domainUri));
         }
     }
 
     public TermsTable retrieve(Domain domain) {
-        return getTermsTable(domain.getUri());
+        return retrieve(domain.getUri());
     }
 
 
     public TermsTable retrieve(String domainUri) {
-
-        Optional<Resource> res = helper.getUdm().read(Resource.Type.DOMAIN).byUri(domainUri);
-
-        if (res.isPresent()) {
-            Domain domain = (Domain) res.get();
-            TermsTable termsTable = getTermsTable(domain.getUri());
-            return termsTable;
-        }
-        return new TermsTable();
-    }
-
-    private TermsTable getTermsTable(String domainUri) {
         TermsTable termsTable = new TermsTable();
 
-        // First we retrieve the URIs of the resources associated with the
-        // considered domain
-        List<String> foundURIs = helper.getUdm().find(Resource.Type.TERM).in(Resource.Type.DOMAIN, domainUri);
+        // First we retrieve the URIs of the resources associated with the considered domain
+        List<String> foundURIs = udm.find(Resource.Type.TERM).in(Resource.Type.DOMAIN,domainUri);
 
         // The terms are then retrieved and added to the Terms Table
         for (String termURI : foundURIs) {
-            Optional<Resource> res = helper.getUdm().read(Resource.Type.TERM).byUri(termURI);
+
+            Optional<Resource> res = udm.read(Resource.Type.TERM).byUri(termURI);
 
             if (res.isPresent()){
-                Term term = (Term) res.get();
-                termsTable.addTerm(term);
+                termsTable.addTerm(res.get().asTerm());
             }
         }
         return termsTable;
     }
-
-    private void remove(Domain domain) {
-        List<String> foundURIs = helper.getUdm().find(Resource.Type.TERM).in(Resource.Type.DOMAIN, domain.getUri());
-
-        //TODO Only the terms appearing (only) in this domain should be removed
-        for (String termURI : foundURIs) {
-            helper.getUdm().delete(Resource.Type.TERM).byUri(termURI);
-        }
-    }
-
 
 }

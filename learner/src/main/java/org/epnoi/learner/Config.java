@@ -5,11 +5,9 @@ import io.swagger.jaxrs.listing.ApiListingResource;
 import io.swagger.jaxrs.listing.SwaggerSerializers;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.epnoi.learner.filesystem.FilesystemHarvesterParameters;
 import org.epnoi.learner.relations.corpus.RelationalSentencesCorpusCreationParameters;
 import org.epnoi.learner.relations.patterns.*;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
-import org.epnoi.model.exceptions.EpnoiResourceAccessException;
 import org.epnoi.model.modules.Profiles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -229,27 +227,5 @@ public class Config {
         return sparkContext;
     }
 
-
-    @Bean
-    public FilesystemHarvesterParameters filesystemHarvesterParameters(
-            @Value("${learner.demo.harvester.uri}") String uri,
-            @Value("${learner.demo.harvester.label}") String label,
-            @Value("${learner.demo.harvester.overwrite}") Boolean overwrite,
-            @Value("${learner.demo.harvester.verbose}") Boolean verbose,
-            @Value("${learner.demo.harvester.path}") String path
-    ) {
-        FilesystemHarvesterParameters parameters = new FilesystemHarvesterParameters();
-
-        parameters.setParameter(FilesystemHarvesterParameters.CORPUS_LABEL, label);
-
-        parameters.setParameter(FilesystemHarvesterParameters.CORPUS_URI, uri);
-        parameters.setParameter(FilesystemHarvesterParameters.VERBOSE, verbose);
-
-        parameters.setParameter(FilesystemHarvesterParameters.OVERWRITE, overwrite);
-
-        parameters.setParameter(FilesystemHarvesterParameters.FILEPATH, path);
-        return parameters;
-
-    }
 
 }

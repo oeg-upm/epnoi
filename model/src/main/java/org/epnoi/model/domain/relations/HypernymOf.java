@@ -1,6 +1,8 @@
 package org.epnoi.model.domain.relations;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.epnoi.model.domain.resources.Resource;
 
@@ -10,6 +12,9 @@ import org.epnoi.model.domain.resources.Resource;
 @ToString(callSuper = true)
 @EqualsAndHashCode(of={"uri"}, callSuper = true)
 public class HypernymOf extends ProvenanceRelation {
+
+    @Getter @Setter
+    String domain;
 
     @Override
     public Resource.Type getStartType() {

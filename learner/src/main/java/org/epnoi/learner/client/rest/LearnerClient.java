@@ -7,7 +7,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
-import org.epnoi.model.Relation;
+import org.epnoi.model.domain.relations.Relation;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;

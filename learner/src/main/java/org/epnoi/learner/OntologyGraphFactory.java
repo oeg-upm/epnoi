@@ -1,19 +1,21 @@
 package org.epnoi.learner;
 
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.learner.terms.TermVertice;
 import org.epnoi.learner.terms.TermsTable;
 import org.epnoi.model.RelationsTable;
 import org.epnoi.model.domain.resources.Term;
-import org.epnoi.model.commons.Parameters;
 
 import java.util.List;
 
 public class OntologyGraphFactory {
 
-	static OntologyGraph build(Parameters ontologyLearningParamters, TermsTable termsTable, RelationsTable table){
+	static OntologyGraph build(LearningHelper helper, TermsTable termsTable, RelationsTable table){
 		OntologyGraph initialOntology = new OntologyGraph();
 		
-		int initialNumberOfTerms = Integer.parseInt((String)ontologyLearningParamters.getParameterValue(LearningHelper.NUMBER_INITIAL_TERMS));
+		//TODO int initialNumberOfTerms =  Integer.parseInt((String)ontologyLearningParamters.getParameterValue(LearningHelper.NUMBER_INITIAL_TERMS));
+		int initialNumberOfTerms =  10;
+
 
 		List<Term> mostProblabeTerms= termsTable.getMostProbable(initialNumberOfTerms);
 		for (Term term: mostProblabeTerms){

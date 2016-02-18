@@ -32,9 +32,9 @@ public class RelationsTable extends Resource {
 	 * @param expansionProbabilityThreshold
 	 * @return
 	 */
-	public List<Relation> getRelations(String sourceURI, double expansionProbabilityThreshold) {
-		List<Relation> relations = new ArrayList<>();
-		for (Relation relationFromSource : this.relationsBySource.get(sourceURI)) {
+	public List<ProvenanceRelation> getRelations(String sourceURI, double expansionProbabilityThreshold) {
+		List<ProvenanceRelation> relations = new ArrayList<>();
+		for (ProvenanceRelation relationFromSource : this.relationsBySource.get(sourceURI)) {
 			if (relationFromSource.getWeight() >= expansionProbabilityThreshold) {
 				relations.add(relationFromSource);
 			}
@@ -48,11 +48,11 @@ public class RelationsTable extends Resource {
 	 * @param expansionProbabilityThreshold
 	 * @return
 	 */
-	public List<Relation> getRelations(String sourceURI, String type,
+	public List<ProvenanceRelation> getRelations(String sourceURI, String type,
 			double expansionProbabilityThreshold) {
 		LOG.info("size> " + this.orderedRelations.size());
-		List<Relation> relations = new ArrayList<>();
-		for (Relation relationFromSource : this.relationsBySource.get(sourceURI)) {
+		List<ProvenanceRelation> relations = new ArrayList<>();
+		for (ProvenanceRelation relationFromSource : this.relationsBySource.get(sourceURI)) {
 			if (type.equals(relationFromSource.getType())
 					&& relationFromSource.getWeight() >= expansionProbabilityThreshold) {
 				relations.add(relationFromSource);

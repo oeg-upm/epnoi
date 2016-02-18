@@ -8,6 +8,7 @@ import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.model.OffsetRangeSelector;
 import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.domain.resources.Term;
+import org.epnoi.model.utils.TimeUtils;
 import org.epnoi.nlp.gate.NLPAnnotationsConstants;
 
 import java.util.*;
@@ -82,8 +83,6 @@ public class TermCandidateBuilder {
 
         termCandidate.setContent(StringUtils.join(words," "));
         termCandidate.setLength(words.size());
-
-        termCandidate.setContent(StringUtils.join(words," "));
         return termCandidate;
     }
 
@@ -95,7 +94,7 @@ public class TermCandidateBuilder {
     public Term generateSubTermCandidate(String[] words) {
         Term termCandidate = new Term();
         termCandidate.setUri(helper.getUriGenerator().newFor(Resource.Type.TERM));
-        termCandidate.setCreationTime(helper.getTimeGenerator().asISO());
+        termCandidate.setCreationTime(TimeUtils.asISO());
         termCandidate.setLength(words.length);
         termCandidate.setContent(StringUtils.join(words," "));
         return termCandidate;

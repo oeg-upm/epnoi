@@ -2,7 +2,7 @@ package org.epnoi.learner.relations;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.learner.Config;
-import org.epnoi.learner.LearningHelper;
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.model.Domain;
 import org.epnoi.model.RelationHelper;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
@@ -30,7 +30,7 @@ public class RelationsHandlerTest {
     private static final Logger LOG = LoggerFactory.getLogger(RelationsHandlerTest.class);
 
     @Autowired
-    org.epnoi.learner.helper.LearningHelper helper;
+    RelationsHandler relationsHandler;
 
     @Test
     public void basic(){
@@ -67,50 +67,6 @@ public class RelationsHandlerTest {
         String hypernymsModelPath = "/opt/epnoi/epnoideployment/firstReviewResources/lexicalModel/model.bin";
 
         // First of all we initialize the KnowledgeBase
-
-
-        RelationsHandlerParameters relationsHandlerParameters = new RelationsHandlerParameters();
-
-
-        relationsHandlerParameters.setParameter(
-                RelationsHandlerParameters.CONSIDERED_DOMAINS,
-                consideredDomains);
-
-        LearningHelper learningHelper = new LearningHelper();
-        learningHelper.setParameter(
-                LearningHelper.CONSIDERED_DOMAINS,
-                consideredDomains);
-
-        learningHelper.setParameter(
-                LearningHelper.TARGET_DOMAIN_URI, targetDomain);
-        learningHelper
-                .setParameter(
-                        LearningHelper.HYPERNYM_RELATION_EXPANSION_THRESHOLD,
-                        hyperymExpansionMinimumThreshold);
-
-        learningHelper
-                .setParameter(
-                        LearningHelper.HYPERNYM_RELATION_EXTRACTION_THRESHOLD,
-                        hyperymExpansionMinimumThreshold);
-        learningHelper.setParameter(
-                LearningHelper.EXTRACT_TERMS, extractTerms);
-        learningHelper.setParameter(
-                LearningHelper.NUMBER_INITIAL_TERMS,
-                numberInitialTerms);
-
-        learningHelper.setParameter(
-                LearningHelper.HYPERNYM_MODEL_PATH,
-                hypernymsModelPath);
-
-        RelationsHandler relationsHandler = new RelationsHandler();
-        try {
-
-            relationsHandler.init(helper, relationsHandlerParameters);
-
-        } catch (EpnoiInitializationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
 
         System.out.println("Are related? "
                 + relationsHandler.areRelated("dog", "canine",

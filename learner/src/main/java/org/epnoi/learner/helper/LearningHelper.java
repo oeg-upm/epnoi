@@ -1,12 +1,14 @@
 package org.epnoi.learner.helper;
 
+import lombok.Data;
 import lombok.Getter;
 import org.epnoi.knowledgebase.KnowledgeBase;
 import org.epnoi.learner.modules.Learner;
+import org.epnoi.learner.relations.RelationsRetriever;
 import org.epnoi.learner.relations.patterns.RelationalPatternsModel;
+import org.epnoi.learner.terms.TermsRetriever;
 import org.epnoi.nlp.NLPHandler;
 import org.epnoi.storage.UDM;
-import org.epnoi.model.utils.TimeUtils;
 import org.epnoi.storage.generator.URIGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,147 +17,147 @@ import org.springframework.stereotype.Component;
 /**
  * Created by cbadenes on 10/02/16.
  */
+@Data
 @Component
 public class LearningHelper {
 
-    @Getter @Value("${epnoi.learner.delay}")
+    @Value("${epnoi.learner.delay}")
     long delay;
 
-    @Getter @Value("${epnoi.learner.rest.port}")
+    @Value("${epnoi.learner.rest.port}")
     int restPort;
 
-    @Getter @Value("${epnoi.learner.spark.app}")
+    @Value("${epnoi.learner.spark.app}")
     String sparkApp;
 
-    @Getter @Value("${epnoi.learner.spark.master}")
+    @Value("${epnoi.learner.spark.master}")
     String sparkMaster;
 
-    @Getter @Value("${epnoi.learner.thrift.port}")
+    @Value("${epnoi.learner.thrift.port}")
     int thriftPort;
 
-    @Getter @Value("${learner.corpus.patterns.lexical.interpolation }")
+    @Value("${learner.corpus.patterns.lexical.interpolation }")
     double lexicalInterpolation;
 
-    @Getter @Value("${learner.corpus.patterns.lexical.maxlength }")
+    @Value("${learner.corpus.patterns.lexical.maxlength }")
     int lexicalMaxLength;
 
-    @Getter @Value("${learner.corpus.patterns.lexical.path}")
+    @Value("${learner.corpus.patterns.lexical.path}")
     String lexicalPath;
 
-    @Getter @Value("${learner.corpus.patterns.lexical.store}")
+    @Value("${learner.corpus.patterns.lexical.store}")
     boolean lexicalStore;
 
-    @Getter @Value("${learner.corpus.patterns.lexical.test}")
+    @Value("${learner.corpus.patterns.lexical.test}")
     boolean lexicalTest;
 
-    @Getter @Value("${learner.corpus.patterns.lexical.uri}")
+    @Value("${learner.corpus.patterns.lexical.uri}")
     String lexicalUri;
 
-    @Getter @Value("${learner.corpus.patterns.lexical.verbose}")
+    @Value("${learner.corpus.patterns.lexical.verbose}")
     boolean lexicalVerbose;
 
-    @Getter @Value("${learner.corpus.sentences.description }")
+    @Value("${learner.corpus.sentences.description }")
     String sentencesDescription;
 
-    @Getter @Value("${learner.corpus.sentences.maxlength }")
+    @Value("${learner.corpus.sentences.maxlength }")
     int sentencesMaxLength;
 
-    @Getter @Value("${learner.corpus.sentences.store}")
+    @Value("${learner.corpus.sentences.store}")
     boolean sentencesStore;
 
-    @Getter @Value("${learner.corpus.sentences.thrift.port }")
+    @Value("${learner.corpus.sentences.thrift.port }")
     int sentencesThriftPort;
 
-    @Getter @Value("${learner.corpus.sentences.type}")
+    @Value("${learner.corpus.sentences.type}")
     String sentencesType;
 
-    @Getter @Value("${learner.corpus.sentences.uri}")
+    @Value("${learner.corpus.sentences.uri}")
     String sentencesUri;
 
-    @Getter @Value("${learner.corpus.sentences.verbose}")
+    @Value("${learner.corpus.sentences.verbose}")
     boolean sentencesVerbose;
 
-    @Getter @Value("${learner.demo.harvester.label}")
+    @Value("${learner.demo.harvester.label}")
     String harvesterLabel;
 
-    @Getter @Value("${learner.demo.harvester.overwrite}")
+    @Value("${learner.demo.harvester.overwrite}")
     boolean harvesterOverwrite;
 
-    @Getter @Value("${learner.demo.harvester.path}")
+    @Value("${learner.demo.harvester.path}")
     String harvesterPath;
 
-    @Getter @Value("${learner.demo.harvester.uri}")
+    @Value("${learner.demo.harvester.uri}")
     String harvesterUri;
 
-    @Getter @Value("${learner.demo.harvester.verbose}")
+    @Value("${learner.demo.harvester.verbose}")
     boolean harvesterVerbose;
 
-    @Getter @Value("${learner.task.relations}")
+    @Value("${learner.task.relations}")
     boolean relations;
 
-    @Getter @Value("${learner.task.relations.extract}")
+    @Value("${learner.task.relations.extract}")
     boolean relationsExtract;
 
-    @Getter @Value("${learner.task.relations.hypernyms.lexical.path}")
+    @Value("${learner.task.relations.hypernyms.lexical.path}")
     String hypernymsLexicalPath;
 
-    @Getter @Value("${learner.task.relations.hypernyms.threshold.expansion }")
+    @Value("${learner.task.relations.hypernyms.threshold.expansion }")
     double hypernymsThresholdExpansion;
 
-    @Getter @Value("${learner.task.relations.hypernyms.threshold.extraction }")
+    @Value("${learner.task.relations.hypernyms.threshold.extraction }")
     double hypernymsThresholdExtraction;
 
-    @Getter @Value("${learner.task.relations.knowledgebase }")
+    @Value("${learner.task.relations.knowledgebase }")
     boolean relationsKnowledgeBase;
 
-    @Getter @Value("${learner.task.relations.maxdistance}")
+    @Value("${learner.task.relations.maxdistance}")
     int relationsMaxDistance;
 
-    @Getter @Value("${learner.task.relations.parallel}")
+    @Value("${learner.task.relations.parallel}")
     boolean relationsParallel;
 
-    @Getter @Value("${learner.task.relations.store}")
+    @Value("${learner.task.relations.store}")
     boolean relationsStore;
 
-    @Getter @Value("${learner.task.relations.thrift.port }")
+    @Value("${learner.task.relations.thrift.port }")
     int relationsThriftPort;
 
-    @Getter @Value("${learner.task.terms}")
+    @Value("${learner.task.terms}")
     boolean terms;
 
-    @Getter @Value("${learner.task.terms.extract}")
+    @Value("${learner.task.terms.extract}")
     boolean termsExtract;
 
-    @Getter @Value("${learner.task.terms.initialterms}")
+    @Value("${learner.task.terms.initialterms}")
     int termsInitial;
 
-    @Getter @Value("${learner.task.terms.store}")
+    @Value("${learner.task.terms.store}")
     boolean termsStore;
 
-    @Getter
     @Autowired
     URIGenerator uriGenerator;
 
-    @Getter
     @Autowired
     UDM udm;
 
-    @Getter
     @Autowired
     Learner learner;
 
-    @Getter
     @Autowired
     NLPHandler nlpHandler;
 
-    @Getter
     @Autowired
     KnowledgeBase knowledgeBase;
 
-    @Getter
     @Autowired
     RelationalPatternsModel relationalPatternsModel;
 
+    @Autowired
+    RelationsRetriever relationsRetriever;
+
+    @Autowired
+    TermsRetriever termsRetriever;
 
     //	// Domain Definition
 //	// Parameters--------------------------------------------------------------------------------

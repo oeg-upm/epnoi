@@ -4,12 +4,11 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.learner.relations.RelationsRetriever;
 import org.epnoi.learner.relations.extractor.RelationsExtractor;
-import org.epnoi.learner.relations.extractor.parallel.ParallelRelationsExtractor;
 import org.epnoi.learner.terms.TermsExtractor;
 import org.epnoi.learner.terms.TermsRetriever;
 import org.epnoi.learner.terms.TermsTable;
-import org.epnoi.model.domain.resources.Domain;
 import org.epnoi.model.RelationsTable;
+import org.epnoi.model.domain.resources.Domain;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,6 @@ public class OntologyLearningTask {
     private RelationsTable relationsTable;
 
     private RelationsExtractor relationsTableExtractor;
-    private ParallelRelationsExtractor parallelRelationsExtractor;
     private RelationsRetriever relationsTableRetriever;
 
 
@@ -76,18 +74,12 @@ public class OntologyLearningTask {
         if (obtainTerms) {
             this.termExtractor = new TermsExtractor();
             this.termExtractor.init(this.domainsTable, learningHelper);
-            this.termsRetriever = new TermsRetriever(learningHelper);
+            this.termsRetriever = learningHelper.getTermsRetriever();
         }
         if (obtainRelations) {
-            if(parallelRelationsExtraction){
-                this.parallelRelationsExtractor = new ParallelRelationsExtractor();
-                this.parallelRelationsExtractor.init(learningHelper,domainsTable, sparkContext);
-
-            }else {
-                this.relationsTableExtractor = new RelationsExtractor();
-                this.relationsTableExtractor.init(this.domainsTable, learningHelper);
-            }
-            this.relationsTableRetriever = new RelationsRetriever();
+            this.relationsTableExtractor = new RelationsExtractor();
+            this.relationsTableExtractor.init(this.domainsTable, learningHelper);
+            this.relationsTableRetriever = learningHelper.getRelationsRetriever();
         }
     }
 
@@ -97,7 +89,6 @@ public class OntologyLearningTask {
         Domain targetDomain = this.domainsTable.getTargetDomain();
         if (obtainTerms) {
             if (extractTerms) {
-
                 this.termsTable = this.termExtractor.extract();
             } else {
                 this.termsTable = this.termsRetriever.retrieve(targetDomain);
@@ -108,14 +99,8 @@ public class OntologyLearningTask {
 
         if (obtainRelations) {
             if (extractRelations) {
-
-                if(parallelRelationsExtraction){
-                    this.relationsTable= this.parallelRelationsExtractor.extract(this.domainsTable);
-                }else {
-                    this.relationsTable = this.relationsTableExtractor.extract(this.termsTable);
-                }
+                this.relationsTable = this.relationsTableExtractor.extract(this.termsTable);
             } else {
-
                 this.relationsTable = this.relationsTableRetriever.retrieve(targetDomain);
             }
 
@@ -151,26 +136,5 @@ public class OntologyLearningTask {
     }
 
     // ---------------------------------------------------------------------------------------------------------
-
-    public static void main(String[] args) {
-/*
-        Core core = CoreUtility.getUIACore();
-        OntologyLearningTask ontologyLearningTask = new OntologyLearningTask();
-
-        Domain domain = null;
-
-        if (core.getInformationHandler().contains(DOMAIN_URI,
-                RDFHelper.DOMAIN_CLASS)) {
-            domain = (Domain) core.getInformationHandler().get(DOMAIN_URI,
-                    RDFHelper.DOMAIN_CLASS);
-        } else {
-            logger.info("The target domain " + DOMAIN_URI + "couldn't be found in the UIA");
-            System.exit(0);
-        }
-
-
-        ontologyLearningTask.perform(domain);
-*/
-    }
 
 }

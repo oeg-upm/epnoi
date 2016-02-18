@@ -1,7 +1,6 @@
 package org.epnoi.learner.relations.extractor;
 
 import gate.*;
-import gate.Document;
 import gate.creole.ResourceInstantiationException;
 import gate.util.InvalidOffsetException;
 import org.epnoi.learner.DomainsTable;
@@ -12,10 +11,10 @@ import org.epnoi.learner.terms.TermCandidateBuilder;
 import org.epnoi.learner.terms.TermsTable;
 import org.epnoi.model.RelationHelper;
 import org.epnoi.model.RelationsTable;
-import org.epnoi.model.domain.relations.RelationProperties;
-import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.domain.relations.HypernymOf;
+import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Domain;
+import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.domain.resources.Term;
 import org.epnoi.nlp.gate.NLPAnnotationsConstants;
 import org.slf4j.Logger;
@@ -55,17 +54,16 @@ public class RelationsExtractor {
 
         this.patternsGenerator = new LexicalRelationalPatternGenerator();
         this.domainsTable = domainsTable;
-        this.relationsTable = new RelationsTable();
     }
 
     public RelationsTable extract(TermsTable termsTable) {
         LOG.info("Extracting the Relations Table");
 
-        String relationsTableUri= this.domainsTable.getTargetDomain().getUri()+"/relations";
-
         this.termsTable = termsTable;
+
         this.relationsTable = new RelationsTable();
-        this.relationsTable.setUri(relationsTableUri);
+        this.relationsTable.setUri(this.domainsTable.getTargetDomain().getUri());
+
         // The relations finding task is only performed in the target domain,
         // these are the resources that we should consider
 
@@ -178,7 +176,7 @@ public class RelationsExtractor {
 
                 if (relationProbability > this.hypernymExtractionThreshold) {
 
-                    _createRelation(sentenceContent, sourceTermWord, targetTermWord, relationProbability);
+                    _createRelation(sentenceContent, termCandidateBuilder.buildTermCandidate(source), termCandidateBuilder.buildTermCandidate(target), relationProbability);
 
                 }
             }
@@ -192,15 +190,10 @@ public class RelationsExtractor {
             return;
         }
 
-        HypernymOf hypernymOf = new HypernymOf();
-        hypernymOf.setUri(helper.getUriGenerator().newFor());
-        hypernymOf.setStart(sourceTerm);
-        hypernymOf.setEnd(targetTerm);
-        hypernymOf.setProperties(RelationProperties.builder().domain(targetDomain.getUri()).build());
+        HypernymOf hypernymOf = Relation.newHypernymOf(sourceTerm.getUri(),targetTerm.getUri());
+        hypernymOf.setDomain(targetDomain.getUri());
         hypernymOf.add(sentenceContent,relationProbability);
         this.relationsTable.introduceRelation(hypernymOf);
-
-
     }
 
     private Document retrieveAnnotatedDocument(String documentUri) {
@@ -216,7 +209,7 @@ public class RelationsExtractor {
         Document document = null;
         try {
             document = (Document) Factory.createResource( "gate.corpora.DocumentImpl",
-                    Utils.featureMap(gate.Document.DOCUMENT_STRING_CONTENT_PARAMETER_NAME, ((org.epnoi.model.domain.resources.Document) res.get()).getContent(), gate.Document.DOCUMENT_MIME_TYPE_PARAMETER_NAME, "text/plain")); //text/xml
+                    Utils.featureMap(gate.Document.DOCUMENT_STRING_CONTENT_PARAMETER_NAME, (res.get().asDocument()).getContent(), gate.Document.DOCUMENT_MIME_TYPE_PARAMETER_NAME, "text/plain")); //text/xml
 
         } catch (ResourceInstantiationException e) {
             LOG.error("Couldn't retrieve the GATE document that represents the annotated content of " + documentUri,e);

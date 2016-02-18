@@ -147,7 +147,7 @@
         <module>nlp</module>
         <module>harvester</module>
         <module>hoarder</module>
-        <!--<module>learner</module>-->
+        <module>learner</module>
         <module>modeler</module>
         <module>knowledgebase</module>
         <module>app</module>

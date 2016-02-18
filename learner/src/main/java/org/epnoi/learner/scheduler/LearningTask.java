@@ -4,6 +4,7 @@ import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.model.domain.resources.Analysis;
 import org.epnoi.model.domain.resources.Domain;
 import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.utils.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,7 @@ public class LearningTask implements Runnable{
 
         Analysis analysis = new Analysis();
         analysis.setUri(helper.getUriGenerator().newFor(Resource.Type.ANALYSIS));
-        analysis.setCreationTime(helper.getTimeGenerator().asISO());
+        analysis.setCreationTime(TimeUtils.asISO());
         analysis.setDomain(domain.getUri());
         analysis.setType(type);
         analysis.setDescription(description);
