@@ -2,7 +2,7 @@ package org.epnoi.modeler.builder;
 
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang.StringUtils;
-import org.epnoi.model.domain.User;
+import org.epnoi.model.domain.resources.User;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

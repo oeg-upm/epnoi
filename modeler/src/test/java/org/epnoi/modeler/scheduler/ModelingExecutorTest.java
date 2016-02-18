@@ -3,7 +3,7 @@ package org.epnoi.modeler.scheduler;
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.modeler.Config;
 import org.epnoi.modeler.helper.ModelingHelper;
-import org.epnoi.model.domain.Domain;
+import org.epnoi.model.domain.resources.Domain;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;

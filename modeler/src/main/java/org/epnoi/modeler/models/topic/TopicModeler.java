@@ -1,7 +1,11 @@
 package org.epnoi.modeler.models.topic;
 
 import es.upm.oeg.epnoi.matching.metrics.domain.entity.RegularResource;
-import org.epnoi.model.domain.*;
+import org.epnoi.model.domain.relations.EmergesIn;
+import org.epnoi.model.domain.relations.MentionsFromTopic;
+import org.epnoi.model.domain.relations.Relation;
+import org.epnoi.model.domain.resources.*;
+import org.epnoi.model.utils.TimeUtils;
 import org.epnoi.modeler.helper.ModelingHelper;
 import org.epnoi.modeler.models.WordDistribution;
 import org.epnoi.modeler.scheduler.ModelingTask;
@@ -89,7 +93,7 @@ public class TopicModeler extends ModelingTask {
 
             // Save the analysis
             analysis.setConfiguration(model.getConfiguration().toString());
-            helper.getUdm().save(Resource.Type.ANALYSIS).with(analysis);
+            helper.getUdm().save(analysis);
         } catch (RuntimeException e){
             LOG.warn(e.getMessage(),e);
         } catch (Exception e){
@@ -98,19 +102,20 @@ public class TopicModeler extends ModelingTask {
     }
 
     private void persistModel(Analysis analysis, TopicModel model, Resource.Type resourceType){
-
-        String creationTime = helper.getTimeGenerator().asISO();
         Map<String,String> topicTable = new HashMap<>();
         for (TopicData topicData : model.getTopics()){
 
             // Save Topic
-            Topic topic = new Topic();
+            Topic topic = Resource.newTopic();
             topic.setUri(helper.getUriGenerator().newFor(Resource.Type.TOPIC));
             topic.setAnalysis(analysis.getUri());
-            topic.setCreationTime(creationTime);
+            topic.setCreationTime(TimeUtils.asISO());
             topic.setContent(String.join(",",topicData.getWords().stream().map(wd -> wd.getWord()).collect(Collectors.toList())));
-            helper.getUdm().save(Resource.Type.TOPIC).with(topic);
-            helper.getUdm().attachFrom(topic.getUri()).to(domain.getUri()).by(Relation.Type.TOPIC_EMERGES_IN_DOMAIN,RelationProperties.builder().description(analysis.getUri()).build());
+            helper.getUdm().save(topic);
+
+            EmergesIn emerges = Relation.newEmergesIn(topic.getUri(), domain.getUri());
+            emerges.setAnalysis(analysis.getUri());
+            helper.getUdm().save(emerges);
 
 
             topicTable.put(topicData.getId(),topic.getUri());
@@ -126,18 +131,20 @@ public class TopicModeler extends ModelingTask {
                     wordURI = helper.getUriGenerator().newFor(Resource.Type.WORD);
 
                     // Create Word
-                    Word word = new Word();
+                    Word word = Resource.newWord();
                     word.setUri(wordURI);
-                    word.setCreationTime(helper.getTimeGenerator().asISO());
+                    word.setCreationTime(TimeUtils.asISO());
                     word.setContent(wordDistribution.getWord());
                     word.setLemma(wordDistribution.getWord());
                     word.setType("term");
-                    helper.getUdm().save(Resource.Type.WORD).with(word);
+                    helper.getUdm().save(word);
 
                 }
 
                 // Relate Topic to Word (mentions)
-                helper.getUdm().attachFrom(topic.getUri()).to(wordURI).by(Relation.Type.TOPIC_MENTIONS_WORD,RelationProperties.builder().weight(wordDistribution.getWeight()).build());
+                MentionsFromTopic mentions = Relation.newMentionsFromTopic(topic.getUri(), wordURI);
+                mentions.setWeight(wordDistribution.getWeight());
+                helper.getUdm().save(mentions);
             }
         }
 
@@ -148,19 +155,20 @@ public class TopicModeler extends ModelingTask {
             for (TopicDistribution topicDistribution: model.getResources().get(resourceURI)){
                 // Relate resource  to Topic
                 String topicURI = topicTable.get(topicDistribution.getTopic());
-                Relation.Type relation = null;
+                Relation relation = null;
                 switch(resourceType){
                     case DOCUMENT:
-                        relation = Relation.Type.DOCUMENT_DEALS_WITH_TOPIC;
+                        relation = Relation.newDealsWithFromDocument(resourceURI,topicURI);
                         break;
                     case ITEM:
-                        relation = Relation.Type.ITEM_DEALS_WITH_TOPIC;
+                        relation = Relation.newDealsWithFromItem(resourceURI,topicURI);
                         break;
                     case PART:
-                        relation = Relation.Type.PART_DEALS_WITH_TOPIC;
+                        relation = Relation.newDealsWithFromPart(resourceURI,topicURI);
                         break;
                 }
-                helper.getUdm().attachFrom(resourceURI).to(topicURI).by(relation,RelationProperties.builder().weight(topicDistribution.getWeight()).build());
+                relation.setWeight(topicDistribution.getWeight());
+                helper.getUdm().save(relation);
             }
         }
         LOG.info("Topic Model saved in ddbb: " + model);

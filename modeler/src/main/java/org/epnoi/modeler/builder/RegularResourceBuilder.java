@@ -3,7 +3,7 @@ package org.epnoi.modeler.builder;
 import es.upm.oeg.epnoi.matching.metrics.domain.entity.Author;
 import es.upm.oeg.epnoi.matching.metrics.domain.entity.Metadata;
 import es.upm.oeg.epnoi.matching.metrics.domain.entity.RegularResource;
-import org.epnoi.model.domain.User;
+import org.epnoi.model.domain.resources.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

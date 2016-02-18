@@ -1,12 +1,16 @@
 package org.epnoi.modeler.models.word;
 
 import es.upm.oeg.epnoi.matching.metrics.domain.entity.RegularResource;
-import org.epnoi.model.domain.*;
+import org.epnoi.model.domain.relations.EmbeddedIn;
+import org.epnoi.model.domain.relations.PairsWith;
+import org.epnoi.model.domain.relations.Relation;
+import org.epnoi.model.domain.resources.*;
 import org.epnoi.modeler.helper.ModelingHelper;
 import org.epnoi.modeler.models.WordDistribution;
 import org.epnoi.modeler.scheduler.ModelingTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.collection.JavaConversions;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,10 +45,10 @@ public class WordEmbeddingModeler extends ModelingTask {
                 throw new RuntimeException("No documents found in domain: " + domain.getUri());
 
             // Clean Similar relations
-            helper.getUdm().delete(Relation.Type.WORD_PAIRS_WITH_WORD).in(Resource.Type.DOMAIN, domain.getUri());
+            helper.getUdm().delete(Relation.Type.PAIRS_WITH).in(Resource.Type.DOMAIN, domain.getUri());
 
             // Clean Embedded relations
-            helper.getUdm().delete(Relation.Type.WORD_EMBEDDED_IN_DOMAIN).in(Resource.Type.DOMAIN, domain.getUri());
+            helper.getUdm().delete(Relation.Type.EMBEDDED_IN).in(Resource.Type.DOMAIN, domain.getUri());
 
             // Create the analysis
             Analysis analysis = newAnalysis("Word-Embedding","W2V",Resource.Type.WORD.name());
@@ -61,7 +65,7 @@ public class WordEmbeddingModeler extends ModelingTask {
             words.stream().forEach(word -> relateWord(word,model));
 
             // Save the analysis
-            helper.getUdm().save(Resource.Type.ANALYSIS).with(analysis);
+            helper.getUdm().save(analysis);
 
         }catch (RuntimeException e){
             LOG.warn(e.getMessage(),e);
@@ -73,15 +77,20 @@ public class WordEmbeddingModeler extends ModelingTask {
     private void relateWord(Word word, W2VModel model){
         // EMBEDDED relation
         float[] vector = model.getRepresentation(word.getLemma());
-        helper.getUdm().attachFrom(word.getUri()).to(domain.getUri()).by(Relation.Type.WORD_EMBEDDED_IN_DOMAIN,RelationProperties.builder().description(Arrays.toString(vector)).build());
+        EmbeddedIn embeddedIn = Relation.newEmbeddedIn(word.getUri(),domain.getUri());
+        embeddedIn.setVector(vector);
+        helper.getUdm().save(embeddedIn);
 
         // PAIRED relations
         List<WordDistribution> words = model.find(word.getLemma()).stream().filter(sim -> sim.getWeight() > helper.getSimilarityThreshold()).collect(Collectors.toList());
         for (WordDistribution wordDistribution : words){
             List<String> result = helper.getUdm().find(Resource.Type.WORD).by(Word.LEMMA, wordDistribution.getWord());
             if (result != null && !result.isEmpty()){
-                helper.getUdm().attachFrom(word.getUri()).to(result.get(0)).by(Relation.Type.WORD_PAIRS_WITH_WORD,RelationProperties.builder().weight(wordDistribution.getWeight()).domain(domain.getUri()).build());
 
+                PairsWith pair = Relation.newPairsWith(word.getUri(), result.get(0));
+                pair.setWeight(wordDistribution.getWeight());
+                pair.setDomain(domain.getUri());
+                helper.getUdm().save(pair);
             }
             // TODO Create word when not exist
         }

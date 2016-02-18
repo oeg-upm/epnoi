@@ -2,12 +2,14 @@ package org.epnoi.modeler.models;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import es.upm.oeg.epnoi.matching.metrics.domain.entity.RegularResource;
-import org.epnoi.model.domain.*;
+import org.epnoi.model.domain.relations.EmbeddedIn;
+import org.epnoi.model.domain.relations.PairsWith;
+import org.epnoi.model.domain.relations.Relation;
+import org.epnoi.model.domain.resources.*;
 import org.epnoi.modeler.Config;
 import org.epnoi.modeler.helper.ModelingHelper;
 import org.epnoi.modeler.models.word.W2VModel;
 import org.epnoi.storage.UDM;
-import org.epnoi.storage.generator.TimeGenerator;
 import org.epnoi.storage.generator.URIGenerator;
 import org.epnoi.storage.system.document.repository.WordDocumentRepository;
 import org.junit.Test;
@@ -42,9 +44,6 @@ public class WordEmbeddingTest {
 
     @Autowired
     URIGenerator uriGenerator;
-
-    @Autowired
-    TimeGenerator timeGenerator;
 
     @Autowired
     UDM udm;
@@ -119,7 +118,10 @@ public class WordEmbeddingTest {
     private void relateWord(Word word, W2VModel model, String domainUri){
         // EMBEDDED relation
         float[] vector = model.getRepresentation(word.getLemma());
-        helper.getUdm().attachFrom(word.getUri()).to(domainUri).by(Relation.Type.WORD_EMBEDDED_IN_DOMAIN,RelationProperties.builder().description(Arrays.toString(vector)).build());
+
+        EmbeddedIn embedded = Relation.newEmbeddedIn(word.getUri(), domainUri);
+        embedded.setVector(vector);
+        helper.getUdm().save(embedded);
 
         // PAIRED relations
         List<WordDistribution> words = model.find(word.getLemma()).stream().filter(sim -> sim.getWeight() > helper.getSimilarityThreshold()).collect(Collectors.toList());
@@ -130,23 +132,26 @@ public class WordEmbeddingTest {
                 // Create word
                 Word wordRef = new Word();
                 wordRef.setUri(uriGenerator.newFor(Resource.Type.WORD));
-                wordRef.setCreationTime(timeGenerator.asISO());
                 wordRef.setContent(wordDistribution.getWord());
                 wordRef.setLemma(wordDistribution.getWord());
                 wordRef.setType("term");
-                udm.save(Resource.Type.WORD).with(wordRef);
+                udm.save(wordRef);
 
                 wordUri = wordRef.getUri();
 
                 // Embedd to Domain
-                udm.attachFrom(wordRef.getUri()).to(domainUri).by(Relation.Type.WORD_EMBEDDED_IN_DOMAIN, RelationProperties.builder().description(Arrays.toString(model.getRepresentation(wordRef.getLemma()))).build());
+                EmbeddedIn embeddedRef = Relation.newEmbeddedIn(wordRef.getUri(), domainUri);
+                embeddedRef.setVector(model.getRepresentation(wordRef.getLemma()));
+                helper.getUdm().save(embeddedRef);
 
             }else{
                 wordUri = result.get(0);
             }
 
             // Pair words
-            helper.getUdm().attachFrom(word.getUri()).to(wordUri).by(Relation.Type.WORD_PAIRS_WITH_WORD,RelationProperties.builder().weight(wordDistribution.getWeight()).domain(domainUri).build());
+            PairsWith pair = Relation.newPairsWith(word.getUri(), wordUri);
+            pair.setWeight(wordDistribution.getWeight());
+            helper.getUdm().save(pair);
         }
 
     }
