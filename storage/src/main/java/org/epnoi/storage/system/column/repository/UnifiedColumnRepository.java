@@ -52,7 +52,7 @@ public class UnifiedColumnRepository implements Repository<Resource,Resource.Typ
         Optional<Resource> result = Optional.empty();
         try{
             Resource column = (Resource) factory.repositoryOf(type).findOne(BasicMapId.id(ResourceUtils.URI, uri));
-            if (column != null) result = Optional.of((Resource) ResourceUtils.map(column, factory.mappingOf(type)));
+            if (column != null) result = Optional.of((Resource) ResourceUtils.map(column, Resource.classOf(type)));
             LOG.debug("Resource read: " + column );
         }catch (RuntimeException e){
             LOG.warn(e.getMessage());

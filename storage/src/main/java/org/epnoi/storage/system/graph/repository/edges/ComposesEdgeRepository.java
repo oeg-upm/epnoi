@@ -1,5 +1,6 @@
 package org.epnoi.storage.system.graph.repository.edges;
 
+import org.epnoi.storage.system.graph.domain.edges.BundlesEdge;
 import org.epnoi.storage.system.graph.domain.edges.ComposesEdge;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ComposesEdgeRepository extends RelationGraphRepository<ComposesEdge> {
 
+
+    // To avoid a class type exception
+    @Override
+    ComposesEdge findOneByUri(String uri);
 
     @Query("match (node1{uri:{0}})-[r:COMPOSES]->(node2{uri:{1}}) return r")
     Iterable<ComposesEdge> findByNodes(String start, String end);

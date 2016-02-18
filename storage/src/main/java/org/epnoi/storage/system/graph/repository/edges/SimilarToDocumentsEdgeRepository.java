@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SimilarToDocumentsEdgeRepository extends RelationGraphRepository<SimilarToDocumentsEdge> {
 
+    // To avoid a class type exception
+    @Override
+    SimilarToDocumentsEdge findOneByUri(String uri);
 
     @Query("match (node1{uri:{0}})-[r:SIMILAR_TO]-(node2{uri:{1}}) return r")
     Iterable<SimilarToDocumentsEdge> findByNodes(String start, String end);

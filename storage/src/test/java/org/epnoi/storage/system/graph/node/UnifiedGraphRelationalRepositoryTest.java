@@ -1,4 +1,4 @@
-package org.epnoi.storage.system.graph;
+package org.epnoi.storage.system.graph.node;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.model.domain.relations.Provides;
@@ -6,6 +6,7 @@ import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Document;
 import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.domain.resources.Source;
+import org.epnoi.storage.system.graph.GraphConfig;
 import org.epnoi.storage.system.graph.repository.edges.UnifiedEdgeGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.UnifiedNodeGraphRepository;
 import org.junit.Test;
@@ -43,11 +44,11 @@ public class UnifiedGraphRelationalRepositoryTest {
         unifiedNodeGraphRepository.deleteAll(Resource.Type.SOURCE);
         unifiedNodeGraphRepository.deleteAll(Resource.Type.DOCUMENT);
 
-        Source source = new Source();
+        Source source = Resource.newSource();
         source.setUri("sources/01");
         unifiedNodeGraphRepository.save(source);
 
-        Document document = new Document();
+        Document document = Resource.newDocument();
         document.setUri("documents/01");
         unifiedNodeGraphRepository.save(document);
 
@@ -66,11 +67,11 @@ public class UnifiedGraphRelationalRepositoryTest {
         unifiedNodeGraphRepository.deleteAll(Resource.Type.SOURCE);
         unifiedNodeGraphRepository.deleteAll(Resource.Type.DOCUMENT);
 
-        Source source = new Source();
+        Source source = Resource.newSource();
         source.setUri("sources/01");
         unifiedNodeGraphRepository.save(source);
 
-        Document document = new Document();
+        Document document = Resource.newDocument();
         document.setUri("documents/01");
         unifiedNodeGraphRepository.save(document);
 

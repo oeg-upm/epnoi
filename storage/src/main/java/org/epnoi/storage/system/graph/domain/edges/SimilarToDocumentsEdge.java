@@ -20,7 +20,6 @@ public class SimilarToDocumentsEdge extends Edge<DocumentNode,DocumentNode> {
     @Property
     private String domain;
 
-
     @Override
     public Resource.Type getStartType() {
         return Resource.Type.DOCUMENT;

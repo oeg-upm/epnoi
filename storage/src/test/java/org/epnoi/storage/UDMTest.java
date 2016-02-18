@@ -114,10 +114,7 @@ public class UDMTest {
         LOG.info("source deleted!");
 
         Optional<Resource> source3 = udm.read(Resource.Type.SOURCE).byUri(source.getUri());
-        Assert.assertTrue(source3.isPresent());
-        Assert.assertNotEquals(source,source3.get().asSource());
-
-        Assert.assertEquals(1, counter.get());
+        Assert.assertFalse(source3.isPresent());
 
     }
 

@@ -1,6 +1,5 @@
 package org.epnoi.storage.system.column;
 
-import com.datastax.driver.core.SocketOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

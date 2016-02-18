@@ -52,7 +52,7 @@ public class UnifiedDocumentRepository implements Repository<Resource,Resource.T
         Optional<Resource> result = Optional.empty();
         try{
             Resource document = (Resource) factory.repositoryOf(type).findOne(uri);
-            if (document != null) result = Optional.of((Resource) ResourceUtils.map(document, factory.mappingOf(type)));
+            if (document != null) result = Optional.of((Resource) ResourceUtils.map(document, Resource.classOf(type)));
         }catch (RuntimeException e){
             LOG.warn(e.getMessage());
         }

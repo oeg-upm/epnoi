@@ -1,10 +1,8 @@
-package org.epnoi.storage.system.graph;
+package org.epnoi.storage.system.graph.node;
 
 import org.epnoi.storage.system.graph.domain.nodes.TermNode;
-import org.epnoi.storage.system.graph.domain.nodes.WordNode;
 import org.epnoi.storage.system.graph.repository.nodes.ResourceGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.TermGraphRepository;
-import org.epnoi.storage.system.graph.repository.nodes.WordGraphRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

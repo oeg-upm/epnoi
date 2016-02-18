@@ -1,8 +1,10 @@
-package org.epnoi.storage.system.column;
+package org.epnoi.storage.system.graph.node;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.model.domain.resources.*;
-import org.epnoi.storage.system.column.repository.UnifiedColumnRepository;
+import org.epnoi.storage.system.graph.GraphConfig;
+import org.epnoi.storage.system.graph.repository.nodes.DomainGraphRepository;
+import org.epnoi.storage.system.graph.repository.nodes.UnifiedNodeGraphRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -21,18 +23,19 @@ import java.util.Optional;
  */
 @Category(IntegrationTest.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ColumnConfig.class)
+@ContextConfiguration(classes = GraphConfig.class)
 @TestPropertySource(properties = {
-        "epnoi.cassandra.contactpoints = drinventor.dia.fi.upm.es",
-        "epnoi.cassandra.port = 5011",
-        "epnoi.cassandra.keyspace = research" })
-public class UnifiedUnifiedColumnRepositoryTest {
+        "epnoi.neo4j.contactpoints = drinventor.dia.fi.upm.es",
+        "epnoi.neo4j.port = 5030" })
+public class UnifiedGraphRepositoryTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UnifiedUnifiedColumnRepositoryTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UnifiedGraphRepositoryTest.class);
 
     @Autowired
-    UnifiedColumnRepository unifiedColumnRepository;
+    UnifiedNodeGraphRepository repository;
 
+    @Autowired
+    DomainGraphRepository domainGraphRepository;
 
     @Test
     public void source(){
@@ -80,7 +83,7 @@ public class UnifiedUnifiedColumnRepositoryTest {
     public void part() {
 
         Part resource = new Part();
-        resource.setUri("items/01");
+        resource.setUri("parts/01");
         resource.setSense("nosense");
         resource.setContent("sampling");
         resource.setTokens("sample");
@@ -91,7 +94,7 @@ public class UnifiedUnifiedColumnRepositoryTest {
     public void topic() {
 
         Topic resource = new Topic();
-        resource.setUri("items/01");
+        resource.setUri("topics/01");
         resource.setAnalysis("analyses/01");
         resource.setContent("sampling");
         test(resource, Resource.Type.TOPIC);
@@ -101,7 +104,7 @@ public class UnifiedUnifiedColumnRepositoryTest {
     public void word() {
 
         Word resource = new Word();
-        resource.setUri("items/01");
+        resource.setUri("words/01");
         resource.setLemma("house");
         resource.setContent("house");
         resource.setPos("nn");
@@ -113,35 +116,20 @@ public class UnifiedUnifiedColumnRepositoryTest {
 
         LOG.info("####################### " + type.name());
 
-        unifiedColumnRepository.deleteAll(type);
+        repository.deleteAll(type);
 
-        Assert.assertFalse(unifiedColumnRepository.exists(type,resource.getUri()));
+        Assert.assertFalse(repository.exists(type,resource.getUri()));
 
-        unifiedColumnRepository.save(resource);
+        repository.save(resource);
 
-        Assert.assertTrue(unifiedColumnRepository.exists(type,resource.getUri()));
-        Optional<Resource> result = unifiedColumnRepository.read(type,resource.getUri());
+        Assert.assertTrue(repository.exists(type,resource.getUri()));
+        Optional<Resource> result = repository.read(type,resource.getUri());
         Assert.assertTrue(result.isPresent());
         Assert.assertEquals(resource,result.get());
 
-        unifiedColumnRepository.delete(type,resource.getUri());
+        repository.delete(type,resource.getUri());
 
-        Assert.assertFalse(unifiedColumnRepository.exists(type,resource.getUri()));
+        Assert.assertFalse(repository.exists(type,resource.getUri()));
     }
 
-
-    @Test
-    public void findBy(){
-
-        unifiedColumnRepository.deleteAll(Resource.Type.DOCUMENT);
-
-        Document document = new Document();
-        document.setUri("documents/01");
-        document.setTitle("This is a title");
-        unifiedColumnRepository.save(document);
-
-        Iterable<Resource> documents = unifiedColumnRepository.findBy(Resource.Type.DOCUMENT, "title", document.getTitle());
-        System.out.println("Documents: " + documents);
-
-    }
 }

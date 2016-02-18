@@ -56,6 +56,7 @@ public class WordUnifiedColumnRepositoryTest extends BaseColumnRepositoryTest<Wo
         Iterable<WordColumn> res2 = repository.findByLemma("sample");
         Assert.assertTrue(res2.iterator().hasNext());
 
+        repository.delete(BasicMapId.id(ResourceUtils.URI,wordURI));
     }
 
     @Test
@@ -78,6 +79,8 @@ public class WordUnifiedColumnRepositoryTest extends BaseColumnRepositoryTest<Wo
 
         Iterable<WordColumn> res2 = repository.findByContent("samples");
         Assert.assertTrue(res2.iterator().hasNext());
+
+        repository.delete(BasicMapId.id(ResourceUtils.URI,wordURI));
 
     }
 

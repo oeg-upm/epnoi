@@ -1,4 +1,4 @@
-package org.epnoi.storage.system.graph;
+package org.epnoi.storage.system.graph.node;
 
 import org.epnoi.storage.system.graph.domain.nodes.DocumentNode;
 import org.epnoi.storage.system.graph.repository.edges.DealsWithFromDocumentEdgeRepository;
@@ -6,7 +6,6 @@ import org.epnoi.storage.system.graph.repository.nodes.DocumentGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.DomainGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.ResourceGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.TopicGraphRepository;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

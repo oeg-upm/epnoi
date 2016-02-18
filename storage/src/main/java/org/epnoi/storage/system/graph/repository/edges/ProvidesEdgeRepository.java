@@ -10,6 +10,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProvidesEdgeRepository extends RelationGraphRepository<ProvidesEdge> {
 
+    // To avoid a class type exception
+    @Override
+    ProvidesEdge findOneByUri(String uri);
+
     @Query("match (node1{uri:{0}})-[r:PROVIDES]->(node2{uri:{1}}) return r")
     Iterable<ProvidesEdge> findByNodes(String start, String end);
 

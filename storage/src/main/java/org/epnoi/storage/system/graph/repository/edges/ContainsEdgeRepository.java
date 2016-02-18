@@ -1,5 +1,6 @@
 package org.epnoi.storage.system.graph.repository.edges;
 
+import org.epnoi.storage.system.graph.domain.edges.ComposesEdge;
 import org.epnoi.storage.system.graph.domain.edges.ContainsEdge;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.stereotype.Repository;
@@ -9,6 +10,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ContainsEdgeRepository extends RelationGraphRepository<ContainsEdge> {
+
+    // To avoid a class type exception
+    @Override
+    ContainsEdge findOneByUri(String uri);
 
     @Query("match (node1{uri:{0}})-[r:CONTAINS]->(node2{uri:{1}}) return r")
     Iterable<ContainsEdge> findByNodes(String start, String end);

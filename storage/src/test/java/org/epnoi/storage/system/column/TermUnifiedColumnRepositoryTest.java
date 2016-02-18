@@ -58,6 +58,9 @@ public class TermUnifiedColumnRepositoryTest extends BaseColumnRepositoryTest<Te
         Iterable<TermColumn> res2 = repository.findByContent("samples");
         Assert.assertTrue(res2.iterator().hasNext());
 
+        // undo
+        repository.delete(BasicMapId.id(ResourceUtils.URI,termURI));
+
     }
 
 }

@@ -2,13 +2,16 @@ package org.epnoi.storage.actions;
 
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.utils.ResourceUtils;
 import org.epnoi.storage.Helper;
 import org.epnoi.storage.session.UnifiedTransaction;
 import org.neo4j.ogm.session.result.ResultProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by cbadenes on 04/02/16.
@@ -28,32 +31,35 @@ public class SearchRelationAction {
     /**
      * Find all relations
      */
-    public Iterable<Relation> all(){
+    public List<Relation> all(){
         LOG.debug("Finding " + type.name() + "s");
+        List<Relation> relations = new ArrayList<>();
         try{
-            return helper.getUnifiedEdgeGraphRepository().findAll(type);
+            helper.getUnifiedEdgeGraphRepository().findAll(type).forEach(x -> relations.add(Relation.class.cast(x)));
+            LOG.info(type.name() + "s: " + relations);
 
         }catch (ResultProcessingException e){
             LOG.warn("getting all " + type,e.getMessage());
         }catch (Exception e){
             LOG.error("Unexpected error while getting all " + type,e);
         }
-        return Collections.EMPTY_LIST;
+        return relations;
     }
 
     /**
-     * Find resources attached to other resource (directly or indirectly)
+     * Find relation attached to other resource (directly or indirectly)
      * @param referenceType
      * @param referenceURI
      * @return
      */
-    public Iterable<Relation> in(Resource.Type referenceType, String referenceURI){
+    public List<Relation> in(Resource.Type referenceType, String referenceURI){
         LOG.debug("Finding " + type.name() + "s in " + referenceType + ": " + referenceURI);
+        List<Relation> relations = new ArrayList<>();
         try{
             helper.getSession().clean();
             UnifiedTransaction transaction = helper.getSession().beginTransaction();
 
-            Iterable<Relation> relations = helper.getUnifiedEdgeGraphRepository().findIn(type, referenceType, referenceURI);
+            helper.getUnifiedEdgeGraphRepository().findIn(type, referenceType, referenceURI).forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
 
             transaction.commit();
             return relations;
@@ -62,7 +68,7 @@ public class SearchRelationAction {
         }catch (Exception e){
             LOG.error("Unexpected error while finding " + type +"s in " + referenceType + ": " + referenceURI,e);
         }
-        return Collections.EMPTY_LIST;
+        return relations;
     }
 
     /**
@@ -71,13 +77,14 @@ public class SearchRelationAction {
      * @param value
      * @return
      */
-    public Iterable<Relation> by(String field, String value){
+    public List<Relation> by(String field, String value){
         LOG.debug("Finding " + type.name() + "s");
+        List<Relation> relations = new ArrayList<>();
         try{
             helper.getSession().clean();
             UnifiedTransaction transaction = helper.getSession().beginTransaction();
 
-            Iterable<Relation> relations = helper.getUnifiedEdgeGraphRepository().findBy(type, field, value);
+            helper.getUnifiedEdgeGraphRepository().findBy(type, field, value).forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
 
             transaction.commit();
             return relations;
@@ -86,7 +93,7 @@ public class SearchRelationAction {
         }catch (Exception e){
             LOG.error("Unexpected error while getting all " + type,e);
         }
-        return Collections.EMPTY_LIST;
+        return relations;
     }
 
 }

@@ -10,6 +10,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MentionsFromTermEdgeRepository extends RelationGraphRepository<MentionsFromTermEdge> {
 
+    // To avoid a class type exception
+    @Override
+    MentionsFromTermEdge findOneByUri(String uri);
+
     @Query("match (node1{uri:{0}})-[r:MENTIONS]->(node2{uri:{1}}) return r")
     Iterable<MentionsFromTermEdge> findByNodes(String start, String end);
 

@@ -1,9 +1,8 @@
-package org.epnoi.storage.system.graph;
+package org.epnoi.storage.system.column;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.model.domain.resources.*;
-import org.epnoi.storage.system.graph.repository.nodes.DomainGraphRepository;
-import org.epnoi.storage.system.graph.repository.nodes.UnifiedNodeGraphRepository;
+import org.epnoi.storage.system.column.repository.UnifiedColumnRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -22,24 +21,23 @@ import java.util.Optional;
  */
 @Category(IntegrationTest.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = GraphConfig.class)
+@ContextConfiguration(classes = ColumnConfig.class)
 @TestPropertySource(properties = {
-        "epnoi.neo4j.contactpoints = drinventor.dia.fi.upm.es",
-        "epnoi.neo4j.port = 5030" })
-public class UnifiedGraphRepositoryTest {
+        "epnoi.cassandra.contactpoints = drinventor.dia.fi.upm.es",
+        "epnoi.cassandra.port = 5011",
+        "epnoi.cassandra.keyspace = research" })
+public class UnifiedColumnRepositoryTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UnifiedGraphRepositoryTest.class);
-
-    @Autowired
-    UnifiedNodeGraphRepository repository;
+    private static final Logger LOG = LoggerFactory.getLogger(UnifiedColumnRepositoryTest.class);
 
     @Autowired
-    DomainGraphRepository domainGraphRepository;
+    UnifiedColumnRepository unifiedColumnRepository;
+
 
     @Test
     public void source(){
 
-        Source source = new Source();
+        Source source = Resource.newSource();
         source.setUri("sources/01");
         source.setName("test01");
         source.setDescription("testing purposes");
@@ -49,7 +47,7 @@ public class UnifiedGraphRepositoryTest {
     @Test
     public void domain(){
 
-        Domain domain = new Domain();
+        Domain domain = Resource.newDomain();
         domain.setUri("domains/01");
         domain.setName("test01");
         domain.setDescription("testing purposes");
@@ -59,7 +57,7 @@ public class UnifiedGraphRepositoryTest {
     @Test
     public void document() {
 
-        Document document = new Document();
+        Document document = Resource.newDocument();
         document.setUri("documents/01");
         document.setAuthoredBy("me");
         document.setAuthoredOn("20151210");
@@ -70,7 +68,7 @@ public class UnifiedGraphRepositoryTest {
     @Test
     public void item() {
 
-        Item resource = new Item();
+        Item resource = Resource.newItem();
         resource.setUri("items/01");
         resource.setAuthoredBy("me");
         resource.setAuthoredOn("20151210");
@@ -81,8 +79,8 @@ public class UnifiedGraphRepositoryTest {
     @Test
     public void part() {
 
-        Part resource = new Part();
-        resource.setUri("parts/01");
+        Part resource = Resource.newPart();
+        resource.setUri("items/01");
         resource.setSense("nosense");
         resource.setContent("sampling");
         resource.setTokens("sample");
@@ -92,8 +90,8 @@ public class UnifiedGraphRepositoryTest {
     @Test
     public void topic() {
 
-        Topic resource = new Topic();
-        resource.setUri("topics/01");
+        Topic resource = Resource.newTopic();
+        resource.setUri("items/01");
         resource.setAnalysis("analyses/01");
         resource.setContent("sampling");
         test(resource, Resource.Type.TOPIC);
@@ -102,8 +100,8 @@ public class UnifiedGraphRepositoryTest {
     @Test
     public void word() {
 
-        Word resource = new Word();
-        resource.setUri("words/01");
+        Word resource = Resource.newWord();
+        resource.setUri("items/01");
         resource.setLemma("house");
         resource.setContent("house");
         resource.setPos("nn");
@@ -115,20 +113,38 @@ public class UnifiedGraphRepositoryTest {
 
         LOG.info("####################### " + type.name());
 
-        repository.deleteAll(type);
+        unifiedColumnRepository.deleteAll(type);
 
-        Assert.assertFalse(repository.exists(type,resource.getUri()));
+        Assert.assertFalse(unifiedColumnRepository.exists(type,resource.getUri()));
 
-        repository.save(resource);
+        unifiedColumnRepository.save(resource);
 
-        Assert.assertTrue(repository.exists(type,resource.getUri()));
-        Optional<Resource> result = repository.read(type,resource.getUri());
+        Assert.assertTrue(unifiedColumnRepository.exists(type,resource.getUri()));
+        Optional<Resource> result = unifiedColumnRepository.read(type,resource.getUri());
         Assert.assertTrue(result.isPresent());
+
+        Resource resource2 = result.get();
+
         Assert.assertEquals(resource,result.get());
 
-        repository.delete(type,resource.getUri());
+        unifiedColumnRepository.delete(type,resource.getUri());
 
-        Assert.assertFalse(repository.exists(type,resource.getUri()));
+        Assert.assertFalse(unifiedColumnRepository.exists(type,resource.getUri()));
     }
 
+
+    @Test
+    public void findBy(){
+
+        unifiedColumnRepository.deleteAll(Resource.Type.DOCUMENT);
+
+        Document document = new Document();
+        document.setUri("documents/01");
+        document.setTitle("This is a title");
+        unifiedColumnRepository.save(document);
+
+        Iterable<Resource> documents = unifiedColumnRepository.findBy(Resource.Type.DOCUMENT, "title", document.getTitle());
+        System.out.println("Documents: " + documents);
+
+    }
 }

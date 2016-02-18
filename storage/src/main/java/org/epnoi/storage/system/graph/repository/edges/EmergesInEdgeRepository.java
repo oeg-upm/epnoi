@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EmergesInEdgeRepository extends RelationGraphRepository<EmergesInEdge> {
 
+    // To avoid a class type exception
+    @Override
+    EmergesInEdge findOneByUri(String uri);
 
     @Query("match (node1{uri:{0}})-[r:EMERGES_IN]->(node2{uri:{1}}) return r")
     Iterable<EmergesInEdge> findByNodes(String start, String end);

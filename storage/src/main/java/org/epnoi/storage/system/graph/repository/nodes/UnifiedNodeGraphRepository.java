@@ -45,7 +45,7 @@ public class UnifiedNodeGraphRepository extends RepeatableActionExecutor impleme
         Optional<Object> result = performRetries(0, "read " + type + "[" + uri + "]", () -> {
             Optional<Resource> resource = Optional.empty();
             Resource node = factory.repositoryOf(type).findOneByUri(uri);
-            if (node != null) resource = Optional.of((Resource) ResourceUtils.map(node, factory.mappingOf(type)));
+            if (node != null) resource = Optional.of((Resource) ResourceUtils.map(node, Resource.classOf(type)));
             return resource;
         });
         return (result.isPresent())? (Optional<Resource>) result.get() : Optional.empty();

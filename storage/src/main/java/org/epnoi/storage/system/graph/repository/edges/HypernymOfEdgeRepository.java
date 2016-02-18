@@ -10,6 +10,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HypernymOfEdgeRepository extends RelationGraphRepository<HypernymOfEdge> {
 
+    // To avoid a class type exception
+    @Override
+    HypernymOfEdge findOneByUri(String uri);
+
     @Query("match (node1{uri:{0}})-[r:PAIRS_WITH]->(node2{uri:{1}}) return r")
     Iterable<HypernymOfEdge> findByNodes(String start, String end);
 

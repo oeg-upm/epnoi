@@ -21,7 +21,7 @@ public class SaveResourceAction {
             helper.getSession().clean();
             UnifiedTransaction transaction = helper.getSession().beginTransaction();
 
-            LOG.debug("trying to save :" + resource);
+            LOG.debug("trying to save: " + resource);
 
             // initialize URI
             if (!resource.hasUri()){
