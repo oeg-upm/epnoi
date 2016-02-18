@@ -1,11 +1,12 @@
 package org.epnoi.model.domain.resources;
 
+import com.sun.java.browser.plugin2.DOM;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.epnoi.model.domain.LinkableElement;
 
 @ToString(callSuper = true)
-@EqualsAndHashCode(of={"uri"})
+@EqualsAndHashCode(of={"uri"}, callSuper = true)
 public abstract class Resource extends LinkableElement {
 
 	public abstract Type getResourceType();
@@ -47,6 +48,22 @@ public abstract class Resource extends LinkableElement {
 		State(String key){ keyValue = key;}
 
 		public String key(){ return keyValue;}
+	}
+
+	public static Class classOf(Type type){
+		switch(type){
+			case ANALYSIS:return Analysis.class;
+			case DOCUMENT: return Document.class;
+			case DOMAIN: return Domain.class;
+			case ITEM: return Item.class;
+			case PART: return Part.class;
+			case SERIALIZED_OBJECT: return SerializedObject.class;
+			case SOURCE: return Source.class;
+			case TERM: return Term.class;
+			case TOPIC: return Topic.class;
+			case WORD: return Word.class;
+			default: return Resource.class;
+		}
 	}
 
 	public static Analysis newAnalysis(){

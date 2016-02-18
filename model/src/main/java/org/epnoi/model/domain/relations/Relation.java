@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 /**
  * Created by cbadenes on 22/12/15.
  */
-@ToString
-@EqualsAndHashCode(of={"uri"}, callSuper = true)
+@ToString(callSuper = true)
+@EqualsAndHashCode(of={"uri"}, exclude = {"startUri","endUri","weight"},callSuper = true)
 public abstract class Relation extends LinkableElement {
 
     private static final Logger LOG = LoggerFactory.getLogger(Relation.class);
@@ -95,6 +95,30 @@ public abstract class Relation extends LinkableElement {
         State(String key){ keyValue = key;}
 
         public String key(){ return keyValue;}
+    }
+
+    public static Class classOf(Type type){
+        switch (type){
+            case APPEARED_IN: return AppearedIn.class;
+            case BUNDLES: return Bundles.class;
+            case COMPOSES: return Composes.class;
+            case CONTAINS: return Contains.class;
+            case DEALS_WITH_FROM_DOCUMENT: return DealsWithFromDocument.class;
+            case DEALS_WITH_FROM_ITEM: return DealsWithFromItem.class;
+            case DEALS_WITH_FROM_PART: return DealsWithFromPart.class;
+            case DESCRIBES: return Describes.class;
+            case EMBEDDED_IN: return EmbeddedIn.class;
+            case EMERGES_IN: return EmergesIn.class;
+            case HYPERNYM_OF: return HypernymOf.class;
+            case MENTIONS_FROM_TERM: return MentionsFromTerm.class;
+            case MENTIONS_FROM_TOPIC: return MentionsFromTopic.class;
+            case PAIRS_WITH: return PairsWith.class;
+            case PROVIDES: return Provides.class;
+            case SIMILAR_TO_DOCUMENTS: return SimilarToDocuments.class;
+            case SIMILAR_TO_ITEMS: return SimilarToItems.class;
+            case SIMILAR_TO_PARTS: return SimilarToParts.class;
+            default: return Relation.class;
+        }
     }
 
     public static AppearedIn newAppearedIn(String startUri, String endUri){

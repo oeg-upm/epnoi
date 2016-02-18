@@ -13,10 +13,6 @@ import org.epnoi.model.domain.resources.Resource;
 @EqualsAndHashCode(of={"uri"}, callSuper = true)
 public class AppearedIn extends Relation{
 
-    @Getter
-    @Setter
-    private Double weight;
-
     @Override
     public Resource.Type getStartType() {
         return Resource.Type.TERM;
