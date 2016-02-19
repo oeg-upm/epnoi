@@ -6,10 +6,9 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import gate.Document;
-import org.epnoi.learner.relations.corpus.RelationalSentencesCorpusCreationParameters;
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.model.clients.thrift.AnnotatedContentServiceClient;
 import org.epnoi.model.clients.thrift.KnowledgeBaseServiceClient;
-import org.epnoi.model.commons.Parameters;
 import org.epnoi.model.rdf.RDFHelper;
 import org.epnoi.nlp.gate.GateUtils;
 
@@ -21,12 +20,12 @@ import java.util.List;
 
 public class UriToAnnotatedDocumentFlatMapper {
 
+    private final LearningHelper helper;
     private String uiaPath;
     private final String knowledgeBasePath = "/uia/annotatedcontent";
-    private Parameters parameters;
 
-    public UriToAnnotatedDocumentFlatMapper(Parameters parameters) {
-        this.parameters = parameters;
+    public UriToAnnotatedDocumentFlatMapper(LearningHelper helper) {
+        this.helper = helper;
     }
 
     public Iterable<Document> call(String uri) throws Exception {
@@ -44,7 +43,7 @@ public class UriToAnnotatedDocumentFlatMapper {
 
     private Document _obtainAnnotatedContent(String uri) {
         System.out.println("uri >"+uri);
-        Integer thriftPort = (Integer) parameters.getParameterValue(RelationalSentencesCorpusCreationParameters.THRIFT_PORT);
+        Integer thriftPort = helper.getThriftPort();
         AnnotatedContentServiceClient uiaService = new AnnotatedContentServiceClient();
         org.epnoi.model.Content<Object> resource = null;
         try {

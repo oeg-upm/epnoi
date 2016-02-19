@@ -1,8 +1,9 @@
 package org.epnoi.learner;
 
 import es.cbadenes.lab.test.IntegrationTest;
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.learner.modules.Learner;
-import org.epnoi.model.Relation;
+import org.epnoi.model.domain.relations.Relation;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;

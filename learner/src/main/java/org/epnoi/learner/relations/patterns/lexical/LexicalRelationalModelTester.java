@@ -1,17 +1,17 @@
 package org.epnoi.learner.relations.patterns.lexical;
 
-import org.epnoi.learner.relations.corpus.RelationalSentencesCorpusCreationParameters;
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.learner.relations.patterns.*;
 import org.epnoi.model.RelationalSentencesCorpus;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 import org.epnoi.model.exceptions.EpnoiResourceAccessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.logging.Logger;
 
 public class LexicalRelationalModelTester {
-	private static final Logger logger = Logger
-			.getLogger(LexicalRelationalModelTester.class.getName());
-	private RelationalPatternsModelCreationParameters parameters;
+	private static final Logger LOG = LoggerFactory.getLogger(LexicalRelationalModelTester.class);
+
 	private RelationalPatternsCorpusCreator patternsCorpusCreator;
 	private RelationalPatternsCorpus patternsCorpus;
 	private RelationalPatternsModelSerializer modelSerializer;
@@ -24,35 +24,24 @@ public class LexicalRelationalModelTester {
 
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public void init(RelationalPatternsModelCreationParameters parameters)
-			throws EpnoiInitializationException {
-		logger.info("Initializing the LexicalRelationalModelTester with the following parameters");
-		logger.info(parameters.toString());
-		this.parameters = parameters;
+	public void init(LearningHelper helper) throws EpnoiInitializationException {
+		LOG.info("Initializing the LexicalRelationalModelTester with the following parameters: " + this);
 
-		relationalSentencesCorpusURI = (String) this.parameters
-				.getParameterValue(RelationalPatternsModelCreationParameters.RELATIONAL_SENTENCES_CORPUS_URI);
+		relationalSentencesCorpusURI = helper.getSentencesUri();
 
-		this.path = (String)this.parameters
-				.getParameterValue(RelationalPatternsModelCreationParameters.MODEL_PATH);
+		this.path = helper.getLexicalPath();
 
 		this.patternsCorpusCreator = new RelationalPatternsCorpusCreator();
 		this.patternsCorpusCreator.init(new LexicalRelationalPatternGenerator());
 
 		try {
-			this.model = (BigramSoftPatternModel) RelationalPatternsModelSerializer
-					.deserialize(this.path);
+			this.model = (BigramSoftPatternModel) RelationalPatternsModelSerializer.deserialize(this.path);
 		} catch (EpnoiResourceAccessException e) {
-
 			throw new EpnoiInitializationException(
 					"The model couldn't not be retrieved at " + this.path);
 		}
 
-		this.path = (String) parameters
-				.getParameterValue(RelationalPatternsModelCreationParameters.MODEL_PATH);
-
-		this.verbose = (boolean) parameters
-				.getParameterValue(RelationalSentencesCorpusCreationParameters.VERBOSE);
+		this.verbose = helper.isLexicalVerbose();
 
 	}
 
@@ -68,7 +57,7 @@ public class LexicalRelationalModelTester {
 	private void testPatternsModel() {
 		double averageProbability = 0;
 		long startingTime = System.currentTimeMillis();
-		logger.info("Testing all the patterns against the model");
+		LOG.info("Testing all the patterns against the model");
 		for (RelationalPattern pattern : patternsCorpus.getPatterns()) {
 			double patternProbability = this.model
 					.calculatePatternProbability(pattern);
@@ -76,9 +65,9 @@ public class LexicalRelationalModelTester {
 			averageProbability += patternProbability;
 		}
 		long totalTime = startingTime - System.currentTimeMillis();
-		logger.info("It took " + Math.abs(totalTime) + " ms to test the model");
+		LOG.info("It took " + Math.abs(totalTime) + " ms to test the model");
 
-		logger.info("The average probability is " + averageProbability
+		LOG.info("The average probability is " + averageProbability
 				/ patternsCorpus.getPatterns().size());
 
 	}
@@ -87,64 +76,27 @@ public class LexicalRelationalModelTester {
 
 	public void createPatternsModel() {
 		// TODO
-		logger.severe("pending to implement by using UDM");
+		LOG.error("pending to implement by using UDM");
 //		RelationalSentencesCorpus relationalSentencesCorpus = (RelationalSentencesCorpus) this.core.getInformationHandler().get(relationalSentencesCorpusURI,RDFHelper.RELATIONAL_SENTECES_CORPUS_CLASS);
 		RelationalSentencesCorpus relationalSentencesCorpus = null;
 
+
+
 		if (relationalSentencesCorpus != null) {
-			logger.info("The relational sentences  has "
+			LOG.info("The relational sentences  has "
 					+ relationalSentencesCorpus.getSentences().size()
 					+ " sentences");
 			patternsCorpus = patternsCorpusCreator
 					.buildCorpus(relationalSentencesCorpus);
 
-			logger.info("The RelationalPatternsCorpus has "
+			LOG.info("The RelationalPatternsCorpus has "
 					+ patternsCorpus.getPatterns().size() + " patterns");
 		} else {
-			logger.severe("The relational sentences corpus with URI "
+			LOG.error("The relational sentences corpus with URI "
 					+ this.relationalSentencesCorpusURI
 					+ " couldn't not be retrieved");
 		}
 	}
 
-	// ----------------------------------------------------------------------------------------------------------------
-
-	public static void main(String[] args) {
-		logger.info("Starting the Lexical Relational Model creation");
-		RelationalPatternsModelCreationParameters parameters = new RelationalPatternsModelCreationParameters();
-		parameters
-				.setParameter(
-						RelationalPatternsModelCreationParameters.RELATIONAL_SENTENCES_CORPUS_URI,
-						"http://drInventorFirstReview/relationalSentencesCorpus");
-		parameters
-				.setParameter(
-						RelationalPatternsModelCreationParameters.MAX_PATTERN_LENGTH,
-						20);
-
-		parameters
-				.setParameter(
-						RelationalPatternsModelCreationParameters.MODEL_PATH,
-						"/opt/epnoi/epnoideployment/firstReviewResources/lexicalModel/model.bin");
-
-		parameters.setParameter(
-				RelationalSentencesCorpusCreationParameters.STORE, true);
-
-		parameters.setParameter(
-				RelationalSentencesCorpusCreationParameters.VERBOSE, false);
-
-		LexicalRelationalModelTester modelTester = new LexicalRelationalModelTester();
-		try {
-			modelTester.init(parameters);
-		} catch (EpnoiInitializationException e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
-
-		modelTester.test();
-
-		logger.info("Ending the Lexical Relational Model creation");
-	}
-
-	// ----------------------------------------------------------------------------------------------------------------
 
 }

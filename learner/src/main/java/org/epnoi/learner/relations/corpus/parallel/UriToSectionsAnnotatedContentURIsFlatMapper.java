@@ -1,11 +1,10 @@
 package org.epnoi.learner.relations.corpus.parallel;
 
 
-import org.epnoi.learner.relations.corpus.RelationalSentencesCorpusCreationParameters;
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.model.AnnotatedContentHelper;
 import org.epnoi.model.WikipediaPage;
 import org.epnoi.model.clients.thrift.UIAServiceClient;
-import org.epnoi.model.commons.Parameters;
 import org.epnoi.model.rdf.RDFHelper;
 
 import java.util.ArrayList;
@@ -13,10 +12,11 @@ import java.util.List;
 
 public class UriToSectionsAnnotatedContentURIsFlatMapper {
 
-    private Parameters parameters;
 
-    public UriToSectionsAnnotatedContentURIsFlatMapper(Parameters parameters) {
-        this.parameters = parameters;
+    private final LearningHelper helper;
+
+    public UriToSectionsAnnotatedContentURIsFlatMapper(LearningHelper helper) {
+        this.helper = helper;
     }
 
     public Iterable<String> call(String uri) throws Exception {
@@ -68,7 +68,7 @@ public class UriToSectionsAnnotatedContentURIsFlatMapper {
         WikipediaPage retrievedWikipediaPage = service.path(wikipediaPagePath).queryParam("uri", wikipediaPageURI)
 				.type(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(WikipediaPage.class);
 		*/
-        Integer thriftPort = (Integer)parameters.getParameterValue(RelationalSentencesCorpusCreationParameters.THRIFT_PORT);
+        Integer thriftPort = helper.getThriftPort();
         UIAServiceClient uiaService = new UIAServiceClient();
         org.epnoi.model.WikipediaPage wikipediaPage = null;
         try {

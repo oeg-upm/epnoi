@@ -43,12 +43,10 @@ public class OntologyLearningTask {
     private boolean extractTerms;
     private boolean extractRelations;
 
-    private JavaSparkContext sparkContext;
     private LearningHelper helper;
 
-    public void init(LearningHelper helper, JavaSparkContext sparkContext) throws EpnoiInitializationException{
+    public void init(LearningHelper helper) throws EpnoiInitializationException{
         this.helper = helper;
-        this.sparkContext = sparkContext;
     }
 
 

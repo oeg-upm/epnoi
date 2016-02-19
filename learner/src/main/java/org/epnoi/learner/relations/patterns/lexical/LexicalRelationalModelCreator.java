@@ -1,19 +1,25 @@
 package org.epnoi.learner.relations.patterns.lexical;
 
-import org.epnoi.learner.relations.corpus.RelationalSentencesCorpusCreationParameters;
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.learner.relations.patterns.*;
 import org.epnoi.model.RelationalSentencesCorpus;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 import org.epnoi.model.exceptions.EpnoiResourceAccessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.logging.Logger;
 
+@Component
 public class LexicalRelationalModelCreator {
-    private static final Logger logger = Logger
-            .getLogger(LexicalRelationalModelCreator.class.getName());
 
-    private RelationalPatternsModelCreationParameters parameters;
+    private static final Logger logger = LoggerFactory.getLogger(LexicalRelationalModelCreator.class);
+
+    @Autowired
+    LearningHelper helper;
+
 
     private RelationalPatternsCorpusCreator patternsCorpusCreator;
     private RelationalPatternsCorpus patternsCorpus;
@@ -30,15 +36,13 @@ public class LexicalRelationalModelCreator {
     @PostConstruct
     public void init() throws EpnoiInitializationException {
         logger.info("Initializing the LexicalRealationalModelCreator with the following parameters");
-        logger.info(parameters.toString());
-        this.parameters = parameters;
-        String relationalSentencesCorpusURI = (String) this.parameters
-                .getParameterValue(RelationalPatternsModelCreationParameters.RELATIONAL_SENTENCES_CORPUS_URI);
+
+        String relationalSentencesCorpusURI = helper.getSentencesUri();
         this.patternsCorpusCreator = new RelationalPatternsCorpusCreator();
         this.patternsCorpusCreator.init(new LexicalRelationalPatternGenerator());
 
         // TODO
-        logger.severe("pending to implement by using UDM");
+        logger.error("pending to implement by using UDM");
 //        RelationalSentencesCorpus relationalSentencesCorpus = (RelationalSentencesCorpus) this.core.getInformationHandler().get(relationalSentencesCorpusURI, RDFHelper.RELATIONAL_SENTECES_CORPUS_CLASS);
         RelationalSentencesCorpus relationalSentencesCorpus = null;
 
@@ -53,7 +57,7 @@ public class LexicalRelationalModelCreator {
 
             _buildPatternsCorpus(relationalSentencesCorpus);
         }
-        modelBuilder = new RelaxedBigramSoftPatternModelBuilder(parameters);
+        modelBuilder = new RelaxedBigramSoftPatternModelBuilder(helper);
 
         _readParameters();
 
@@ -71,26 +75,15 @@ public class LexicalRelationalModelCreator {
     }
 
     private void _readParameters() {
-        this.path = (String) parameters
-                .getParameterValue(RelationalPatternsModelCreationParameters.MODEL_PATH);
+        this.path = helper.getLexicalPath();
 
-        this.store = (boolean) parameters
-                .getParameterValue(RelationalSentencesCorpusCreationParameters.STORE);
+        this.store = helper.isLexicalStore();
 
-        this.verbose = (boolean) parameters
-                .getParameterValue(RelationalSentencesCorpusCreationParameters.VERBOSE);
+        this.verbose = helper.isLexicalVerbose();
 
-        if (parameters
-                .getParameterValue(RelationalSentencesCorpusCreationParameters.TEST) != null) {
+        this.test = helper.isLexicalTest();
 
-            this.test = ((boolean) parameters
-                    .getParameterValue(RelationalSentencesCorpusCreationParameters.TEST));
-        } else {
-            this.test = false;
-        }
-
-        this.interpolationConstant = (double) parameters
-                .getParameterValue(RelationalPatternsModelCreationParameters.INTERPOLATION_CONSTANT);
+        this.interpolationConstant = helper.getLexicalInterpolation();
     }
 
     // ----------------------------------------------------------------------------------------------------------------
@@ -112,8 +105,7 @@ public class LexicalRelationalModelCreator {
     // ----------------------------------------------------------------------------------------------------------------
 
     public void create() {
-        logger.info("Starting the creation of a lexical BigramSoftPatternModel with the following parameters: "
-                + this.parameters);
+        logger.info("Starting the creation of a lexical BigramSoftPatternModel with the following parameters: " + this);
         this.model = buildModel();
 
         if (this.verbose) {
@@ -125,9 +117,9 @@ public class LexicalRelationalModelCreator {
                 RelationalPatternsModelSerializer.serialize(path, model);
 
             } catch (EpnoiResourceAccessException e) {
-                logger.severe("There was a problem trying to serialize the BigramSoftPatternModel at "
+                logger.error("There was a problem trying to serialize the BigramSoftPatternModel at "
                         + path);
-                logger.severe(e.getMessage());
+                logger.error(e.getMessage());
             }
 
         }

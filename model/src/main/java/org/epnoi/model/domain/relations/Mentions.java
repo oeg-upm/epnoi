@@ -14,7 +14,7 @@ import org.epnoi.model.domain.resources.Resource;
 public abstract class Mentions extends Relation{
 
     @Getter @Setter
-    private Long times;
+    private Long times = 0L;
 
     @Override
     public Resource.Type getEndType() {

@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 /**
  * Created by cbadenes on 10/02/16.
  */
-@Data
 @Component
+@Data
 public class LearningHelper {
 
     @Value("${epnoi.learner.delay}")
@@ -27,19 +27,13 @@ public class LearningHelper {
     @Value("${epnoi.learner.rest.port}")
     int restPort;
 
-    @Value("${epnoi.learner.spark.app}")
-    String sparkApp;
-
-    @Value("${epnoi.learner.spark.master}")
-    String sparkMaster;
-
     @Value("${epnoi.learner.thrift.port}")
     int thriftPort;
 
-    @Value("${learner.corpus.patterns.lexical.interpolation }")
+    @Value("${learner.corpus.patterns.lexical.interpolation}")
     double lexicalInterpolation;
 
-    @Value("${learner.corpus.patterns.lexical.maxlength }")
+    @Value("${learner.corpus.patterns.lexical.maxlength}")
     int lexicalMaxLength;
 
     @Value("${learner.corpus.patterns.lexical.path}")
@@ -57,16 +51,16 @@ public class LearningHelper {
     @Value("${learner.corpus.patterns.lexical.verbose}")
     boolean lexicalVerbose;
 
-    @Value("${learner.corpus.sentences.description }")
+    @Value("${learner.corpus.sentences.description}")
     String sentencesDescription;
 
-    @Value("${learner.corpus.sentences.maxlength }")
+    @Value("${learner.corpus.sentences.maxlength}")
     int sentencesMaxLength;
 
     @Value("${learner.corpus.sentences.store}")
     boolean sentencesStore;
 
-    @Value("${learner.corpus.sentences.thrift.port }")
+    @Value("${learner.corpus.sentences.thrift.port}")
     int sentencesThriftPort;
 
     @Value("${learner.corpus.sentences.type}")
@@ -78,21 +72,6 @@ public class LearningHelper {
     @Value("${learner.corpus.sentences.verbose}")
     boolean sentencesVerbose;
 
-    @Value("${learner.demo.harvester.label}")
-    String harvesterLabel;
-
-    @Value("${learner.demo.harvester.overwrite}")
-    boolean harvesterOverwrite;
-
-    @Value("${learner.demo.harvester.path}")
-    String harvesterPath;
-
-    @Value("${learner.demo.harvester.uri}")
-    String harvesterUri;
-
-    @Value("${learner.demo.harvester.verbose}")
-    boolean harvesterVerbose;
-
     @Value("${learner.task.relations}")
     boolean relations;
 
@@ -102,13 +81,13 @@ public class LearningHelper {
     @Value("${learner.task.relations.hypernyms.lexical.path}")
     String hypernymsLexicalPath;
 
-    @Value("${learner.task.relations.hypernyms.threshold.expansion }")
+    @Value("${learner.task.relations.hypernyms.threshold.expansion}")
     double hypernymsThresholdExpansion;
 
-    @Value("${learner.task.relations.hypernyms.threshold.extraction }")
+    @Value("${learner.task.relations.hypernyms.threshold.extraction}")
     double hypernymsThresholdExtraction;
 
-    @Value("${learner.task.relations.knowledgebase }")
+    @Value("${learner.task.relations.knowledgebase}")
     boolean relationsKnowledgeBase;
 
     @Value("${learner.task.relations.maxdistance}")
@@ -120,7 +99,7 @@ public class LearningHelper {
     @Value("${learner.task.relations.store}")
     boolean relationsStore;
 
-    @Value("${learner.task.relations.thrift.port }")
+    @Value("${learner.task.relations.thrift.port}")
     int relationsThriftPort;
 
     @Value("${learner.task.terms}")

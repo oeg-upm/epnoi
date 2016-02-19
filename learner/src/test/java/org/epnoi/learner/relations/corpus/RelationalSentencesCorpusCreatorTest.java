@@ -5,6 +5,8 @@ import gate.Document;
 import gate.DocumentContent;
 import org.epnoi.knowledgebase.KnowledgeBase;
 import org.epnoi.learner.Config;
+import org.epnoi.learner.helper.LearningHelper;
+import org.epnoi.learner.relations.corpus.parallel.RelationalSentencesCorpusCreator;
 import org.epnoi.model.*;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 import org.epnoi.model.exceptions.EpnoiResourceAccessException;
@@ -23,6 +25,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 /**
@@ -42,27 +45,32 @@ public class RelationalSentencesCorpusCreatorTest {
     @Autowired
     KnowledgeBase knowledgeBase;
 
+    @Autowired
+    LearningHelper helper;
+
+    @Autowired
+    RelationalSentencesCorpusCreator relationalSentencesCorpusCreator;
+
     private RelationalSentencesCorpus corpus;
-    private RelationalSentencesCorpusCreationParameters parameters;
     private boolean storeResult;
     private boolean verbose;
     private int MAX_SENTENCE_LENGTH = 100;
     private long nonRelationalSentencesCounter = 0;
 
+
     // ----------------------------------------------------------------------------------------------------------------------
 
-    public void init(RelationalSentencesCorpusCreationParameters parameters)
+    @PostConstruct
+    public void init()
             throws EpnoiInitializationException {
         logger.info("Initializing the RelationalSentencesCorpusCreator with the following parameters "
-                + parameters.toString());
-        this.parameters = parameters;
+                + helper);
         this.corpus = new RelationalSentencesCorpus();
 
-        this.storeResult = (boolean) parameters.getParameterValue(RelationalSentencesCorpusCreationParameters.STORE);
+        this.storeResult = helper.isLexicalStore();
 
-        this.verbose = (boolean) parameters.getParameterValue(RelationalSentencesCorpusCreationParameters.VERBOSE);
-        this.MAX_SENTENCE_LENGTH = (int) parameters
-                .getParameterValue(RelationalSentencesCorpusCreationParameters.MAX_SENTENCE_LENGTH);
+        this.verbose = helper.isLexicalVerbose();
+        this.MAX_SENTENCE_LENGTH =  helper.getSentencesMaxLength();
 
     }
 
@@ -70,18 +78,14 @@ public class RelationalSentencesCorpusCreatorTest {
 
     public void createCorpus() {
 
-        logger.info("Creating a relational sencences corpus with the following parameters:");
-        logger.info(this.parameters.toString());
+        logger.info("Creating a relational sencences corpus with the following parameters:" + helper);
         // This should be done in parallel!!
         _searchWikipediaCorpus();
         _searchReutersCorpus();
 
-        corpus.setUri((String) this.parameters.getParameterValue(
-                RelationalSentencesCorpusCreationParameters.RELATIONAL_SENTENCES_CORPUS_URI));
-        corpus.setDescription((String) this.parameters.getParameterValue(
-                RelationalSentencesCorpusCreationParameters.RELATIONAL_SENTENCES_CORPUS_DESCRIPTION));
-        corpus.setType((String) this.parameters.getParameterValue(
-                RelationalSentencesCorpusCreationParameters.RELATIONAL_SENTENCES_CORPUS_TYPE));
+        corpus.setUri(helper.getSentencesUri());
+        corpus.setDescription(helper.getSentencesDescription());
+        corpus.setType(helper.getSentencesType());
 
         if (this.verbose) {
             _showRelationalSentenceCorpusInfo();
@@ -418,39 +422,7 @@ public class RelationalSentencesCorpusCreatorTest {
     public void simpleTest() {
         logger.info("Starting the Relation Sentences Corpus Creator");
 
-        RelationalSentencesCorpusCreatorTest relationSentencesCorpusCreator = new RelationalSentencesCorpusCreatorTest();
-
-        RelationalSentencesCorpusCreationParameters parameters = new RelationalSentencesCorpusCreationParameters();
-
-        String relationalCorpusURI = "http://drInventorFirstReview/relationalSentencesCorpus";
-
-        parameters.setParameter(RelationalSentencesCorpusCreationParameters.RELATIONAL_SENTENCES_CORPUS_URI,
-                relationalCorpusURI);
-
-        parameters.setParameter(RelationalSentencesCorpusCreationParameters.RELATIONAL_SENTENCES_CORPUS_TYPE,
-                RelationHelper.HYPERNYMY);
-
-        parameters.setParameter(
-                RelationalSentencesCorpusCreationParameters.RELATIONAL_SENTENCES_CORPUS_DESCRIPTION,
-                "DrInventor first review relational sentences corpus");
-
-        parameters.setParameter(RelationalSentencesCorpusCreationParameters.RELATIONAL_SENTENCES_CORPUS_URI,
-                relationalCorpusURI);
-
-        parameters.setParameter(RelationalSentencesCorpusCreationParameters.MAX_SENTENCE_LENGTH, 80);
-
-        parameters.setParameter(RelationalSentencesCorpusCreationParameters.STORE, true);
-
-        parameters.setParameter(RelationalSentencesCorpusCreationParameters.VERBOSE, true);
-
-        try {
-            relationSentencesCorpusCreator.init(parameters);
-        } catch (EpnoiInitializationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            System.exit(-1);
-        }
-		/*
+        /*
 		 * RelationalSentencesCorpus testRelationalSentenceCorpus =
 		 * relationSentencesCorpusCreator .createTestCorpus();
 		 *
@@ -465,9 +437,9 @@ public class RelationalSentencesCorpusCreatorTest {
 		 * System.exit(0);
 		 */
 
-        relationSentencesCorpusCreator.createCorpus();
+        relationalSentencesCorpusCreator.createCorpus();
 
-        System.out.println("Checking if the Relational Sentence Corpus can be retrieved");
+        logger.info("Checking if the Relational Sentence Corpus can be retrieved");
 
         //TODO
         logger.error("pending to implement by using UDM");

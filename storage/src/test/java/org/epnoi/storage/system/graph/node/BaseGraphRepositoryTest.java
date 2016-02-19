@@ -3,6 +3,7 @@ package org.epnoi.storage.system.graph.node;
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.storage.system.graph.GraphConfig;
+import org.epnoi.storage.system.graph.domain.nodes.Node;
 import org.epnoi.storage.system.graph.repository.nodes.ResourceGraphRepository;
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,7 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = GraphConfig.class)
 @TestPropertySource(properties = { "epnoi.neo4j.contactpoints = drinventor.dia.fi.upm.es", "epnoi.neo4j.port = 5030" })
-public abstract class BaseGraphRepositoryTest<T extends Resource> {
+public abstract class BaseGraphRepositoryTest<T extends Node> {
 
     public abstract ResourceGraphRepository<T> getRepository();
 

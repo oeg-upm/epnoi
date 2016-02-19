@@ -39,7 +39,6 @@ public class ComparisonTest {
     @Test
     public void simulate() throws InterruptedException {
 
-        udm.delete(Resource.Type.ANY).all();
 
         // Domain
         Domain domain = Resource.newDomain();

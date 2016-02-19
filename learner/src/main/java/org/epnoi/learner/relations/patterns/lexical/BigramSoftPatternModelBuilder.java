@@ -1,8 +1,8 @@
 package org.epnoi.learner.relations.patterns.lexical;
 
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.learner.relations.patterns.RelationalPattern;
 import org.epnoi.learner.relations.patterns.RelationalPatternsModelBuilder;
-import org.epnoi.learner.relations.patterns.RelationalPatternsModelCreationParameters;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,11 +15,11 @@ public class BigramSoftPatternModelBuilder implements
 		RelationalPatternsModelBuilder {
 	private static final Logger logger = Logger
 			.getLogger(BigramSoftPatternModelBuilder.class.getName());
+	private final LearningHelper helper;
 	private HashMap<String, NodeInformation> nodesInformation;
 	private Long[] nodesPositionsCount;
 	private Long nodesCount;
 
-	private RelationalPatternsModelCreationParameters parameters;
 	private int maxPatternLenght;
 
 	private Map<String, Map<String, Double[]>> bigramProbability;
@@ -28,12 +28,10 @@ public class BigramSoftPatternModelBuilder implements
 
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public BigramSoftPatternModelBuilder(
-			RelationalPatternsModelCreationParameters parameters) {
-		this.parameters = parameters;
+	public BigramSoftPatternModelBuilder(LearningHelper helper) {
+		this.helper = helper;
 		this.nodesInformation = new HashMap<>();
-		maxPatternLenght = (Integer) this.parameters
-				.getParameterValue(RelationalPatternsModelCreationParameters.MAX_PATTERN_LENGTH);
+		maxPatternLenght = helper.getLexicalMaxLength();
 		this.nodesPositionsCount = new Long[maxPatternLenght];
 		this.nodesCount = 0L;
 		for (int i = 0; i < nodesPositionsCount.length; i++) {
@@ -198,7 +196,7 @@ public class BigramSoftPatternModelBuilder implements
 
 		}
 
-		return new BigramSoftPatternModel(this.parameters,
+		return new BigramSoftPatternModel(this.helper,
 				this.unigramProbability, this.bigramProbability, 0.5);
 
 	}

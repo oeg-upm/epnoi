@@ -4,6 +4,7 @@ import org.apache.mahout.classifier.sgd.L2;
 import org.apache.mahout.classifier.sgd.OnlineLogisticRegression;
 import org.apache.mahout.math.RandomAccessSparseVector;
 import org.apache.mahout.math.Vector;
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.learner.relations.patterns.*;
 
 import java.util.ArrayList;
@@ -24,8 +25,7 @@ public class SyntacticRelationalPatternsModelBuilder implements
 
 	// ------------------------------------------------------------------------------------------------------
 
-	public SyntacticRelationalPatternsModelBuilder(
-			RelationalPatternsModelCreationParameters parameters) {
+	public SyntacticRelationalPatternsModelBuilder(LearningHelper helper) {
 		logger.info("Initializing the SyntacticRelationalPatternsMoldel builder");
 		this.model = new SyntacticRelationalPatternsModel(
 				logisticRegressionClassifier);

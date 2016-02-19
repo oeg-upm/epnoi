@@ -90,8 +90,9 @@ public class UnifiedNodeGraphRepository extends RepeatableActionExecutor impleme
 
     public void delete(Resource.Type type, String uri){
         performRetries(0,"delete " + type + "["+uri+"]", () -> {
-            Resource resource = factory.repositoryOf(type).findOneByUri(uri);
-            if (resource != null) factory.repositoryOf(type).delete( factory.mappingOf(type).cast(resource) );
+            Node resource = factory.repositoryOf(type).findOneByUri(uri);
+            //if (resource != null) factory.repositoryOf(type).delete( factory.mappingOf(type).cast(resource) );
+            if (resource != null) factory.repositoryOf(type).delete( resource.getId());
             return 1;
         });
     }

@@ -41,14 +41,9 @@ public abstract class SimilarityTask implements Runnable,Serializable {
     @Override
     public void run() {
         // Delete previous similarities
-        // TODO helper.getUdm().delete(similarityType).in(Resource.Type.DOMAIN, analysis.getDomain());
-        Iterable<Relation> existingSimilarities = helper.getUdm().find(similarityType).in(Resource.Type.DOMAIN, analysis.getDomain());
-        LOG.debug("deleting existing " + similarityType + " : " + existingSimilarities);
-        if (existingSimilarities != null){
-            for (Relation existingSimilarity : existingSimilarities) {
-                helper.getUdm().delete(existingSimilarity.getType()).byUri(existingSimilarity.getUri());
-            }
-        }
+        LOG.debug("deleting existing similarities: " + similarityType);
+        // TODO this action will remove other relations
+        helper.getUdm().delete(similarityType).in(Resource.Type.DOMAIN, analysis.getDomain());
 
         // Get topic distributions
         Iterable<Relation> relations = helper.getUdm().find(dealsType).in(Resource.Type.DOMAIN, analysis.getDomain());
@@ -59,22 +54,21 @@ public abstract class SimilarityTask implements Runnable,Serializable {
 
         // Save similarities in ddbb
         for (WeightedPair pair: similarities){
-            LOG.info("Attaching "+similarityType+" based on " + pair);
-
+            LOG.info("Attaching " + similarityType + " based on " + pair);
             SimilarTo simRel1 = null;
             SimilarTo simRel2 = null;
-            switch(similarityType){
+            switch (similarityType) {
                 case SIMILAR_TO_DOCUMENTS:
-                    simRel1 = Relation.newSimilarToDocuments(pair.getUri1(),pair.getUri2());
-                    simRel2 = Relation.newSimilarToDocuments(pair.getUri2(),pair.getUri1());
+                    simRel1 = Relation.newSimilarToDocuments(pair.getUri1(), pair.getUri2());
+                    simRel2 = Relation.newSimilarToDocuments(pair.getUri2(), pair.getUri1());
                     break;
                 case SIMILAR_TO_ITEMS:
-                    simRel1 = Relation.newSimilarToItems(pair.getUri1(),pair.getUri2());
-                    simRel2 = Relation.newSimilarToItems(pair.getUri2(),pair.getUri1());
+                    simRel1 = Relation.newSimilarToItems(pair.getUri1(), pair.getUri2());
+                    simRel2 = Relation.newSimilarToItems(pair.getUri2(), pair.getUri1());
                     break;
                 case SIMILAR_TO_PARTS:
-                    simRel1 = Relation.newSimilarToParts(pair.getUri1(),pair.getUri2());
-                    simRel2 = Relation.newSimilarToParts(pair.getUri2(),pair.getUri1());
+                    simRel1 = Relation.newSimilarToParts(pair.getUri1(), pair.getUri2());
+                    simRel2 = Relation.newSimilarToParts(pair.getUri2(), pair.getUri1());
                     break;
             }
             simRel1.setWeight(pair.getWeight());
@@ -83,6 +77,7 @@ public abstract class SimilarityTask implements Runnable,Serializable {
             simRel2.setDomain(analysis.getDomain());
             helper.getUdm().save(simRel1);
             helper.getUdm().save(simRel2);
+
         }
 
     }
@@ -99,11 +94,13 @@ public abstract class SimilarityTask implements Runnable,Serializable {
 
         LOG.debug("Topic Distributions: "+topicDistributions.collect().size());
 
+        final Double threshold = helper.getThreshold();
+
         List<WeightedPair> similarities = topicDistributions.
                 cartesian(topicDistributions).
                 filter(x -> x._1().getUri().compareTo(x._2().getUri()) > 0).
                 map(x -> new WeightedPair(x._1().getUri(), x._2().getUri(), RelationalSimilarity.between(x._1().getRelationships(), x._2().getRelationships()))).
-//                filter(x -> x.getWeight() > 0.5).
+                filter(x -> x.getWeight() > threshold).
                 collect();
 
         LOG.debug("Similarities: "+similarities);

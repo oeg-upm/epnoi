@@ -5,6 +5,7 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.epnoi.learner.Config;
 import org.epnoi.learner.OntologyLearningTask;
 import org.epnoi.learner.helper.LearningHelper;
+import org.epnoi.learner.helper.SparkHelper;
 import org.epnoi.learner.relations.RelationsRetriever;
 import org.epnoi.learner.terms.TermsRetriever;
 import org.epnoi.learner.terms.TermsTable;
@@ -44,9 +45,6 @@ public class Learner {
     LearningHelper helper;
 
     @Autowired
-    JavaSparkContext sparkContext;
-
-    @Autowired
     TermsRetriever termsRetriever;
 
     @Autowired
@@ -64,7 +62,7 @@ public class Learner {
 
         try {
             OntologyLearningTask ontologyLearningTask = new OntologyLearningTask();
-            ontologyLearningTask.init(this.helper, this.sparkContext);
+            ontologyLearningTask.init(this.helper);
             try {
                 ontologyLearningTask.perform(domainUri);
                 _storeLearningResults(ontologyLearningTask, domainUri);

@@ -51,12 +51,17 @@ public class TopicModelBuilder {
         // TODO LDASettings can not be static class!!!
         LDASettings.setMaxIterations(maxIterations);
 
-        logger.info("Learning Topic Model for '" + id + "' maxIt: " + maxIterations);
-        LDASolution settings = LDASettings.learn(workspace.featureVectors(), maxIterations, maxIterations);
+//        logger.info("Learning Topic Model for '" + id + "' maxIt: " + maxIterations);
+//        LDASolution settings = LDASettings.learn(workspace.featureVectors(), maxIterations, maxIterations);
 
-        logger.info("Topic Model for '" + id + "' learnt with: alpha=" + settings.getAlpha() + ", beta="+ settings.getBeta() + " and numTopics: " + settings.getTopics());
 
-        return build(id, workspace, settings.getTopics(), settings.getAlpha(), settings.getBeta(), maxIterations);
+
+        int topics = 4;
+        double alpha = 16.1;
+        double beta = 4.1;
+
+        logger.info("Topic Model for '" + id + "' learnt with: alpha=" + alpha + ", beta="+ beta + " and numTopics: " + topics);
+        return build(id, workspace, topics, alpha, beta, maxIterations);
     }
 
     public TopicModel build(String id, List<RegularResource> regularResources, Integer numTopics, Double alpha, Double beta, Integer maxIt){

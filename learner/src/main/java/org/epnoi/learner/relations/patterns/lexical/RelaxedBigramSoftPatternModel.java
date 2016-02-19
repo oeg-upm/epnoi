@@ -2,7 +2,6 @@ package org.epnoi.learner.relations.patterns.lexical;
 
 import org.epnoi.learner.relations.patterns.RelationalPattern;
 import org.epnoi.learner.relations.patterns.RelationalPatternsModel;
-import org.epnoi.learner.relations.patterns.RelationalPatternsModelCreationParameters;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +13,6 @@ public class RelaxedBigramSoftPatternModel implements RelationalPatternsModel {
     private static final int MAX_PATTERN_LENGTH = 20;
     private Map<String, Double> unigramProbability;
     private Map<String, Map<String, Double>> bigramProbability;
-    private RelationalPatternsModelCreationParameters parmeters;
     // private int maxPatternLength;
     // private LexicalRelationalModelCreationParameters parameters;
     private double interpolationConstant; // Set to this value using the
@@ -159,8 +157,7 @@ public class RelaxedBigramSoftPatternModel implements RelationalPatternsModel {
     public String toString() {
         return "BigramSoftPatternModel [unigramProbability="
                 + _unigramProbabilityToString() + ", bigramProbability="
-                + _bigramProbabilityToString() + ", parmeters=" + parmeters
-                + ", interpolation_constant=" + interpolationConstant + "]";
+                + _bigramProbabilityToString() + ", interpolation_constant=" + interpolationConstant + "]";
     }
 
     // ---------------------------------------------------------------------------------------------------------

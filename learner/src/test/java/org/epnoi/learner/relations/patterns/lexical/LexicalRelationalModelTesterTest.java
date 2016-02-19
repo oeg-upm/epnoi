@@ -1,4 +1,4 @@
-package org.epnoi.learner.relations.patterns.syntactic;
+package org.epnoi.learner.relations.patterns.lexical;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.learner.Config;
@@ -15,33 +15,31 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * Created by cbadenes on 10/02/16.
+ * Created by cbadenes on 19/02/16.
  */
 @Category(IntegrationTest.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = Config.class)
 @TestPropertySource(properties = {"epnoi.learner.delay = 2000"})
-public class SyntacticRelationalModelCreatorTest {
+public class LexicalRelationalModelTesterTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SyntacticRelationalModelCreatorTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LexicalRelationalModelTesterTest.class);
 
     @Autowired
     LearningHelper helper;
 
-    @Test
-    public void basic(){
-        LOG.info("Starting the Syntactic Relational Model creation");
-        SyntacticRelationalModelCreator modelCreator = new SyntacticRelationalModelCreator();
-        try {
 
-            modelCreator.init(helper);
+    @Test
+    public void createModel(){
+        LexicalRelationalModelTester modelTester = new LexicalRelationalModelTester();
+        try {
+            modelTester.init(helper);
         } catch (EpnoiInitializationException e) {
             e.printStackTrace();
             System.exit(-1);
         }
-
-        modelCreator.create();
-
-        LOG.info("Ending the Syntantic Relational Model creation");
+        modelTester.test();
+        LOG.info("Ending the Lexical Relational Model creation");
     }
+
 }

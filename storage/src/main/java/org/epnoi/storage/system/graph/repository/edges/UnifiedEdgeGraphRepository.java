@@ -36,15 +36,23 @@ public class UnifiedEdgeGraphRepository extends RepeatableActionExecutor impleme
     @Override
     public void save(Relation relation){
 
-        Resource snode = nodeFactory.repositoryOf(relation.getStartType()).findOneByUri(relation.getStartUri());
-        Resource enode = nodeFactory.repositoryOf(relation.getEndType()).findOneByUri(relation.getEndUri());
+        performRetries(0, "save " + relation.getType() + "[" + relation + "]", () -> {
+            Resource snode = nodeFactory.repositoryOf(relation.getStartType()).findOneByUri(relation.getStartUri());
+            Resource enode = nodeFactory.repositoryOf(relation.getEndType()).findOneByUri(relation.getEndUri());
 
-        // Build the edge between nodes
-        Edge edge = (Edge) ResourceUtils.map(relation, factory.mappingOf(relation.getType()));
-        edge.setStart((Node) snode);
-        edge.setEndNode((Node) enode);
+            if (snode == null || enode == null){
+                LOG.warn("One of nodes is null: ["+snode +"->"+enode+"]");
+                return 0;
+            }
 
-        performRetries(0, "save " + relation.getType() + "[" + relation + "]", () -> factory.repositoryOf(relation.getType()).save(edge));
+            // Build the edge between nodes
+            Edge edge = (Edge) ResourceUtils.map(relation, factory.mappingOf(relation.getType()));
+            edge.setStart((Node) snode);
+            edge.setEndNode((Node) enode);
+
+            factory.repositoryOf(relation.getType()).save(edge);
+            return 1;
+        });
     }
 
     @Override
@@ -105,7 +113,8 @@ public class UnifiedEdgeGraphRepository extends RepeatableActionExecutor impleme
     public void delete(Relation.Type type, String uri) {
         performRetries(0,"delete " + type + "["+uri+"]", () -> {
             Edge relation = factory.repositoryOf(type).findOneByUri(uri);
-            if (relation != null) factory.repositoryOf(type).delete(factory.mappingOf(type).cast(relation) );
+            //if (relation != null) factory.repositoryOf(type).delete(factory.mappingOf(type).cast(relation) );
+            if (relation != null) factory.repositoryOf(type).delete(relation.getId());
             return 1;
         });
     }

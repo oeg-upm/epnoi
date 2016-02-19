@@ -9,6 +9,8 @@ import org.epnoi.storage.session.UnifiedTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.stream.StreamSupport;
+
 /**
  * Created by cbadenes on 04/02/16.
  */
@@ -75,10 +77,16 @@ public class DeleteRelationAction {
 
             Iterable<Relation> pairs = helper.getUnifiedEdgeGraphRepository().findIn(type,refType, uri);
             if (pairs != null){
-                for (Relation pair : pairs) {
+                StreamSupport.stream(pairs.spliterator(), false).parallel().forEach(pair -> {
                     helper.getUnifiedEdgeGraphRepository().delete(type,pair.getUri());
-                    helper.getEventBus().post(Event.from(pair), RoutingKey.of(type, Relation.State.DELETED));
-                }
+                    helper.getEventBus().post(Event.from(pair.getUri()), RoutingKey.of(type, Relation.State.DELETED));
+                    LOG.info("Deleted: "+type.name()+"[" + uri+"]");
+                });
+//                for (Relation pair : pairs) {
+//                    //TODO parelleize
+//                    helper.getUnifiedEdgeGraphRepository().delete(type,pair.getUri());
+//                    helper.getEventBus().post(Event.from(pair.getUri()), RoutingKey.of(type, Relation.State.DELETED));
+//                }
             }
 
             transaction.commit();

@@ -1,129 +1,95 @@
 package org.epnoi.learner.relations.corpus.parallel;
 
 import gate.Document;
-import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.broadcast.Broadcast;
-import org.epnoi.learner.relations.corpus.RelationalSentencesCorpusCreationParameters;
+import org.epnoi.learner.helper.LearningHelper;
+import org.epnoi.learner.helper.SparkHelper;
 import org.epnoi.model.RelationalSentence;
 import org.epnoi.model.RelationalSentencesCorpus;
-import org.epnoi.model.Selector;
-import org.epnoi.model.commons.Parameters;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
-import org.epnoi.model.rdf.RDFHelper;
 import org.epnoi.nlp.wikipedia.WikipediaPagesRetriever;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Component
 public class RelationalSentencesCorpusCreator {
-    private static final Logger logger = Logger.getLogger(RelationalSentencesCorpusCreator.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(RelationalSentencesCorpusCreator.class);
 
     @Autowired
-    private RelationalSentencesCorpusCreationParameters parameters;
-    @Autowired
-    private SparkConf sparkConf;
+    private SparkHelper sparkHelper;
 
     @Autowired
-    private JavaSparkContext sparkContext;
+    LearningHelper helper;
 
-    private Parameters<Object> runtimeParameters;
+    @Value("${learner.corpus.sentences.maxlength}")
+    int sentencesMaxLength;
+
+    @Value("${learner.corpus.patterns.lexical.store}")
+    boolean lexicalStore;
+
+    @Value("${learner.corpus.patterns.lexical.verbose}")
+    boolean lexicalVerbose;
 
     private RelationalSentencesCorpus corpus;
 
-    private boolean storeResult;
-    private boolean verbose;
-
-    private int MAX_SENTENCE_LENGTH;
-
-
-    // ----------------------------------------------------------------------------------------------------------------------
-
-
     @PostConstruct
-    public void init()
-            throws EpnoiInitializationException {
-        logger.info("Initializing the RelationalSentencesCorpusCreator with the following parameters "
-                + parameters.toString());
-
+    public void init() throws EpnoiInitializationException {
+        LOG.info("Initializing the RelationalSentencesCorpusCreator with the following parameters " + this);
         this.corpus = new RelationalSentencesCorpus();
-
-        this.storeResult = (boolean) parameters.getParameterValue(RelationalSentencesCorpusCreationParameters.STORE);
-
-        this.verbose = (boolean) parameters.getParameterValue(RelationalSentencesCorpusCreationParameters.VERBOSE);
-        this.MAX_SENTENCE_LENGTH = (int) parameters
-                .getParameterValue(RelationalSentencesCorpusCreationParameters.MAX_SENTENCE_LENGTH);
-
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------
 
-    public void createCorpus(Parameters<Object> runtimeParameters) {
-        this.runtimeParameters = runtimeParameters;
-        logger.info("Creating a relational sencences corpus with the following parameters:");
-        logger.info(this.parameters.toString());
-        logger.info("Creating a relational sencences corpus with the following runtime parameters:");
-        logger.info(this.runtimeParameters.toString());
+    public void createCorpus() {
+
+        LOG.info("Creating a relational sencences corpus with the following parameters: " + helper);
+
         // This should be done in parallel!!
         List<String> URIs = _collectCorpusURIs();
 
-        if (runtimeParameters.getParameterValue(RelationalSentencesCorpusCreationParameters.RELATIONAL_SENTENCES_CORPUS_URI) != null) {
-            corpus.setUri((String) this.runtimeParameters.getParameterValue(
-                    RelationalSentencesCorpusCreationParameters.RELATIONAL_SENTENCES_CORPUS_URI));
-        } else {
-            corpus.setUri((String) this.parameters.getParameterValue(
-                    RelationalSentencesCorpusCreationParameters.RELATIONAL_SENTENCES_CORPUS_URI));
-
-        }
-
-        corpus.setDescription((String) this.parameters.getParameterValue(
-                RelationalSentencesCorpusCreationParameters.RELATIONAL_SENTENCES_CORPUS_DESCRIPTION));
-        corpus.setType((String) this.parameters.getParameterValue(
-                RelationalSentencesCorpusCreationParameters.RELATIONAL_SENTENCES_CORPUS_TYPE));
+        corpus.setUri(helper.getSentencesUri());
+        corpus.setDescription(helper.getSentencesDescription());
+        corpus.setType(helper.getSentencesType());
 
         corpus.setSentences(_findRelationalSentences(URIs));
 
-        if (this.verbose) {
+        if (this.lexicalVerbose) {
             RelationalSentencesCorpusViewer.showRelationalSentenceCorpusInfo(corpus);
         }
 
-        if (this.storeResult) {
+        if (this.lexicalStore) {
             _storeCorpus();
         }
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------
 
     private List<RelationalSentence> _findRelationalSentences(List<String> URIs) {
 
-
-        //
-
-
-        Broadcast<RelationalSentencesCorpusCreationParameters> parametersBroadcast = sparkContext.broadcast((RelationalSentencesCorpusCreationParameters) this.parameters);
+        //Broadcast<RelationalSentencesCorpusCreationParameters> parametersBroadcast = sparkContext.broadcast((RelationalSentencesCorpusCreationParameters) this.parameters);
 
         // First we must create the RDD with the URIs of the resources to be
         // included in the creation of the corpus
-        JavaRDD<String> corpusURIs = sparkContext.parallelize(URIs);
+        JavaRDD<String> corpusURIs = sparkHelper.getSc().parallelize(URIs);
 
-        System.out.println("init!!!!!");
+        LOG.info("init!!!!!");
         // THen we obtain the uris of the annotated content documents that are
         // stored at the UIA. The uris are those of the sections of the documents
 
         JavaRDD<String> annotatedContentURIs = corpusURIs.flatMap(uri -> {
-            UriToSectionsAnnotatedContentURIsFlatMapper mapper = new UriToSectionsAnnotatedContentURIsFlatMapper(parametersBroadcast.getValue());
+            UriToSectionsAnnotatedContentURIsFlatMapper mapper = new UriToSectionsAnnotatedContentURIsFlatMapper(helper);
             return mapper.call(uri);
         });
 
         //From
 
         JavaRDD<Document> annotatedDocuments = annotatedContentURIs.flatMap(uri -> {
-            UriToAnnotatedDocumentFlatMapper flatMapper = new UriToAnnotatedDocumentFlatMapper(parametersBroadcast.getValue());
+            UriToAnnotatedDocumentFlatMapper flatMapper = new UriToAnnotatedDocumentFlatMapper(helper);
             return flatMapper.call(uri);
         });
 
@@ -135,7 +101,7 @@ public class RelationalSentencesCorpusCreator {
         JavaRDD<RelationalSentenceCandidate> relationalSentencesCandidates =
                 annotatedDocumentsSentences.flatMap(relationalSentence -> {
                     SentenceToRelationalSentenceCandidateFlatMapper sentenceMapper = new
-                            SentenceToRelationalSentenceCandidateFlatMapper(parametersBroadcast.getValue());
+                            SentenceToRelationalSentenceCandidateFlatMapper(helper);
                     return sentenceMapper.call(relationalSentence);
                 });
 
@@ -149,7 +115,7 @@ public class RelationalSentencesCorpusCreator {
 
     private void _storeCorpus() {
         // TODO
-        logger.severe("Pending to implement by using UDM");
+        LOG.error("Pending to implement by using UDM");
 //        core.getInformationHandler().remove(this.corpus.getUri(), RDFHelper.RELATIONAL_SENTECES_CORPUS_CLASS);
 //        core.getInformationHandler().put(this.corpus, Context.getEmptyContext());
     }
@@ -168,16 +134,7 @@ public class RelationalSentencesCorpusCreator {
 
         List<String> wikipediaPages = WikipediaPagesRetriever.getWikipediaArticles();
 
-
-        if (runtimeParameters.getParameterValue(RelationalSentencesCorpusCreationParameters.MAX_TEXT_CORPUS_SIZE) != null) {
-            Integer corpusMaxSize = (Integer) runtimeParameters.getParameterValue(RelationalSentencesCorpusCreationParameters.MAX_TEXT_CORPUS_SIZE);
-            logger.info("A maximum for the number of text items has been set for the test corpus: " + corpusMaxSize);
-            Integer max = (corpusMaxSize > wikipediaPages.size()) ? wikipediaPages.size() : corpusMaxSize;
-            logger.info("Using as a maximum: " +max);
-            return wikipediaPages.subList(0, max);
-        }
-
-        return wikipediaPages;
+        return wikipediaPages.subList(0, helper.getSentencesMaxLength());
     }
 
     // ----------------------------------------------------------------------------------------------------------------------

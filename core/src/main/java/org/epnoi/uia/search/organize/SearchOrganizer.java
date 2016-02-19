@@ -1,6 +1,6 @@
 package org.epnoi.uia.search.organize;
 
-import org.epnoi.model.domain.Resource;
+import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.search.OrganizationResultPair;
 import org.epnoi.model.search.SearchOrganizationResult;
 import org.epnoi.model.search.SearchSelectResult;

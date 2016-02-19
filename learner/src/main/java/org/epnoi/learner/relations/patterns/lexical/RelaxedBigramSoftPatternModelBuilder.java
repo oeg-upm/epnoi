@@ -1,8 +1,8 @@
 package org.epnoi.learner.relations.patterns.lexical;
 
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.learner.relations.patterns.RelationalPattern;
 import org.epnoi.learner.relations.patterns.RelationalPatternsModelBuilder;
-import org.epnoi.learner.relations.patterns.RelationalPatternsModelCreationParameters;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +18,6 @@ public class RelaxedBigramSoftPatternModelBuilder implements
 	private HashMap<String, NodeInformation> nodesInformation;
 	private Long nodesCount;
 
-	private RelationalPatternsModelCreationParameters parameters;
 	private int maxPatternLenght = 20;
 	private int minPatternLenght = 2;
 	private double interpolationConstant;
@@ -38,16 +37,13 @@ public class RelaxedBigramSoftPatternModelBuilder implements
 
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public RelaxedBigramSoftPatternModelBuilder(
-			RelationalPatternsModelCreationParameters parameters) {
-		this.parameters = parameters;
+	public RelaxedBigramSoftPatternModelBuilder(LearningHelper helper) {
 		this.nodesInformation = new HashMap<>();
 
 		this.nodesCount = 0L;
 		this.bigramProbability = new HashMap<>();
 		this.unigramProbability = new HashMap<>();
-		this.interpolationConstant = (double) parameters
-				.getParameterValue(RelationalPatternsModelCreationParameters.INTERPOLATION_CONSTANT);
+		this.interpolationConstant = helper.getLexicalInterpolation();
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------

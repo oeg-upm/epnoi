@@ -1,113 +1,81 @@
 package org.epnoi.learner.relations.patterns;
 
-import org.epnoi.learner.Config;
 import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.learner.relations.corpus.MockUpRelationalSentencesCorpusCreator;
 import org.epnoi.model.RelationalSentencesCorpus;
-import org.epnoi.model.commons.Parameters;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 import org.epnoi.model.exceptions.EpnoiResourceAccessException;
-import org.epnoi.model.modules.Profiles;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 
 
 public class RelationalPatternsModelCreator {
-    private static final Logger logger = Logger
-            .getLogger(RelationalPatternsModelCreator.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(RelationalPatternsModelCreator.class);
 
+    @Autowired
+    private LearningHelper helper;
 
-    private RelationalPatternsModelCreationParameters parameters;
-    private Parameters<Object> runtimeParameters;
+    private final String type;
 
-
+    @Value("${learner.corpus.sentences.uri}")
     String relationalSentencesCorpusURI;
+
+    @Value("${learner.corpus.patterns.lexical.path}")
+    String path;
+
+    @Value("${learner.corpus.patterns.lexical.store}")
+    boolean store;
+
+    @Value("${learner.corpus.patterns.lexical.test}")
+    boolean test;
+
+    @Value("${learner.corpus.patterns.lexical.verbose}")
+    boolean verbose;
+
     private RelationalSentencesCorpus relationalSentencesCorpus;
+
     private RelationalPatternsCorpusCreator patternsCorpusCreator;
+
     private RelationalPatternsCorpus patternsCorpus;
 
     private RelationalPatternsModelBuilder modelBuilder;
+
     private RelationalPatternsModel model;
+
     MockUpRelationalSentencesCorpusCreator relationSentencesCorpusCreator;
-    private boolean store;
-    private boolean verbose;
-    private boolean test;
-    private String path;
-    private LearningHelper helper;
 
-    // ----------------------------------------------------------------------------------------------------------------
+    public RelationalPatternsModelCreator(String type){
+        this.type = type;
+    }
 
-    public void init(LearningHelper helper,
-                     RelationalPatternsModelCreationParameters parameters)
-            throws EpnoiInitializationException {
-        logger.info("Initializing the RelationalPatternsModelCreator with the following parameters");
-        logger.info(parameters.toString());
-        this.helper = helper;
-        this.parameters = parameters;
-        this.relationalSentencesCorpusURI = (String) this.parameters
-                .getParameterValue(RelationalPatternsModelCreationParameters.RELATIONAL_SENTENCES_CORPUS_URI);
-
+    @PostConstruct
+    public void init() throws EpnoiInitializationException, EpnoiResourceAccessException {
+        LOG.info("Initializing the RelationalPatternsModelCreator with the following parameters: " + helper);
 
         this.patternsCorpusCreator = new RelationalPatternsCorpusCreator();
+
         RelationalPatternGenerator relationalPatternsGenerator = null;
         try {
-            relationalPatternsGenerator = RelationalPatternsGeneratorFactory
-                    .build(parameters);
+            relationalPatternsGenerator = RelationalPatternsGeneratorFactory.build(type);
         } catch (EpnoiResourceAccessException exception) {
-
             throw new EpnoiInitializationException(exception.getMessage());
         }
         this.patternsCorpusCreator.init(relationalPatternsGenerator);
 
         this.relationSentencesCorpusCreator = new MockUpRelationalSentencesCorpusCreator();
 
-        try {
-            this.relationSentencesCorpusCreator.init(helper);
-        } catch (EpnoiInitializationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            System.exit(-1);
-        }
+        this.relationSentencesCorpusCreator.init(helper);
 
-        try {
-            this.modelBuilder = RelationalPatternsModelBuilderFactory
-                    .build(parameters);
-        } catch (EpnoiResourceAccessException e) {
+        this.modelBuilder = RelationalPatternsModelBuilderFactory.build(helper,type);
 
-            throw new EpnoiInitializationException(e.getMessage());
-        }
-
-        _readParameters(parameters);
     }
 
-    private void _readParameters(RelationalPatternsModelCreationParameters parameters) {
-        this.path = (String) parameters
-                .getParameterValue(RelationalPatternsModelCreationParameters.MODEL_PATH);
-
-        this.store = (boolean) parameters
-                .getParameterValue(RelationalPatternsModelCreationParameters.STORE);
-
-        this.verbose = (boolean) parameters
-                .getParameterValue(RelationalPatternsModelCreationParameters.VERBOSE);
-
-        if (parameters
-                .getParameterValue(RelationalPatternsModelCreationParameters.TEST) != null) {
-
-            this.test = ((boolean) parameters
-                    .getParameterValue(RelationalPatternsModelCreationParameters.TEST));
-        } else {
-            this.test = false;
-        }
-    }
-
-    // ------------------------------------------------------------------------------------------------------------------------
-
-    public void create(Parameters<Object> runtimeParameters) {
-        logger.info("Creating a relational patterns model with the following runtime parameters " + runtimeParameters);
-        this.runtimeParameters = runtimeParameters;
+    public void create() {
+        LOG.info("Creating a relational patterns model with the following runtime parameters: " + this);
         _obtainPatternsCorpus();
 
         this.model = _createModel();
@@ -124,26 +92,13 @@ public class RelationalPatternsModelCreator {
 
     private void _storeModel() {
 
-        String runtimePath;
-        System.out.printf("-------------------------------__> "+this.runtimeParameters);
-        if (this.runtimeParameters.getParameterValue(RelationalPatternsModelCreationParameters.MODEL_PATH) != null) {
-            runtimePath =
-                    ((String) this.runtimeParameters.getParameterValue(
-                            RelationalPatternsModelCreationParameters.MODEL_PATH));
-
-        } else {
-            runtimePath = this.path;
-        }
-
-        logger.info("Storing the model at " + runtimePath);
+        LOG.info("Storing the model at " + this.path);
 
         try {
-            RelationalPatternsModelSerializer.serialize(runtimePath, model);
+            RelationalPatternsModelSerializer.serialize(this.path, model);
 
         } catch (EpnoiResourceAccessException e) {
-            logger.severe("There was a problem trying to serialize the patterns model at "
-                    + runtimePath);
-            logger.severe(e.getMessage());
+            LOG.error("There was a problem trying to serialize the patterns model at " + this.path,e);
         }
 
     }
@@ -151,28 +106,27 @@ public class RelationalPatternsModelCreator {
     // ------------------------------------------------------------------------------------------------------------------------
 
     private void _obtainPatternsCorpus() {
-        logger.info("Obtaining the RelationalPatternsCorspus");
+        LOG.info("Obtaining the RelationalPatternsCorspus");
 
         _obtainRealtionalSentencesCorpus();
         if (relationalSentencesCorpus == null) {
-            logger.severe("The RelationalSentecesCorpus was null, the model cannot be created!");
+            LOG.error("The RelationalSentecesCorpus was null, the model cannot be created!");
         } else {
 
-            logger.info("The RelationalSencentcesCorpus has "
+            LOG.info("The RelationalSencentcesCorpus has "
                     + relationalSentencesCorpus.getSentences().size()
                     + " sentences");
             patternsCorpus = patternsCorpusCreator
                     .buildCorpus(relationalSentencesCorpus);
 
-            logger.info("The RelationalPatternsCorpus has "
+            LOG.info("The RelationalPatternsCorpus has "
                     + patternsCorpus.getPatterns().size() + " patterns");
         }
     }
 
     private void _obtainRealtionalSentencesCorpus() {
         if (this.test) {
-            this.relationalSentencesCorpus = relationSentencesCorpusCreator
-                    .createTestCorpus();
+            this.relationalSentencesCorpus = relationSentencesCorpusCreator.createTestCorpus();
         } else {
             this.relationalSentencesCorpus = _retrieveRelationalSentencesCorpus();
         }
@@ -181,120 +135,46 @@ public class RelationalPatternsModelCreator {
     // ------------------------------------------------------------------------------------------------------------------------
 
     private RelationalSentencesCorpus _retrieveRelationalSentencesCorpus() {
-        logger.info("Retrieving the relational sentences corpus with the following uri " + relationalSentencesCorpusURI);
+        LOG.info("Retrieving the relational sentences corpus with the following uri " + relationalSentencesCorpusURI);
 
         //TODO
-        logger.severe("Pending to implement by using UDM");
+        LOG.error("Pending to implement by using UDM");
 //        RelationalSentencesCorpus relationalSentencesCorpus = (RelationalSentencesCorpus) this.core
 //                .getInformationHandler().get(relationalSentencesCorpusURI,
 //                        RDFHelper.RELATIONAL_SENTECES_CORPUS_CLASS);
         RelationalSentencesCorpus relationalSentencesCorpus = null;
 
         if (relationalSentencesCorpus == null) {
-            logger.info("The Relational Sentences Corpus "
+            LOG.info("The Relational Sentences Corpus "
                     + relationalSentencesCorpusURI + "could not be found");
 
         } else {
 
-            logger.info("The RelationalSencentcesCorpus has "
+            LOG.info("The RelationalSencentcesCorpus has "
                     + relationalSentencesCorpus.getSentences().size()
                     + " sentences");
             patternsCorpus = patternsCorpusCreator
                     .buildCorpus(relationalSentencesCorpus);
 
-            logger.info("The RelationalPatternsCorpus has "
+            LOG.info("The RelationalPatternsCorpus has "
                     + patternsCorpus.getPatterns().size() + " patterns");
         }
         return relationalSentencesCorpus;
     }
 
-    // ----------------------------------------------------------------------------------------------------------------
-
     private RelationalPatternsModel _createModel() {
         long startingTime = System.currentTimeMillis();
-        logger.info("Adding all the patterns to the model");
+        LOG.info("Adding all the patterns to the model");
         for (RelationalPattern pattern : patternsCorpus.getPatterns()) {
             this.modelBuilder.addPattern(pattern);
         }
-        logger.info("Building the model");
+        LOG.info("Building the model");
         RelationalPatternsModel model = this.modelBuilder.build();
         long totalTime = startingTime - System.currentTimeMillis();
-        logger.info("It took " + Math.abs(totalTime) + " ms to build the model");
+        LOG.info("It took " + Math.abs(totalTime) + " ms to build the model");
         return model;
     }
 
-    // ----------------------------------------------------------------------------------------------------------------
 
-    public static void main(String[] args) {
-        System.out.println("Starting the Syntactic Relational Model creation");
-        RelationalPatternsModelCreationParameters parameters = new RelationalPatternsModelCreationParameters();
-        parameters
-                .setParameter(
-                        RelationalPatternsModelCreationParameters.RELATIONAL_SENTENCES_CORPUS_URI,
-                        "http://drInventorFirstReview/relationalSentencesCorpus");
-        parameters
-                .setParameter(
-                        RelationalPatternsModelCreationParameters.MAX_PATTERN_LENGTH,
-                        20);
-
-        parameters.setParameter(
-                RelationalPatternsModelCreationParameters.MODEL_PATH,
-                "/JUNK/syntacticModel.bin");
-        parameters.setParameter(RelationalPatternsModelCreationParameters.TYPE,
-                PatternsConstants.SYNTACTIC);
-
-        parameters.setParameter(
-                RelationalPatternsModelCreationParameters.STORE, false);
-
-        parameters.setParameter(
-                RelationalPatternsModelCreationParameters.VERBOSE, true);
-
-        parameters.setParameter(RelationalPatternsModelCreationParameters.TEST,
-                true);
-
-        //	Core core = CoreUtility.getUIACore();
-
-        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
-
-
-        applicationContext.getEnvironment().setActiveProfiles(Profiles.DEVELOP);
-/*
-        MutablePropertySources propertySources = applicationContext.getEnvironment().getPropertySources();
-
-		Map epnoiProperties = new HashMap();
-
-		epnoiProperties.put(EpnoiConfig.EPNOI_PROPERTIES_PATH, configFilePath);
-		propertySources.addFirst(new MapPropertySource(EpnoiConfig.EPNOI_PROPERTIES, epnoiProperties));
-
-
-*/
-        applicationContext.register(Config.class);
-        applicationContext.refresh();
-
-        List<String> beans = new ArrayList<>();
-        for (String bean : applicationContext.getBeanDefinitionNames()) {
-            beans.add("   Bean: " + bean);
-        }
-        logger.info("Initializing the Spring context with the following beans: \n" + String.join("\n", beans));
-
-
-
-
-/*
-        RelationalPatternsModelCreator modelCreator = new RelationalPatternsModelCreator();
-		try {
-			modelCreator.init(core, parameters);
-		} catch (EpnoiInitializationException e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
-
-		modelCreator.create();
-
-		System.out.println("Ending the Relational Model creation");
-*/
-    }
-
-    // ----------------------------------------------------------------------------------------------------------------
 
 }

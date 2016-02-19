@@ -1,6 +1,7 @@
 package org.epnoi.comparator.helper;
 
 import lombok.Data;
+import org.epnoi.comparator.pool.PoolExecutor;
 import org.epnoi.model.utils.TimeUtils;
 import org.epnoi.storage.UDM;
 import org.epnoi.storage.generator.URIGenerator;
@@ -26,5 +27,8 @@ public class ComparatorHelper {
 
     @Value("${epnoi.comparator.threshold}")
     Double threshold;
+
+    @Autowired
+    PoolExecutor poolExecutor;
 
 }

@@ -1,6 +1,5 @@
 package org.epnoi.storage.system.graph.repository.edges;
 
-import org.epnoi.storage.system.graph.domain.edges.ComposesEdge;
 import org.epnoi.storage.system.graph.domain.edges.DealsWithFromDocumentEdge;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.stereotype.Repository;

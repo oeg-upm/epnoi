@@ -6,13 +6,10 @@ import org.epnoi.model.exceptions.EpnoiResourceAccessException;
 
 public class RelationalPatternsGeneratorFactory {
 	
-	public static RelationalPatternGenerator build(
-			RelationalPatternsModelCreationParameters parameters)
-			throws EpnoiResourceAccessException {
+	public static RelationalPatternGenerator build(String type) throws EpnoiResourceAccessException {
 
 		RelationalPatternGenerator relationalPatternsGenerator = null;
-		String type = (String) parameters
-				.getParameterValue(RelationalPatternsModelCreationParameters.TYPE);
+
 		switch (type) {
 		case PatternsConstants.LEXICAL:
 			relationalPatternsGenerator = new LexicalRelationalPatternGenerator();

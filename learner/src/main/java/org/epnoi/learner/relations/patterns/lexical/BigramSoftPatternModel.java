@@ -1,9 +1,8 @@
 package org.epnoi.learner.relations.patterns.lexical;
 
-import gate.util.compilers.eclipse.jdt.internal.compiler.lookup.SourceTypeBinding;
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.learner.relations.patterns.RelationalPattern;
 import org.epnoi.learner.relations.patterns.RelationalPatternsModel;
-import org.epnoi.learner.relations.patterns.RelationalPatternsModelCreationParameters;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,7 +15,6 @@ public class BigramSoftPatternModel implements RelationalPatternsModel {
 	private static final int MAX_PATTERN_LENGTH = 20;
 	private Map<String, Double[]> unigramProbability;
 	private Map<String, Map<String, Double[]>> bigramProbability;
-	private RelationalPatternsModelCreationParameters parmeters;
 	// private int maxPatternLength;
 	// private LexicalRelationalModelCreationParameters parameters;
 	private double interpolation_constant = 0.7d; // Set to this value using the
@@ -34,7 +32,7 @@ public class BigramSoftPatternModel implements RelationalPatternsModel {
 	}
 
 	protected BigramSoftPatternModel(
-			RelationalPatternsModelCreationParameters parameters,
+			LearningHelper helper,
 			Map<String, Double[]> unigramProbability,
 			Map<String, Map<String, Double[]>> bigramProbability,
 			double interpolationConstant) {
@@ -151,7 +149,7 @@ public class BigramSoftPatternModel implements RelationalPatternsModel {
 	public String toString() {
 		return "BigramSoftPatternModel [unigramProbability="
 				+ _unigramProbabilityToString() + ", bigramProbability="
-				+ _bigramProbabilityToString() + ", parmeters=" + parmeters
+				+ _bigramProbabilityToString()
 				+ ", interpolation_constant=" + interpolation_constant + "]";
 	}
 

@@ -1,41 +1,31 @@
 package org.epnoi.learner.relations.corpus.parallel;
 
 
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 import gate.Annotation;
 import gate.AnnotationSet;
 import org.apache.spark.api.java.function.FlatMapFunction;
-import org.epnoi.learner.relations.corpus.RelationalSentencesCorpusCreationParameters;
+import org.epnoi.learner.helper.LearningHelper;
 import org.epnoi.model.RelationHelper;
 import org.epnoi.model.clients.thrift.KnowledgeBaseServiceClient;
-import org.epnoi.model.commons.Parameters;
 import org.epnoi.model.exceptions.EpnoiInitializationException;
 import org.epnoi.nlp.gate.NLPAnnotationsConstants;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriBuilder;
-import java.net.URI;
 import java.util.*;
 
 
 public class SentenceToRelationalSentenceCandidateFlatMapper
         implements FlatMapFunction<Sentence, RelationalSentenceCandidate> {
 
-    private Parameters parameters;
 
     private final int MIN_TERM_LENGTH = 2;
+    private final LearningHelper helper;
     private Map<String, List<String>> stemmingTable = new HashMap<>();
     private Map<String, List<String>> hypernymsTable = new HashMap<>();
     private KnowledgeBaseServiceClient knowledgeBaseServiceClient;
 
 
-    SentenceToRelationalSentenceCandidateFlatMapper(Parameters parameters){
-        this.parameters=parameters;
+    SentenceToRelationalSentenceCandidateFlatMapper(LearningHelper helper){
+        this.helper = helper;
     }
 
     @Override
@@ -57,7 +47,7 @@ _initKnowledgeBaseServiceClient();
 
     private void _initKnowledgeBaseServiceClient() {
         knowledgeBaseServiceClient= new KnowledgeBaseServiceClient();
-        Integer thriftPort = (Integer)parameters.getParameterValue(RelationalSentencesCorpusCreationParameters.THRIFT_PORT);
+        Integer thriftPort = helper.getThriftPort();
         try {
             knowledgeBaseServiceClient.init("localhost", thriftPort);
         } catch (EpnoiInitializationException e) {
