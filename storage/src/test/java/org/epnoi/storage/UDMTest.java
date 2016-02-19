@@ -84,6 +84,25 @@ public class UDMTest {
     @Autowired
     TimeGenerator timeGenerator;
 
+
+    @Test
+    public void newAnalysis(){
+
+        String domain = "http://epnoi.org/domains/ce123683-512a-4f2a-a539-c77b666a8b79";
+
+        Analysis analysis = new Analysis();
+        analysis.setUri(uriGenerator.newAnalysis());
+        analysis.setCreationTime(timeGenerator.getNowAsISO());
+        analysis.setConfiguration("NSGA");
+        analysis.setDomain(domain);
+        analysis.setDescription("topic modelling");
+        analysis.setType("topic-model");
+
+        udm.saveAnalysis(analysis);
+
+    }
+
+
     @Test
     public void saveSource(){
         AtomicInteger counter = new AtomicInteger(0);
