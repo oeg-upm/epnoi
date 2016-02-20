@@ -39,6 +39,9 @@ public class TopicModelBuilder {
     @Value("${epnoi.modeler.maxiterations}")
     Integer maxIterations;
 
+    @Value("${epnoi.modeler.learn}")
+    Boolean learn;
+
     @Value("${epnoi.modeler.similar.max}")
     Integer maxWords;
 
@@ -51,14 +54,19 @@ public class TopicModelBuilder {
         // TODO LDASettings can not be static class!!!
         LDASettings.setMaxIterations(maxIterations);
 
-//        logger.info("Learning Topic Model for '" + id + "' maxIt: " + maxIterations);
-//        LDASolution settings = LDASettings.learn(workspace.featureVectors(), maxIterations, maxIterations);
-
-
-
         int topics = 4;
         double alpha = 16.1;
         double beta = 4.1;
+
+        if (learn){
+            logger.info("Learning Topic Model for '" + id + "' maxIt: " + maxIterations);
+            LDASolution settings = LDASettings.learn(workspace.featureVectors(), maxIterations, maxIterations);
+
+            topics = settings.getTopics();
+            alpha = settings.getAlpha();
+            beta = settings.getBeta();
+        }
+
 
         logger.info("Topic Model for '" + id + "' learnt with: alpha=" + alpha + ", beta="+ beta + " and numTopics: " + topics);
         return build(id, workspace, topics, alpha, beta, maxIterations);

@@ -77,6 +77,7 @@ public class DeleteRelationAction {
 
             Iterable<Relation> pairs = helper.getUnifiedEdgeGraphRepository().findIn(type,refType, uri);
             if (pairs != null){
+                // TODO Check this
                 StreamSupport.stream(pairs.spliterator(), false).parallel().forEach(pair -> {
                     helper.getUnifiedEdgeGraphRepository().delete(type,pair.getUri());
                     helper.getEventBus().post(Event.from(pair.getUri()), RoutingKey.of(type, Relation.State.DELETED));
