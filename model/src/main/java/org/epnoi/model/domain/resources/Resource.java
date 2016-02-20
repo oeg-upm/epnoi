@@ -1,6 +1,5 @@
 package org.epnoi.model.domain.resources;
 
-import com.sun.java.browser.plugin2.DOM;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.epnoi.model.domain.LinkableElement;

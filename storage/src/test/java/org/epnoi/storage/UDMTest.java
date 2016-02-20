@@ -2,10 +2,11 @@ package org.epnoi.storage;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.model.Event;
-import org.epnoi.model.WikidataView;
-import org.epnoi.model.domain.relations.EmbeddedIn;
 import org.epnoi.model.domain.relations.Relation;
-import org.epnoi.model.domain.resources.*;
+import org.epnoi.model.domain.resources.Document;
+import org.epnoi.model.domain.resources.Domain;
+import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.domain.resources.Source;
 import org.epnoi.model.modules.BindingKey;
 import org.epnoi.model.modules.EventBus;
 import org.epnoi.model.modules.EventBusSubscriber;
@@ -13,7 +14,6 @@ import org.epnoi.model.modules.RoutingKey;
 import org.epnoi.storage.generator.URIGenerator;
 import org.epnoi.storage.system.document.domain.WordDocument;
 import org.epnoi.storage.system.document.repository.WordDocumentRepository;
-import org.epnoi.storage.system.graph.domain.nodes.DomainNode;
 import org.epnoi.storage.system.graph.repository.edges.DealsWithFromDocumentEdgeRepository;
 import org.epnoi.storage.system.graph.repository.nodes.DocumentGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.DomainGraphRepository;
@@ -30,7 +30,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -247,74 +249,6 @@ public class UDMTest {
 
         WordDocument doc = wordDocumentRepository.findOne(wordURI);
         System.out.println(doc);
-    }
-
-
-
-    @Test
-    public void saveSerializedObject(){
-
-        udm.delete(Resource.Type.SERIALIZED_OBJECT).all();
-
-        WikidataView view = new WikidataView();
-
-        Map<String, Set<String>> dictionary = new HashMap<>();
-        Set<String> value1 = new HashSet<>();
-        value1.add("value1");
-        dictionary.put("key1",value1);
-        view.setLabelsDictionary(dictionary);
-
-
-        Map<String, Set<String>> reverseDictionary = new HashMap<>();
-        Set<String> value2 = new HashSet<>();
-        value2.add("value2");
-        reverseDictionary.put("key2",value2);
-        view.setLabelsReverseDictionary(reverseDictionary);
-
-
-        Map<String, Map<String, Set<String>>> relations = new HashMap<>();
-        Map<String, Set<String>> value3 = new HashMap<>();
-        Set<String> value4 = new HashSet<>();
-        value4.add("value4");
-        value3.put("key4",value4);
-        relations.put("key3",value3);
-        view.setRelations(relations);
-
-
-        view.setUri("sample-uri");
-        view.setCreationTime("2016");
-
-
-        SerializedObject serializedObject = new SerializedObject();
-        serializedObject.setUri("serializations/1");
-        serializedObject.setCreationTime("2016");
-        serializedObject.setInstance(view);
-
-        udm.save(serializedObject);
-
-        List<String> result = udm.find(Resource.Type.SERIALIZED_OBJECT).all();
-
-        Assert.assertEquals(1,result.size());
-
-        LOG.info("Result: " + result);
-    }
-
-
-    @Test
-    public void readSerializedObject(){
-
-        Optional<Resource> result = udm.read(Resource.Type.SERIALIZED_OBJECT).byUri("serializations/1");
-
-        LOG.info(""+result);
-
-        Assert.assertTrue(result.isPresent());
-
-        SerializedObject serializedObject = result.get().asSerializedObject();
-
-        Object view = serializedObject.getInstance();
-
-        Assert.assertNotNull(view);
-
     }
 
 }

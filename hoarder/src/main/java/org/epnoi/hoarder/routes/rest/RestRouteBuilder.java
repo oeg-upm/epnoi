@@ -2,7 +2,7 @@ package org.epnoi.hoarder.routes.rest;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
-import org.epnoi.model.Source;
+import org.epnoi.model.domain.resources.Source;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

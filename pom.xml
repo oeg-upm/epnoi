@@ -138,18 +138,13 @@
     </properties>
     <modules>
         <module>storage</module>
-        <!--<module>core</module>-->
         <module>comparator</module>
-        <!--<module>uia</module>-->
         <module>api</module>
         <module>parser</module>
         <module>model</module>
-        <module>nlp</module>
         <module>harvester</module>
         <module>hoarder</module>
-        <module>learner</module>
         <module>modeler</module>
-        <module>knowledgebase</module>
         <module>app</module>
         <module>vms</module>
         <module>eventbus</module>

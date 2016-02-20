@@ -4,7 +4,7 @@ import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.harvester.Config;
 import org.epnoi.model.Event;
 import org.epnoi.model.domain.resources.Resource;
-import org.epnoi.model.Source;
+import org.epnoi.model.domain.resources.Source;
 import org.epnoi.model.modules.EventBus;
 import org.epnoi.model.modules.RoutingKey;
 import org.epnoi.storage.UDM;

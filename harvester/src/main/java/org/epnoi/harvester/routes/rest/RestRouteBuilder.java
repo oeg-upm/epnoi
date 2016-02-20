@@ -2,7 +2,7 @@ package org.epnoi.harvester.routes.rest;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
-import org.epnoi.model.Source;
+import org.epnoi.model.domain.resources.Source;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +27,7 @@ public class RestRouteBuilder extends RouteBuilder {
                 .contextPath("harvester/rest")
                 .port(port);
 
+        // TODO Change to valid resources
         rest("/sources").description("harvester rest service for sources management")
                 //.consumes("application/json").produces("application/json")
 
