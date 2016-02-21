@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Created by cbadenes on 01/12/15.
  */
-@Configuration
+@Configuration("harvester")
 @ComponentScan({"org.epnoi.harvester","org.epnoi.storage","org.epnoi.eventbus"})
 @PropertySource({"classpath:harvester.properties","classpath:eventbus.properties","classpath:storage.properties"})
 public class Config {

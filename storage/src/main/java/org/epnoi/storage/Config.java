@@ -9,7 +9,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 /**
  * Created by cbadenes on 21/12/15.
  */
-@Configuration
+@Configuration("storage")
 @ComponentScan({"org.epnoi.storage","org.epnoi.eventbus"})
 @PropertySource({"classpath:storage.properties","classpath:eventbus.properties"})
 public class Config {

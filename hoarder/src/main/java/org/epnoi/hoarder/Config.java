@@ -12,7 +12,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 import java.util.List;
 
-@Configuration
+@Configuration("hoarder")
 @ComponentScan({"org.epnoi.hoarder","org.epnoi.eventbus"})
 @PropertySource({"classpath:hoarder.properties","classpath:eventbus.properties"})
 public class Config {
