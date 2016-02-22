@@ -1,8 +1,6 @@
 package org.epnoi.storage.system.graph.domain.edges;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import org.epnoi.model.domain.relations.AppearedIn;
 import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.storage.system.graph.domain.nodes.DomainNode;
@@ -21,6 +19,30 @@ public class AppearedInEdge extends Edge<TermNode,DomainNode> {
 
     @Property
     private Long times;
+
+    @Property
+    private long subtermOf;
+
+    @Property
+    private long supertermOf;
+
+    @Property
+    private double cvalue;
+
+    @Property
+    private double consensus;
+
+    @Property
+    private double pertinence;
+
+    @Property
+    private double probability;
+
+    @Property
+    private double termhood;
+
+
+
 
     @Override
     public Resource.Type getStartType() {

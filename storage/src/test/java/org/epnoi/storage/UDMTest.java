@@ -90,19 +90,12 @@ public class UDMTest {
     public void read(){
 
 
-        ResourceGraphRepository domainRepo = factory.repositoryOf(Resource.Type.DOMAIN);
+        Domain domain = Resource.newDomain();
+        domain.setName("siggraph");
+        domain.setDescription("siggraph corpus");
+        udm.save(domain);
 
-        Node result = domainRepo.findOneByUri("http://epnoi.org/domains/dc3ebf0e-c457-430d-af2a-8f3329e333fd");
-
-
-        
-        
-
-        Optional<Resource> domain = udm.read(Resource.Type.DOMAIN).byUri("http://epnoi.org/domains/dc3ebf0e-c457-430d-af2a-8f3329e333fd");
-
-        Optional<Resource> document = udm.read(Resource.Type.DOCUMENT).byUri("http://epnoi.org/documents/2a081791-525d-4c86-bc7b-cde989076d08");
-
-        udm.save(Relation.newContains(domain.get().asDomain().getUri(),document.get().asDocument().getUri()));
+        eventBus.post(Event.from(domain),RoutingKey.of(Resource.Type.DOMAIN,Resource.State.UPDATED));
 
         assert true;
     }
