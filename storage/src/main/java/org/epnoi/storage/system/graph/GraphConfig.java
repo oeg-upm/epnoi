@@ -2,7 +2,10 @@ package org.epnoi.storage.system.graph;
 
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
@@ -20,15 +23,21 @@ import org.springframework.data.neo4j.server.RemoteServer;
 //@EnableTransactionManagement
 public class GraphConfig extends Neo4jConfiguration{
 
-    @Autowired
-    private Environment env;
+    private static final Logger LOG = LoggerFactory.getLogger(GraphConfig.class);
 
+    @Value("${epnoi.neo4j.contactpoints}")
+    String hosts;
+
+    @Value("${epnoi.neo4j.port}")
+    Integer port;
 
     @Override
     @Bean
     public Neo4jServer neo4jServer() {
         // Credentials : return new RemoteServer("http://localhost:7474",username,password);
-        return new RemoteServer("http://"+env.getProperty("epnoi.neo4j.contactpoints")+":"+env.getProperty("epnoi.neo4j.port"));
+        RemoteServer server = new RemoteServer("http://" + hosts + ":" +port);
+        LOG.info("Initialized Neo4j connection to: " + hosts + " " + port);
+        return server;
     }
 
     @Override

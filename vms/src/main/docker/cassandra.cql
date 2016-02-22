@@ -52,17 +52,13 @@ create table if not exists research.parts(uri text, creationTime text, sense tex
 create index on research.parts (creationTime);
 create index on research.parts (sense);
 
-create table if not exists research.terms(uri text, creationTime text, content text, length int, ocurrences bigint, subterms bigint, superterms bigint, cvalue double, consensus double, pertinence double, probability double, termhood double, primary key (uri));
+create table if not exists research.terms(uri text, creationTime text, content text, primary key (uri));
 create index on research.terms (creationTime);
 create index on research.terms (content);
 
-create table if not exists research.words(uri text, creationTime text, content text, lemma text, stem text, pos text, type text, primary key (uri));
+create table if not exists research.words(uri text, creationTime text, content text, primary key (uri));
 create index on research.words (creationTime);
 create index on research.words (content);
-create index on research.words (lemma);
-create index on research.words (stem);
-create index on research.words (pos);
-create index on research.words (type);
 
 create table if not exists research.topics(uri text, creationTime text, content text, analysis text, primary key (uri));
 create index on research.topics (creationTime);

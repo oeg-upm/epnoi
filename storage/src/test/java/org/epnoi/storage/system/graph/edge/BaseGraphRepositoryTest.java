@@ -22,7 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @Category(IntegrationTest.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = GraphConfig.class)
-@TestPropertySource(properties = { "epnoi.neo4j.contactpoints = drinventor.dia.fi.upm.es", "epnoi.neo4j.port = 5030" })
+@TestPropertySource(properties = { "epnoi.eventbus.host = local","epnoi.neo4j.contactpoints = drinventor.dia.fi.upm.es", "epnoi.neo4j.port = 5030" })
 public abstract class BaseGraphRepositoryTest<T extends Edge> {
 
     public abstract RelationGraphRepository<T> getRepository();

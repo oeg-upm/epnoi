@@ -13,8 +13,37 @@ import org.epnoi.model.domain.resources.Resource;
 @EqualsAndHashCode(of={"uri"}, callSuper = true)
 public class AppearedIn extends Relation{
 
+    public static final String LENGTH="times";
     @Getter @Setter
-    private Long times = 0L;
+    private Long times;
+
+    public static final String SUBTERMS="subtermOf";
+    @Getter @Setter
+    private long subtermOf;
+
+    public static final String SUPERTERMS="supertermOf";
+    @Getter @Setter
+    private long supertermOf;
+
+    public static final String CVALUE="cvalue";
+    @Getter @Setter
+    private double cvalue;
+
+    public static final String CONSENSUS="consensus";
+    @Getter @Setter
+    private double consensus;
+
+    public static final String PERTINENCE="pertinence";
+    @Getter @Setter
+    private double pertinence;
+
+    public static final String PROBABILITY="probability";
+    @Getter @Setter
+    private double probability;
+
+    public static final String TERMHOOD="termhood";
+    @Getter @Setter
+    private double termhood;
 
     @Override
     public Resource.Type getStartType() {

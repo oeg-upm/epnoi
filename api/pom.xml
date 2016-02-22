@@ -61,6 +61,16 @@
                         <contextPath>/api</contextPath>
                     </webApp>
                     <useTestScope>true</useTestScope>
+                    <systemProperties>
+                        <systemProperty>
+                            <name>EPNOI_HOME</name>
+                            <value>.</value>
+                        </systemProperty>
+                        <systemProperty>
+                            <name>EPNOI_HOST</name>
+                            <value>drinventor.dia.fi.upm.es</value>
+                        </systemProperty>
+                    </systemProperties>
                 </configuration>
             </plugin>
 

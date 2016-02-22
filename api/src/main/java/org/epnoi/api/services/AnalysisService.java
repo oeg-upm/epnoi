@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * Created by cbadenes on 18/01/16.
  */
 @Component
-public class AnalysisService extends AbstractCRUDService<Analysis> {
+public class AnalysisService extends AbstractResourceService<Analysis> {
 
     public AnalysisService() {
         super(Resource.Type.ANALYSIS);

@@ -102,9 +102,7 @@ public class UnifiedColumnRepositoryTest {
 
         Word resource = Resource.newWord();
         resource.setUri("items/01");
-        resource.setLemma("house");
         resource.setContent("house");
-        resource.setPos("nn");
         test(resource, Resource.Type.WORD);
     }
 

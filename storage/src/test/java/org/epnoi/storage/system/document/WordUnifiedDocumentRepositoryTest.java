@@ -24,10 +24,6 @@ public class WordUnifiedDocumentRepositoryTest extends BaseDocumentRepositoryTes
         document.setUri("words/72ce5395-6268-439a-947e-802229e7f022");
         document.setCreationTime("2015-12-21T16:18:59Z");
         document.setContent("molecular");
-        document.setLemma("molecula");
-        document.setStem("molecula");
-        document.setPos("NN");
-        document.setType("term");
         return document;
     }
 }

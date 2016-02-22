@@ -14,10 +14,9 @@ import org.epnoi.model.modules.RoutingKey;
 import org.epnoi.storage.generator.URIGenerator;
 import org.epnoi.storage.system.document.domain.WordDocument;
 import org.epnoi.storage.system.document.repository.WordDocumentRepository;
+import org.epnoi.storage.system.graph.domain.nodes.Node;
 import org.epnoi.storage.system.graph.repository.edges.DealsWithFromDocumentEdgeRepository;
-import org.epnoi.storage.system.graph.repository.nodes.DocumentGraphRepository;
-import org.epnoi.storage.system.graph.repository.nodes.DomainGraphRepository;
-import org.epnoi.storage.system.graph.repository.nodes.SourceGraphRepository;
+import org.epnoi.storage.system.graph.repository.nodes.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -49,13 +48,16 @@ import java.util.concurrent.atomic.AtomicInteger;
         "epnoi.elasticsearch.port = 5021",
         "epnoi.neo4j.contactpoints = drinventor.dia.fi.upm.es",
         "epnoi.neo4j.port = 5030",
-        "epnoi.eventbus.uri = amqp://epnoi:drinventor@drinventor.dia.fi.upm.es:5041/drinventor"})
+        "epnoi.eventbus.host = drinventor.dia.fi.upm.es"})
 public class UDMTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(UDMTest.class);
 
     @Autowired
     UDM udm;
+
+    @Autowired
+    Helper helper;
 
     @Autowired
     Session session;
@@ -80,6 +82,31 @@ public class UDMTest {
 
     @Autowired
     URIGenerator uriGenerator;
+
+    @Autowired
+    UnifiedNodeGraphRepositoryFactory factory;
+
+    @Test
+    public void read(){
+
+
+        ResourceGraphRepository domainRepo = factory.repositoryOf(Resource.Type.DOMAIN);
+
+        Node result = domainRepo.findOneByUri("http://epnoi.org/domains/dc3ebf0e-c457-430d-af2a-8f3329e333fd");
+
+
+        
+        
+
+        Optional<Resource> domain = udm.read(Resource.Type.DOMAIN).byUri("http://epnoi.org/domains/dc3ebf0e-c457-430d-af2a-8f3329e333fd");
+
+        Optional<Resource> document = udm.read(Resource.Type.DOCUMENT).byUri("http://epnoi.org/documents/2a081791-525d-4c86-bc7b-cde989076d08");
+
+        udm.save(Relation.newContains(domain.get().asDomain().getUri(),document.get().asDocument().getUri()));
+
+        assert true;
+    }
+
 
     @Test
     public void saveSource(){

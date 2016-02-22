@@ -5,7 +5,10 @@ import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.transport.TransportAddress;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -26,8 +29,14 @@ import java.util.concurrent.TimeUnit;
 @EnableTransactionManagement
 public class DocumentConfig {
 
-    @Autowired
-    private Environment env;
+    private Logger LOG = LoggerFactory.getLogger(DocumentConfig.class);
+
+
+    @Value("${epnoi.elasticsearch.contactpoints}")
+    String hosts;
+
+    @Value("${epnoi.elasticsearch.port}")
+    Integer port;
 
     @Bean
     public TransportClient client(){
@@ -40,8 +49,9 @@ public class DocumentConfig {
                 build();
 
         TransportClient client = new TransportClient(settings);
-        TransportAddress address = new InetSocketTransportAddress(env.getProperty("epnoi.elasticsearch.contactpoints"),Integer.parseInt(env.getProperty("epnoi.elasticsearch.port")));
+        TransportAddress address = new InetSocketTransportAddress(hosts,port);
         client.addTransportAddress(address);
+        LOG.info("Initialized Elasticsearch connection to: " + hosts + " " + port);
         return client;
     }
 

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * Created by cbadenes on 18/01/16.
  */
 @Component
-public class WordService extends AbstractCRUDService<Word> {
+public class WordService extends AbstractResourceService<Word> {
 
     public WordService() {
         super(Resource.Type.WORD);

@@ -117,31 +117,29 @@ public class WordEmbeddingTest {
 
     private void relateWord(Word word, W2VModel model, String domainUri){
         // EMBEDDED relation
-        float[] vector = model.getRepresentation(word.getLemma());
+        float[] vector = model.getRepresentation(word.getContent());
 
         EmbeddedIn embedded = Relation.newEmbeddedIn(word.getUri(), domainUri);
         embedded.setVector(vector);
         helper.getUdm().save(embedded);
 
         // PAIRED relations
-        List<WordDistribution> words = model.find(word.getLemma()).stream().filter(sim -> sim.getWeight() > helper.getSimilarityThreshold()).collect(Collectors.toList());
+        List<WordDistribution> words = model.find(word.getContent()).stream().filter(sim -> sim.getWeight() > helper.getSimilarityThreshold()).collect(Collectors.toList());
         for (WordDistribution wordDistribution : words){
-            List<String> result = helper.getUdm().find(Resource.Type.WORD).by(Word.LEMMA,wordDistribution.getWord());
+            List<String> result = helper.getUdm().find(Resource.Type.WORD).by(Word.CONTENT,wordDistribution.getWord());
             String wordUri;
             if (result == null || result.isEmpty()){
                 // Create word
                 Word wordRef = new Word();
                 wordRef.setUri(uriGenerator.newFor(Resource.Type.WORD));
                 wordRef.setContent(wordDistribution.getWord());
-                wordRef.setLemma(wordDistribution.getWord());
-                wordRef.setType("term");
                 udm.save(wordRef);
 
                 wordUri = wordRef.getUri();
 
                 // Embedd to Domain
                 EmbeddedIn embeddedRef = Relation.newEmbeddedIn(wordRef.getUri(), domainUri);
-                embeddedRef.setVector(model.getRepresentation(wordRef.getLemma()));
+                embeddedRef.setVector(model.getRepresentation(wordRef.getContent()));
                 helper.getUdm().save(embeddedRef);
 
             }else{

@@ -15,7 +15,7 @@ import java.util.Optional;
  * Created by cbadenes on 18/01/16.
  */
 @Component
-public class SourceService extends AbstractCRUDService<Source> {
+public class SourceService extends AbstractResourceService<Source> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SourceService.class);
 

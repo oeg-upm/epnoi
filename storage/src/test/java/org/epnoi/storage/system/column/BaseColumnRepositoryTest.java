@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @Category(IntegrationTest.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = ColumnConfig.class)
-@TestPropertySource(properties = { "epnoi.cassandra.contactpoints = drinventor.dia.fi.upm.es", "epnoi.cassandra.port = 5011", "epnoi.cassandra.keyspace = research" })
+@TestPropertySource(properties = { "epnoi.eventbus.host = local","epnoi.cassandra.contactpoints = drinventor.dia.fi.upm.es", "epnoi.cassandra.port = 5011", "epnoi.cassandra.keyspace = research" })
 public abstract class BaseColumnRepositoryTest<T extends Resource> {
 
     public abstract BaseColumnRepository<T> getRepository();

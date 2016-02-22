@@ -31,8 +31,23 @@ public class RabbitMQEventBus implements EventBus {
 
     private static final String EXCHANGE = "epnoi.eventbus";
 
-    @Value("${epnoi.eventbus.uri}")
-    private String uri;
+    @Value("${epnoi.eventbus.host}")
+    private String host;
+
+    @Value("${epnoi.eventbus.port}")
+    private String port;
+
+    @Value("${epnoi.eventbus.user}")
+    private String user;
+
+    @Value("${epnoi.eventbus.password}")
+    private String pwd;
+
+    @Value("${epnoi.eventbus.keyspace}")
+    private String keyspace;
+
+    @Value("${epnoi.eventbus.protocol}")
+    private String protocol;
 
     private Channel channel;
 
@@ -41,6 +56,10 @@ public class RabbitMQEventBus implements EventBus {
     @PostConstruct
     public void init() {
         try {
+            String uri = new StringBuilder().
+                    append(protocol).append("://").append(user).append(":").append(pwd).
+                    append("@").append(host).append(":").append(port).
+                    append("/").append(keyspace).toString();
             LOG.info("Initializing RabbitMQ Event-Bus in: " + uri);
             this.client = new RabbitMQClient();
             this.client.connect(uri);

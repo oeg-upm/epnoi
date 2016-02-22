@@ -28,15 +28,6 @@ public class TermUnifiedColumnRepositoryTest extends BaseColumnRepositoryTest<Te
         term.setUri("terms/72ce5395-6268-439a-947e-802229e7f022");
         term.setCreationTime("2015-12-21T16:18:59Z");
         term.setContent("molecular");
-        term.setConsensus(2.0);
-        term.setCvalue(0.8);
-        term.setLength(1);
-        term.setOcurrences(2);
-        term.setPertinence(0.8);
-        term.setProbability(0.5);
-        term.setSubterms(2);
-        term.setSuperterms(2);
-        term.setTermhood(0.9);
         return term;
     }
 

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * Created by cbadenes on 18/01/16.
  */
 @Component
-public class TopicService extends AbstractCRUDService<Topic> {
+public class TopicService extends AbstractResourceService<Topic> {
 
     public TopicService() {
         super(Resource.Type.TOPIC);

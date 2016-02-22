@@ -41,8 +41,7 @@ public class UnifiedEdgeGraphRepository extends RepeatableActionExecutor impleme
             Resource enode = nodeFactory.repositoryOf(relation.getEndType()).findOneByUri(relation.getEndUri());
 
             if (snode == null || enode == null){
-                LOG.warn("One of nodes is null: ["+snode +"->"+enode+"]");
-                return 0;
+                throw new RuntimeException("One of nodes is null: ["+snode +"->"+enode+"]");
             }
 
             // Build the edge between nodes

@@ -105,9 +105,7 @@ public class UnifiedGraphRepositoryTest {
 
         Word resource = new Word();
         resource.setUri("words/01");
-        resource.setLemma("house");
         resource.setContent("house");
-        resource.setPos("nn");
         test(resource, Resource.Type.WORD);
     }
 

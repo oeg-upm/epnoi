@@ -153,7 +153,7 @@ public class TopicModelBuilderTest {
             // Relate it to Words
             for (WordDistribution wordDistribution : topicData.getWords()){
 
-                List<String> result = udm.find(Resource.Type.WORD).by(Word.LEMMA, wordDistribution.getWord());
+                List<String> result = udm.find(Resource.Type.WORD).by(Word.CONTENT, wordDistribution.getWord());
                 String wordURI;
                 if (result != null && !result.isEmpty()){
                     wordURI = result.get(0);
@@ -163,7 +163,7 @@ public class TopicModelBuilderTest {
                     // Create Word
                     Word word = new Word();
                     word.setUri(wordURI);
-                    word.setLemma(wordDistribution.getWord());
+                    word.setContent(wordDistribution.getWord());
                     udm.save(word);
 
                 }

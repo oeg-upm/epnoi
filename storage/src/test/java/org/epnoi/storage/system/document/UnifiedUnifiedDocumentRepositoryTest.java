@@ -101,9 +101,7 @@ public class UnifiedUnifiedDocumentRepositoryTest {
 
         Word resource = new Word();
         resource.setUri("items/01");
-        resource.setLemma("house");
         resource.setContent("house");
-        resource.setPos("nn");
         test(resource, Resource.Type.WORD);
     }
 

@@ -11,8 +11,8 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 public class RabbitMQCondition implements Condition{
     @Override
     public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata annotatedTypeMetadata) {
-        String eventBusUri = conditionContext.getEnvironment().getProperty("epnoi.eventbus.uri");
+        String eventBusUri = conditionContext.getEnvironment().getProperty("epnoi.eventbus.protocol");
 
-        return !Strings.isNullOrEmpty(eventBusUri) && eventBusUri.startsWith("amqp");
+        return !Strings.isNullOrEmpty(eventBusUri) && eventBusUri.equalsIgnoreCase("amqp");
     }
 }

@@ -28,7 +28,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Category(IntegrationTest.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = Config.class)
-@TestPropertySource(properties = { "epnoi.eventbus.uri = amqp://epnoi:drinventor@drinventor.dia.fi.upm.es:5041/drinventor" })
+@TestPropertySource(properties = {
+        "epnoi.eventbus.host=drinventor.dia.fi.upm.es",
+        "epnoi.eventbus.port=5041",
+        "epnoi.eventbus.user=epnoi",
+        "epnoi.eventbus.password=drinventor",
+        "epnoi.eventbus.keyspace=drinventor",
+        "epnoi.eventbus.protocol = amqp" })
 public class RabbitMQEventBusTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(RabbitMQEventBusTest.class);

@@ -123,7 +123,7 @@ public class TopicModeler extends ModelingTask {
             // Relate it to Words
             for (WordDistribution wordDistribution : topicData.getWords()){
 
-                List<String> result = helper.getUdm().find(Resource.Type.WORD).by(Word.LEMMA, wordDistribution.getWord());
+                List<String> result = helper.getUdm().find(Resource.Type.WORD).by(Word.CONTENT, wordDistribution.getWord());
                 String wordURI;
                 if (result != null && !result.isEmpty()){
                     wordURI = result.get(0);
@@ -135,8 +135,6 @@ public class TopicModeler extends ModelingTask {
                     word.setUri(wordURI);
                     word.setCreationTime(TimeUtils.asISO());
                     word.setContent(wordDistribution.getWord());
-                    word.setLemma(wordDistribution.getWord());
-                    word.setType("term");
                     helper.getUdm().save(word);
 
                 }

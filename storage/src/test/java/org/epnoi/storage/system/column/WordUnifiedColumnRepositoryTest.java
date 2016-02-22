@@ -28,10 +28,6 @@ public class WordUnifiedColumnRepositoryTest extends BaseColumnRepositoryTest<Wo
         column.setUri("words/72ce5395-6268-439a-947e-802229e7f022");
         column.setCreationTime("2015-12-21T16:18:59Z");
         column.setContent("molecular");
-        column.setLemma("molecula");
-        column.setStem("molecula");
-        column.setPos("NN");
-        column.setType("term");
         return column;
     }
 
@@ -48,9 +44,6 @@ public class WordUnifiedColumnRepositoryTest extends BaseColumnRepositoryTest<Wo
         sample.setUri(wordURI);
         sample.setCreationTime("20160112T1533");
         sample.setContent("samples");
-        sample.setLemma("sample");
-        sample.setPos("n");
-        sample.setStem("sampl");
         repository.save(sample);
 
         Iterable<WordColumn> res2 = repository.findByLemma("sample");
@@ -72,9 +65,6 @@ public class WordUnifiedColumnRepositoryTest extends BaseColumnRepositoryTest<Wo
         sample.setUri(wordURI);
         sample.setCreationTime("20160112T1533");
         sample.setContent("samples");
-        sample.setLemma("sample");
-        sample.setPos("n");
-        sample.setStem("sampl");
         repository.save(sample);
 
         Iterable<WordColumn> res2 = repository.findByContent("samples");

@@ -1,9 +1,10 @@
 package org.epnoi.api.services;
 
 import com.google.common.base.Strings;
+import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Resource;
-import org.epnoi.storage.UDM;
 import org.epnoi.model.utils.TimeUtils;
+import org.epnoi.storage.UDM;
 import org.epnoi.storage.generator.URIGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,16 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by cbadenes on 18/01/16.
  */
 
-public abstract class  AbstractCRUDService<T extends Resource> {
+public abstract class AbstractRelationalService<T extends Relation> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractCRUDService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractRelationalService.class);
 
-    private final Resource.Type type;
+    private final Relation.Type type;
 
     @Autowired
     protected UDM udm;
@@ -29,7 +31,7 @@ public abstract class  AbstractCRUDService<T extends Resource> {
     @Autowired
     URIGenerator uriGenerator;
 
-    public AbstractCRUDService(Resource.Type type){
+    public AbstractRelationalService(Relation.Type type){
         this.type = type;
     }
 
@@ -53,7 +55,7 @@ public abstract class  AbstractCRUDService<T extends Resource> {
     public T update(String id,T resource){
         String uri = uriGenerator.from(type,id);
         LOG.debug("updating by uri: " + uri);
-        Optional<Resource> result = udm.read(type).byUri(uri);
+        Optional<Relation> result = udm.read(type).byUri(uri);
         if (!result.isPresent()){
             throw new RuntimeException("Resource does not exist with uri: " + uri);
         }
@@ -75,14 +77,14 @@ public abstract class  AbstractCRUDService<T extends Resource> {
     }
 
     public List<String> list(){
-        return udm.find(type).all();
+        return udm.find(type).all().stream().map(relation -> relation.getUri()).collect(Collectors.toList());
     }
 
 
     public T get(String id){
         String uri = uriGenerator.from(type,id);
         LOG.debug("getting by uri: " + uri);
-        Optional<Resource> result = udm.read(type).byUri(uri);
+        Optional<Relation> result = udm.read(type).byUri(uri);
         if (!result.isPresent())
             return null; //TODO Handle empty result
         return (T) result.get();

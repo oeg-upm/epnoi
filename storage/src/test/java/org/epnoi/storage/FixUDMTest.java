@@ -34,7 +34,7 @@ import java.util.*;
         "epnoi.elasticsearch.port = 5021",
         "epnoi.neo4j.contactpoints = zavijava.dia.fi.upm.es",
         "epnoi.neo4j.port = 5032",
-        "epnoi.eventbus.uri = amqp://epnoi:drinventor@drinventor.dia.fi.upm.es:5041/drinventor"})
+        "epnoi.eventbus.host = drinventor.dia.fi.upm.es"})
 public class FixUDMTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(FixUDMTest.class);

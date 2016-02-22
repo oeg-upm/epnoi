@@ -26,15 +26,6 @@ public class TermUnifiedDocumentRepositoryTest extends BaseDocumentRepositoryTes
         document.setUri("words/72ce5395-6268-439a-947e-802229e7f022");
         document.setCreationTime("2015-12-21T16:18:59Z");
         document.setContent("molecular");
-        document.setConsensus(2.0);
-        document.setCvalue(0.8);
-        document.setLength(1);
-        document.setOcurrences(2);
-        document.setPertinence(0.8);
-        document.setProbability(0.5);
-        document.setSubterms(2);
-        document.setSuperterms(2);
-        document.setTermhood(0.9);
         return document;
     }
 }

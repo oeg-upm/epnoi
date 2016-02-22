@@ -2,7 +2,12 @@ package org.epnoi.api.routes.rest;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
+import org.epnoi.api.model.ContainsI;
+import org.epnoi.api.model.DomainI;
+import org.epnoi.api.model.ResourceI;
 import org.epnoi.api.model.SourceI;
+import org.epnoi.model.domain.relations.Contains;
+import org.epnoi.model.domain.relations.HypernymOf;
 import org.epnoi.model.domain.resources.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +44,11 @@ public class RestRouteBuilder extends RouteBuilder {
                 .dataFormatProperty("json.in.disableFeatures", "FAIL_ON_UNKNOWN_PROPERTIES,ADJUST_DATES_TO_CONTEXT_TIME_ZONE")
 //                .dataFormatProperty("json.out.disableFeatures", "WRITE_NULL_MAP_VALUES")
                 .dataFormatProperty("xml.out.mustBeJAXBElement", "false")
-                .contextPath("api/0.1")
+                .contextPath("api/0.2")
                 .port(port);
 
+
+        // Resources
         createReadUpdateDeleteOf("sources","source",SourceI.class,Source.class);
         readDeleteOf("domains","domain",Domain.class);
         readDeleteOf("documents","document",Document.class);
@@ -49,11 +56,19 @@ public class RestRouteBuilder extends RouteBuilder {
         readDeleteOf("parts","part",Part.class);
         readDeleteOf("words","word",Word.class);
         readDeleteOf("topics","topic",Topic.class);
-//        readDeleteOf("analyses","analysis",Analysis.class);
-//        createReadUpdateDeleteOf("relations","relation",Relation.class);
-//        crdOf("searches","search", Search.class);
-//        crdOf("explorations","exploration", Exploration.class);
+        readDeleteOf("terms","term",Term.class);
+
+        // Relations
+        readDeleteOf("hypernyms","hypernym",HypernymOf.class);
+
+
+
+
+
+        createReadUpdateDeleteOf("contains","contains",ContainsI.class,Contains.class);
+        createReadUpdateDeleteOf("compositions","composes",ContainsI.class,Contains.class);
     }
+
 
     private void createReadUpdateDeleteOf(String domain, String label, Class facade, Class resource){
 

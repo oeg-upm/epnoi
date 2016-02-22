@@ -1,6 +1,9 @@
 package org.epnoi.storage.system.column;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -23,15 +26,24 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class ColumnConfig extends AbstractCassandraConfiguration{
 
+    private static final Logger LOG = LoggerFactory.getLogger(ColumnConfig.class);
+
     @Autowired
     private Environment env;
+
+    @Value("${epnoi.cassandra.contactpoints}")
+    String hosts;
+
+    @Value("${epnoi.cassandra.port}")
+    Integer port;
 
     @Bean
     public CassandraClusterFactoryBean cluster(){
         CassandraClusterFactoryBean cluster = new CassandraClusterFactoryBean();
-        cluster.setContactPoints(env.getProperty("epnoi.cassandra.contactpoints"));
-        cluster.setPort(Integer.parseInt(env.getProperty("epnoi.cassandra.port")));
+        cluster.setContactPoints(hosts);
+        cluster.setPort(port);
         cluster.setSocketOptions(getSocketOptions());
+        LOG.info("Initialized Cassandra connection to: " + hosts + " " + port);
         return cluster;
     }
 

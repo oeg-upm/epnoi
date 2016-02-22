@@ -76,15 +76,15 @@ public class WordEmbeddingModeler extends ModelingTask {
 
     private void relateWord(Word word, W2VModel model){
         // EMBEDDED relation
-        float[] vector = model.getRepresentation(word.getLemma());
+        float[] vector = model.getRepresentation(word.getContent());
         EmbeddedIn embeddedIn = Relation.newEmbeddedIn(word.getUri(),domain.getUri());
         embeddedIn.setVector(vector);
         helper.getUdm().save(embeddedIn);
 
         // PAIRED relations
-        List<WordDistribution> words = model.find(word.getLemma()).stream().filter(sim -> sim.getWeight() > helper.getSimilarityThreshold()).collect(Collectors.toList());
+        List<WordDistribution> words = model.find(word.getContent()).stream().filter(sim -> sim.getWeight() > helper.getSimilarityThreshold()).collect(Collectors.toList());
         for (WordDistribution wordDistribution : words){
-            List<String> result = helper.getUdm().find(Resource.Type.WORD).by(Word.LEMMA, wordDistribution.getWord());
+            List<String> result = helper.getUdm().find(Resource.Type.WORD).by(Word.CONTENT, wordDistribution.getWord());
             if (result != null && !result.isEmpty()){
 
                 PairsWith pair = Relation.newPairsWith(word.getUri(), result.get(0));
