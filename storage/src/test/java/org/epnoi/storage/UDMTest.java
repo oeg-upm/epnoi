@@ -90,6 +90,8 @@ public class UDMTest {
     public void read(){
 
         udm.delete(Resource.Type.TERM).all();
+        udm.delete(Resource.Type.WORD).all();
+        udm.delete(Resource.Type.DOMAIN).all();
 
         Domain domain = Resource.newDomain();
         domain.setName("siggraph");

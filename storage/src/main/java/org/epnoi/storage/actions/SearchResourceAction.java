@@ -84,7 +84,7 @@ public class SearchResourceAction {
             helper.getUnifiedColumnRepository().findBy(type, field,value).forEach(x -> uris.add(x.getUri()));
 
             transaction.commit();
-            LOG.info("By "+field+": " + value+ " found: ["+type + "]: " + uris);
+            LOG.info("By "+field+": '" + value+ "' found: ["+type + "]: " + uris);
         }catch (ResultProcessingException e){
             LOG.warn("getting all " + type,e.getMessage());
         }catch (Exception e){
