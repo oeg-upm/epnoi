@@ -1,5 +1,6 @@
 package org.epnoi.hoarder.processor;
 
+import es.cbadenes.lab.test.IntegrationTest;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
 import org.apache.camel.Produce;
@@ -15,8 +16,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
-
+@Category(IntegrationTest.class)
 public class HttpRelationOAITest extends CamelTestSupport {
 
     @EndpointInject(uri = "mock:result")

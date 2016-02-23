@@ -1,5 +1,6 @@
 package org.epnoi.hoarder.processor;
 
+import es.cbadenes.lab.test.IntegrationTest;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
@@ -8,8 +9,10 @@ import org.apache.camel.builder.xml.Namespaces;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 
+@Category(IntegrationTest.class)
 public class FilterOAITest extends CamelTestSupport {
 
     @EndpointInject(uri = "mock:result")

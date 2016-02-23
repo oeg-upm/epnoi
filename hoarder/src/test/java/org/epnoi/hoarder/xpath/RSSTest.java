@@ -1,5 +1,6 @@
 package org.epnoi.hoarder.xpath;
 
+import es.cbadenes.lab.test.IntegrationTest;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
@@ -9,8 +10,9 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.epnoi.model.Record;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
-
+@Category(IntegrationTest.class)
 public class RSSTest extends CamelTestSupport {
 
     @EndpointInject(uri = "mock:result")
