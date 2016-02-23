@@ -2,6 +2,7 @@ package org.epnoi.storage;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.model.Event;
+import org.epnoi.model.domain.relations.HypernymOf;
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Document;
 import org.epnoi.model.domain.resources.Domain;
@@ -99,6 +100,19 @@ public class UDMTest {
         udm.save(domain);
 
         eventBus.post(Event.from(domain),RoutingKey.of(Resource.Type.DOMAIN,Resource.State.UPDATED));
+
+        assert true;
+    }
+
+
+    @Test
+    public void hypernym(){
+
+        HypernymOf hypernym = Relation.newHypernymOf("http://epnoi.org/terms/3324e10e-87c5-49a5-a9ba-c79adf3beba0", "http://epnoi.org/terms/4cbd8d67-05d1-4d0b-b1da-7ccd3244298a");
+        hypernym.setDomain("http://epnoi.org/domains/28cd53dc-bc1c-417d-9ae5-2b5a7052d819");
+        hypernym.setProvenances();
+        hypernym.setWeight(0.04766949152542373);
+        udm.save(hypernym);
 
         assert true;
     }

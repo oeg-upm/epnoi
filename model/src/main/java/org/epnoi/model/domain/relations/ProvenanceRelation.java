@@ -2,6 +2,7 @@ package org.epnoi.model.domain.relations;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.HashMap;
@@ -14,12 +15,17 @@ import java.util.Map;
 @EqualsAndHashCode(of={"uri"}, callSuper = true)
 public abstract class ProvenanceRelation extends Relation {
 
-    @Getter
+    @Getter @Setter
     protected Map<String, Double> provenances = new HashMap<>();
 
     @Override
     public Double getWeight() {
-        return provenances.values().stream().mapToDouble(x -> x.doubleValue()).average().getAsDouble();
+        if ((provenances != null) && (!provenances.isEmpty())) {
+            return provenances.values().stream().mapToDouble(x -> x.doubleValue()).average().getAsDouble();
+        }
+        else{
+            return weight;
+        }
     }
 
     public void add(String provenance, double relationProbability) {
