@@ -47,6 +47,7 @@ public abstract class RepeatableActionExecutor {
                 return Optional.empty();
             }
             else{
+                LOG.info("Trying to retry a storage operation: " + retries);
                 waitForRetry(retries);
                 return performRetries(++retries,id,function);
             }
