@@ -8,10 +8,12 @@ import org.epnoi.model.domain.resources.*;
 import org.epnoi.model.utils.TimeUtils;
 import org.epnoi.parser.annotator.helper.ParserHelper;
 import org.epnoi.parser.annotator.upf.AnnotatedDocument;
+import org.epnoi.parser.serializer.AnnotatedDocumentSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -43,14 +45,31 @@ public class ParserTask implements Runnable {
             // Source URI
             String sourceUri        = file.getSource();
 
+            // Document File
+            String path             = file.getUrl();
+
+
+            if (path.endsWith(".ser")){
+                // Serialized Document
+                Optional<AnnotatedDocument> res = AnnotatedDocumentSerializer.from(path);
+                if (res.isPresent()){
+                    annotatedDocument = res.get();
+                } else{
+                    LOG.warn("Error deserializing document: " + path);
+                    return;
+                }
+            }else{
+                annotatedDocument       = helper.getTextMiner().annotate(path);
+            }
+
 
             // Metainformation
             MetaInformation metaInformation = file.getMetainformation();
 
             // Attached file
             // TODO Handle multiple attached files
-            String path             = file.getUrl();
-            annotatedDocument       = helper.getTextMiner().annotate(path);
+
+
             String rawContent       = annotatedDocument.getContent();
 //            Map<String, Integer> tokens   = textMiner.parse(rawContent).stream().filter(token -> token.isValid()).collect(Collectors.toConcurrentMap(w -> w.getLemma(), w -> 1, Integer::sum));
 
