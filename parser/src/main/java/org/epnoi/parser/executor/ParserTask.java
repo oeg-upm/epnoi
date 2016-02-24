@@ -60,6 +60,7 @@ public class ParserTask implements Runnable {
                 }
             }else{
                 annotatedDocument       = helper.getTextMiner().annotate(path);
+                AnnotatedDocumentSerializer.to(annotatedDocument,path+".ser");
             }
 
 
@@ -140,6 +141,7 @@ public class ParserTask implements Runnable {
 
             // Relate it to Domain
             helper.getUdm().save(Relation.newContains(domainUri,document.getUri()));
+
 
         }catch (RuntimeException e){
             LOG.error("Error processing resource: " + file, e);

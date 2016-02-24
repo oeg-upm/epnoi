@@ -20,7 +20,7 @@ public class AnnotatedDocumentSerializer {
         try{
             File file = new File(path);
             Document gateDocument = document.getGateDocument();
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file+".ser"));
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
             oos.writeObject(gateDocument);
             oos.close();
             LOG.info("Serialized : " + document + " in:  " + path);
