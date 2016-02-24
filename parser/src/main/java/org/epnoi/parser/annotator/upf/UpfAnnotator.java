@@ -4,6 +4,7 @@ import edu.upf.taln.dri.lib.Factory;
 import edu.upf.taln.dri.lib.exception.DRIexception;
 import edu.upf.taln.dri.lib.loader.PDFloaderImpl;
 import edu.upf.taln.dri.lib.model.Document;
+import lombok.Setter;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ public class UpfAnnotator {
 
     private static final Logger LOG = LoggerFactory.getLogger(UpfAnnotator.class);
 
+    @Setter
     @Value("${epnoi.upf.miner.config}")
     String driConfigPath;
 

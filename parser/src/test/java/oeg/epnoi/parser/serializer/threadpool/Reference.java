@@ -1,4 +1,4 @@
-package org.epnoi.storage.documents;
+package oeg.epnoi.parser.serializer.threadpool;
 
 import lombok.Data;
 

@@ -3,6 +3,7 @@ package org.epnoi.parser.annotator.upf;
 import edu.upf.taln.dri.lib.exception.DRIexception;
 import edu.upf.taln.dri.lib.exception.InternalProcessingException;
 import edu.upf.taln.dri.lib.model.Document;
+import edu.upf.taln.dri.lib.model.DocumentImpl;
 import edu.upf.taln.dri.lib.model.ext.RhetoricalClassENUM;
 import edu.upf.taln.dri.lib.model.ext.Sentence;
 import edu.upf.taln.dri.lib.model.ext.SentenceSelectorENUM;
@@ -24,10 +25,12 @@ public class AnnotatedDocument implements Serializable{
 
     public static final String ABSTRACT_SECTION= "Abstract";
 
-    private final Document document;
-    private final List<Sentence> sentences;
-    private final String name;
+    private transient DocumentImpl document;
+    private List<Sentence> sentences;
+    private String name;
 //    private final SectionReader sectionReader;
+
+    public AnnotatedDocument(){};
 
     public AnnotatedDocument(Document document)  {
         try{
@@ -35,7 +38,7 @@ public class AnnotatedDocument implements Serializable{
             this.name               = document.getName();
 
             // Raw document
-            this.document           = document;
+            this.document           = (DocumentImpl) document;
 
             // Sentences
             this.sentences          = document.extractSentences(SentenceSelectorENUM.ALL);
@@ -45,6 +48,10 @@ public class AnnotatedDocument implements Serializable{
         }catch (DRIexception e){
             throw new RuntimeException(e);
         }
+    }
+
+    public gate.Document getGateDocument(){
+        return document.cacheManager.getGateDoc();
     }
 
     public String getContent() {

@@ -13,6 +13,10 @@ import java.util.List;
 public class FolderUtils {
     private static final Logger LOG = LoggerFactory.getLogger(FolderUtils.class);
 
+    public static List<String> listFiles(String directory) {
+        return listFiles(new File(directory));
+    }
+
 
     public static List<String> listFiles(File directory) {
 

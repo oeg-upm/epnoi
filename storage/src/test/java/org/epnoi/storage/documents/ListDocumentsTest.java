@@ -3,6 +3,7 @@ package org.epnoi.storage.documents;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.cbadenes.lab.test.IntegrationTest;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
 import org.epnoi.model.Event;
 import org.epnoi.model.domain.relations.HypernymOf;
 import org.epnoi.model.domain.relations.Relation;
@@ -33,6 +34,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -44,14 +47,14 @@ import java.util.stream.Collectors;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = Config.class)
 @TestPropertySource(properties = {
-        "epnoi.cassandra.contactpoints = zavijava.dia.fi.upm.es",
+        "epnoi.cassandra.contactpoints = wiener.dia.fi.upm.es",
         "epnoi.cassandra.port = 5011",
         "epnoi.cassandra.keyspace = research",
-        "epnoi.elasticsearch.contactpoints = zavijava.dia.fi.upm.es",
+        "epnoi.elasticsearch.contactpoints = wiener.dia.fi.upm.es",
         "epnoi.elasticsearch.port = 5021",
-        "epnoi.neo4j.contactpoints = zavijava.dia.fi.upm.es",
+        "epnoi.neo4j.contactpoints = wiener.dia.fi.upm.es",
         "epnoi.neo4j.port = 5030",
-        "epnoi.eventbus.host = drinventor.dia.fi.upm.es"})
+        "epnoi.eventbus.host = wiener.dia.fi.upm.es"})
 public class ListDocumentsTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(ListDocumentsTest.class);
@@ -91,7 +94,7 @@ public class ListDocumentsTest {
 
 
     @Test
-    public void listOfDocuments() throws IOException {
+    public void listOfDocuments() throws IOException, URISyntaxException {
 
         List<String> refFiles = Arrays.asList(new String[]{"a109-rivers.pdf",
                 "a120-gutierrez",
@@ -145,57 +148,60 @@ public class ListDocumentsTest {
                 "p932-macintyre"});
 
 
-        List<String> uris = udm.find(Resource.Type.ITEM).all();
 
-        LOG.info("Item URIs: " + uris);
+//        udm.save(new Item());
+//
+//        List<String> uris = udm.find(Resource.Type.ITEM).all();
+//
+//        LOG.info("Item URIs: " + uris);
 
-        List<Item> items = uris.stream().map(uri -> udm.read(Resource.Type.ITEM).byUri(uri).get().asItem()).collect(Collectors.toList());
-
-//		items.forEach(item-> LOG.info("Item: " + item.getUri() + " -> " + item.getUrl()));
-
-		LOG.info("Items: " + items.size());
-
-        File baseFolder = new File("/Users/cbadenes/Documents/OEG/Projects/DrInventor/datasets/2nd-review");
-        List<String> files = FolderUtils.listFiles(baseFolder);
-
-        HashMap<String,String> fileTable = new HashMap<>();
-
-        files.stream().map(path -> new File(path)).filter(file -> refFiles.contains(file.getName())).forEach(file->fileTable.put(file.getName(), StringUtils.substringAfter(file.getAbsolutePath(),baseFolder.getAbsolutePath())));
-
-
-        String basedir = "/opt/drinventor/tomcat-background/../workspace/ftp/siggraph";
-
-//        List<Document> documents = refFiles.stream().
-//                flatMap(refName -> items.stream().filter(item -> item.getUrl().contains(refName))).
-//                map(item -> udm.find(Resource.Type.DOCUMENT).by(Document.TITLE,item.getTitle())).
-//                map(docUris -> udm.read(Resource.Type.DOCUMENT).byUri(docUris.get(0)).get().asDocument()).
-//                collect(Collectors.toList());
-//        ;
-
-
-        List<Reference> references = new ArrayList<>();
-        for (String fileName : refFiles){
-            LOG.info("File: " + fileName);
-            try{
-                Item item           = items.stream().filter(el -> el.getUrl().contains(fileName)).collect(Collectors.toList()).get(0);
-                String docUri       = udm.find(Resource.Type.DOCUMENT).by(Document.TITLE,item.getTitle()).get(0);
-                Document document   = udm.read(Resource.Type.DOCUMENT).byUri(docUri).get().asDocument();
-
-                Reference reference = new Reference();
-                reference.setFileName(fileName);
-                reference.setTitle(document.getTitle());
-                reference.setUri(document.getUri());
-                references.add(reference);
-            }catch (Exception e){
-                LOG.error("Error on file: " + fileName,e);
-            }
-
-        }
-
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        mapper.writeValue(new File("documents.json"), references);
+//        List<Item> items = uris.stream().map(uri -> udm.read(Resource.Type.ITEM).byUri(uri).get().asItem()).collect(Collectors.toList());
+//
+////		items.forEach(item-> LOG.info("Item: " + item.getUri() + " -> " + item.getUrl()));
+//
+//		LOG.info("Items: " + items.size());
+//
+//        File baseFolder = new File("/Users/cbadenes/Documents/OEG/Projects/DrInventor/datasets/2nd-review");
+//        List<String> files = FolderUtils.listFiles(baseFolder);
+//
+//        HashMap<String,String> fileTable = new HashMap<>();
+//
+//        files.stream().map(path -> new File(path)).filter(file -> refFiles.contains(file.getName())).forEach(file->fileTable.put(file.getName(), StringUtils.substringAfter(file.getAbsolutePath(),baseFolder.getAbsolutePath())));
+//
+//
+//        String basedir = "/opt/drinventor/tomcat-background/../workspace/ftp/siggraph";
+//
+////        List<Document> documents = refFiles.stream().
+////                flatMap(refName -> items.stream().filter(item -> item.getUrl().contains(refName))).
+////                map(item -> udm.find(Resource.Type.DOCUMENT).by(Document.TITLE,item.getTitle())).
+////                map(docUris -> udm.read(Resource.Type.DOCUMENT).byUri(docUris.get(0)).get().asDocument()).
+////                collect(Collectors.toList());
+////        ;
+//
+//
+//        List<Reference> references = new ArrayList<>();
+//        for (String fileName : refFiles){
+//            LOG.info("File: " + fileName);
+//            try{
+//                Item item           = items.stream().filter(el -> el.getUrl().contains(fileName)).collect(Collectors.toList()).get(0);
+//                String docUri       = udm.find(Resource.Type.DOCUMENT).by(Document.TITLE,item.getTitle()).get(0);
+//                Document document   = udm.read(Resource.Type.DOCUMENT).byUri(docUri).get().asDocument();
+//
+//                Reference reference = new Reference();
+//                reference.setFileName(fileName);
+//                reference.setTitle(document.getTitle());
+//                reference.setUri(document.getUri());
+//                references.add(reference);
+//            }catch (Exception e){
+//                LOG.error("Error on file: " + fileName,e);
+//            }
+//
+//        }
+//
+//
+//        ObjectMapper mapper = new ObjectMapper();
+//
+//        mapper.writeValue(new File("documents.json"), references);
 
 
     }
