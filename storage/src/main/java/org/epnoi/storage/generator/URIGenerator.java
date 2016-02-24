@@ -73,6 +73,6 @@ public class URIGenerator {
 
 
     private String getUUID(){
-        return getUUID();
+        return UUID.randomUUID().toString();
     }
 }
