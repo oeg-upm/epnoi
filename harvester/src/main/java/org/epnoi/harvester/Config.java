@@ -67,7 +67,13 @@ public class Config {
     public ConnectionFactory getCustomConnectionFactory() throws NoSuchAlgorithmException, KeyManagementException, URISyntaxException {
         ConnectionFactory connectionFactory = new ConnectionFactory();
         connectionFactory.setAutomaticRecoveryEnabled(true);
-        connectionFactory.setUri(env.getProperty("epnoi.eventbus.uri"));
+
+        String uri = new StringBuilder().
+                append(env.getProperty("epnoi.eventbus.protocol")).append("://").append(env.getProperty("epnoi.eventbus.user")).append(":").append(env.getProperty("epnoi.eventbus.password")).
+                append("@").append(env.getProperty("epnoi.eventbus.host")).append(":").append(env.getProperty("epnoi.eventbus.port")).
+                append("/").append(env.getProperty("epnoi.eventbus.keyspace")).toString();
+
+        connectionFactory.setUri(uri);
         return connectionFactory;
     }
 

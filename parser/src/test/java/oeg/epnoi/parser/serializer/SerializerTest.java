@@ -43,7 +43,7 @@ public class SerializerTest {
         annotator.setup();
 
 
-        List<String> files = FolderUtils.listFiles("/Users/cbadenes/Documents/OEG/Projects/DrInventor/datasets/2nd-review-xml/22papers");
+        List<String> files = FolderUtils.listFiles("/Users/cbadenes/Documents/OEG/Projects/DrInventor/datasets/2nd-review-xml/51papers");
 
 
 
@@ -51,7 +51,7 @@ public class SerializerTest {
         RejectedExecutionHandler executionHandler = new MyRejectedExecutionHandlerImpl();
 
         // Create the ThreadPoolExecutor
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(7, 7, 10, TimeUnit.SECONDS, worksQueue, executionHandler);
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(5, 5, 10, TimeUnit.SECONDS, worksQueue, executionHandler);
         executor.allowCoreThreadTimeOut(false);
 
         // Starting the monitor thread as a daemon
@@ -73,7 +73,7 @@ public class SerializerTest {
 
 
 
-        List<String> files = FolderUtils.listFiles("/Users/cbadenes/Documents/OEG/Projects/DrInventor/datasets/2nd-review-xml/22papers");
+        List<String> files = FolderUtils.listFiles("/Users/cbadenes/Documents/OEG/Projects/DrInventor/datasets/2nd-review-xml/51papers");
 
 
         // Adding the tasks

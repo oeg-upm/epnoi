@@ -66,7 +66,7 @@ public class ParserTask implements Runnable {
             }
 
             // Document
-            Document document = createAndSaveDocument(metaInformation,rawContent,sourceUri,domainUri);
+            Document document = createAndSaveDocument(metaInformation,annotatedDocument,sourceUri,domainUri);
 
             // Words
             // TODO
@@ -150,10 +150,10 @@ public class ParserTask implements Runnable {
 
     }
 
-    private Document createAndSaveDocument(MetaInformation metaInformation, String rawContent, String sourceUri, String domainUri){
+    private Document createAndSaveDocument(MetaInformation metaInformation, AnnotatedDocument annotatedDocument, String sourceUri, String domainUri){
         // Document
         Document document = Resource.newDocument();
-        document.setUri(helper.getUriGenerator().basedOnContent(Resource.Type.DOCUMENT,rawContent)); // Maybe better using PUBLICATION_URI
+        document.setUri(helper.getUriGenerator().basedOnContent(Resource.Type.DOCUMENT,annotatedDocument.getContent())); // Maybe better using PUBLICATION_URI
         document.setPublishedOn(metaInformation.getPublished());
         document.setPublishedBy(metaInformation.getSourceUri());
         document.setAuthoredOn(metaInformation.getAuthored());
@@ -165,12 +165,12 @@ public class ParserTask implements Runnable {
         document.setLanguage(metaInformation.getLanguage());
         document.setTitle(metaInformation.getTitle());
         document.setSubject(metaInformation.getSubject());
-        document.setDescription(metaInformation.getDescription());
+        document.setDescription(annotatedDocument.getAbstractContent());
         document.setRights(metaInformation.getRights());
         document.setType(metaInformation.getType());
-        document.setContent(rawContent);
+        document.setContent(annotatedDocument.getContent());
 
-        String tokens   = helper.getTextMiner().parse(rawContent).stream().filter(token -> token.isValid()).map(token -> token.getLemma()).collect(Collectors.joining(" "));
+        String tokens   = helper.getTextMiner().parse(annotatedDocument.getContent()).stream().filter(token -> token.isValid()).map(token -> token.getLemma()).collect(Collectors.joining(" "));
         document.setTokens(tokens);
 
         helper.getUdm().save(document);
