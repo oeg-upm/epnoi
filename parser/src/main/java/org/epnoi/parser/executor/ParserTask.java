@@ -2,6 +2,7 @@ package org.epnoi.parser.executor;
 
 import com.google.common.base.Strings;
 import lombok.Getter;
+import org.apache.commons.lang.StringUtils;
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.*;
 import org.epnoi.model.utils.TimeUtils;
@@ -66,7 +67,7 @@ public class ParserTask implements Runnable {
             }
 
             // Document
-            Document document = createAndSaveDocument(metaInformation,annotatedDocument,sourceUri,domainUri);
+            Document document = createAndSaveDocument(metaInformation,path,annotatedDocument,sourceUri,domainUri);
 
             // Words
             // TODO
@@ -150,7 +151,7 @@ public class ParserTask implements Runnable {
 
     }
 
-    private Document createAndSaveDocument(MetaInformation metaInformation, AnnotatedDocument annotatedDocument, String sourceUri, String domainUri){
+    private Document createAndSaveDocument(MetaInformation metaInformation, String path, AnnotatedDocument annotatedDocument, String sourceUri, String domainUri){
         // Document
         Document document = Resource.newDocument();
         document.setUri(helper.getUriGenerator().basedOnContent(Resource.Type.DOCUMENT,annotatedDocument.getContent())); // Maybe better using PUBLICATION_URI
@@ -159,10 +160,10 @@ public class ParserTask implements Runnable {
         document.setAuthoredOn(metaInformation.getAuthored());
         document.setAuthoredBy(metaInformation.getCreators());
         document.setContributedBy(metaInformation.getContributors());
-        document.setRetrievedFrom(metaInformation.getSourceUrl());
+        document.setRetrievedFrom(StringUtils.substringBefore(new java.io.File(path).getName(),".xml"));//TODO metaInformation.getSourceUrl()
         document.setRetrievedOn(TimeUtils.asISO()); //TODO hoarding time
-        document.setFormat(metaInformation.getPubFormat());
-        document.setLanguage(metaInformation.getLanguage());
+        document.setFormat("pdf"); //TODO metaInformation.getPubFormat()
+        document.setLanguage("en");// TODO metaInformation.getLanguage()
         document.setTitle(metaInformation.getTitle());
         document.setSubject(metaInformation.getSubject());
         document.setDescription(annotatedDocument.getAbstractContent());
