@@ -65,8 +65,8 @@ public class RestRouteBuilder extends RouteBuilder {
 
 
 
-        createReadUpdateDeleteOf("contains","contains",ContainsI.class,Contains.class);
-        createReadUpdateDeleteOf("compositions","composes",ContainsI.class,Contains.class);
+//        createReadUpdateDeleteOf("contains","contains",ContainsI.class,Contains.class);
+//        createReadUpdateDeleteOf("compositions","composes",ContainsI.class,Contains.class);
     }
 
 
