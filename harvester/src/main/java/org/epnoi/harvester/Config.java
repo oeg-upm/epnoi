@@ -39,6 +39,24 @@ public class Config {
     @Value("${epnoi.harvester.folder.input}")
     String inputFolder;
 
+    @Value("${epnoi.eventbus.host}")
+    private String host;
+
+    @Value("${epnoi.eventbus.port}")
+    private String port;
+
+    @Value("${epnoi.eventbus.user}")
+    private String user;
+
+    @Value("${epnoi.eventbus.password}")
+    private String pwd;
+
+    @Value("${epnoi.eventbus.keyspace}")
+    private String keyspace;
+
+    @Value("${epnoi.eventbus.protocol}")
+    private String protocol;
+
     @Bean
     public SpringCamelContext camelContext(ApplicationContext applicationContext) throws Exception {
         SpringCamelContext camelContext = new SpringCamelContext(applicationContext);
@@ -69,9 +87,9 @@ public class Config {
         connectionFactory.setAutomaticRecoveryEnabled(true);
 
         String uri = new StringBuilder().
-                append(env.getProperty("epnoi.eventbus.protocol")).append("://").append(env.getProperty("epnoi.eventbus.user")).append(":").append(env.getProperty("epnoi.eventbus.password")).
-                append("@").append(env.getProperty("epnoi.eventbus.host")).append(":").append(env.getProperty("epnoi.eventbus.port")).
-                append("/").append(env.getProperty("epnoi.eventbus.keyspace")).toString();
+                append(protocol).append("://").append(user).append(":").append(pwd).
+                append("@").append(host).append(":").append(port).
+                append("/").append(keyspace).toString();
 
         connectionFactory.setUri(uri);
         return connectionFactory;
