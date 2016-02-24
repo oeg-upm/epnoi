@@ -14,6 +14,9 @@ public interface DocumentGraphRepository extends ResourceGraphRepository<Documen
     @Override
     DocumentNode findOneByUri(String uri);
 
+    @Query("match (document)-[:BUNDLES]->(item{uri:{0}}) return document")
+    Iterable<DocumentNode> findByItem(String uri);
+
     @Query("match (document)<-[:CONTAINS]-(domain{uri:{0}}) return document")
     Iterable<DocumentNode> findByDomain(String uri);
 
