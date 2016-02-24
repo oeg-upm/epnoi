@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.apache.commons.lang.StringUtils;
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.*;
+import org.epnoi.model.domain.resources.File;
 import org.epnoi.model.utils.TimeUtils;
 import org.epnoi.parser.annotator.helper.ParserHelper;
 import org.epnoi.parser.annotator.upf.AnnotatedDocument;
@@ -12,6 +13,7 @@ import org.epnoi.parser.serializer.AnnotatedDocumentSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,7 +62,8 @@ public class ParserTask implements Runnable {
                 }
             }else{
                 annotatedDocument       = helper.getTextMiner().annotate(path);
-                AnnotatedDocumentSerializer.to(annotatedDocument,path+".ser");
+                java.io.File aux = new java.io.File(path);
+                AnnotatedDocumentSerializer.to(annotatedDocument,helper.getSerializationDirectory()+ java.io.File.pathSeparator + aux.getName()+".ser");
             }
 
 
