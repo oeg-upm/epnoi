@@ -3,9 +3,11 @@ package org.epnoi.parser.executor;
 import com.google.common.base.Strings;
 import lombok.Getter;
 import org.apache.commons.lang.StringUtils;
+import org.epnoi.model.Event;
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.*;
 import org.epnoi.model.domain.resources.File;
+import org.epnoi.model.modules.RoutingKey;
 import org.epnoi.model.utils.TimeUtils;
 import org.epnoi.parser.annotator.helper.ParserHelper;
 import org.epnoi.parser.annotator.upf.AnnotatedDocument;
@@ -145,6 +147,11 @@ public class ParserTask implements Runnable {
             // Relate it to Domain
             helper.getUdm().save(Relation.newContains(domainUri,document.getUri()));
 
+
+            //TODO Temporal solution
+            Domain domain = Resource.newDomain();
+            domain.setUri(domainUri);
+            helper.getEventBus().post(Event.from(domain), RoutingKey.of(Resource.Type.DOMAIN,Resource.State.UPDATED));
 
         }catch (RuntimeException e){
             LOG.error("Error processing resource: " + file, e);

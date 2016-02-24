@@ -1,6 +1,7 @@
 package org.epnoi.parser.annotator.helper;
 
 import lombok.Getter;
+import org.epnoi.model.modules.EventBus;
 import org.epnoi.parser.annotator.TextAnnotator;
 import org.epnoi.storage.UDM;
 import org.epnoi.storage.generator.URIGenerator;
@@ -21,6 +22,10 @@ public class ParserHelper {
     @Getter
     @Autowired
     UDM udm;
+
+    @Getter
+    @Autowired
+    EventBus eventBus;
 
     @Getter
     @Autowired

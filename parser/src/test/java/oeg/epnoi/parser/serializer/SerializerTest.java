@@ -43,8 +43,9 @@ public class SerializerTest {
         annotator.setup();
 
 
-        List<String> files = FolderUtils.listFiles("/Users/cbadenes/Documents/OEG/Projects/DrInventor/datasets/2nd-review-xml/51papers");
+        //List<String> files = FolderUtils.listFiles("/Users/cbadenes/Documents/OEG/Projects/DrInventor/datasets/2nd-review-xml/51papers");
 
+        List<String> files = FolderUtils.listFiles("/Users/cbadenes/Documents/OEG/Projects/DrInventor/datasets/acm-siggraph-2002-2014/sig2002").stream().filter(path -> path.endsWith(".pdf")).collect(Collectors.toList());
 
 
         BlockingQueue<Runnable> worksQueue = new ArrayBlockingQueue<Runnable>(500);
