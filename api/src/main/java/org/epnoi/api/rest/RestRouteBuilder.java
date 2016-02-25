@@ -1,18 +1,17 @@
-package org.epnoi.api.routes.rest;
+package org.epnoi.api.rest;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
-import org.epnoi.api.model.ContainsI;
-import org.epnoi.api.model.DomainI;
-import org.epnoi.api.model.ResourceI;
 import org.epnoi.api.model.SourceI;
-import org.epnoi.model.domain.relations.Contains;
 import org.epnoi.model.domain.relations.HypernymOf;
 import org.epnoi.model.domain.resources.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * Created by cbadenes on 18/01/16.
@@ -24,6 +23,9 @@ public class RestRouteBuilder extends RouteBuilder {
 
     @Value("${epnoi.api.rest.port}")
     protected Integer port;
+
+    @Autowired
+    List<RestRoute> routes;
 
     @Override
     public void configure() throws Exception {
@@ -48,10 +50,14 @@ public class RestRouteBuilder extends RouteBuilder {
                 .port(port);
 
 
+        // Configure REST routes
+        this.getRestCollection().setCamelContext(this.getContext());
+        routes.forEach(route -> configureRest(route.configure(getRestCollection())));
+
         // Resources
-        createReadUpdateDeleteOf("sources","source",SourceI.class,Source.class);
-        readDeleteOf("domains","domain",Domain.class);
-        readDeleteOf("documents","document",Document.class);
+//        createReadUpdateDeleteOf("sources","source",SourceI.class,Source.class);
+//        readDeleteOf("domains","domain",Domain.class);
+//        readDeleteOf("documents","document",Document.class);
         readDeleteOf("items","item",Item.class);
         readDeleteOf("parts","part",Part.class);
         readDeleteOf("words","word",Word.class);
@@ -59,8 +65,7 @@ public class RestRouteBuilder extends RouteBuilder {
         readDeleteOf("terms","term",Term.class);
 
         // Relations
-        readDeleteOf("hypernyms","hypernym",HypernymOf.class);
-
+//        readDeleteOf("hypernyms","hypernym",HypernymOf.class);
 
 
 

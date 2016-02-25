@@ -58,6 +58,7 @@ public class GraphConfig extends Neo4jConfiguration{
     @Bean
     @Scope(value = BeanDefinition.SCOPE_SINGLETON, proxyMode = ScopedProxyMode.TARGET_CLASS)
     public Session getSession() throws Exception {
-        return super.getSession();
+        Session session = super.getSession();
+        return session;
     }
 }
