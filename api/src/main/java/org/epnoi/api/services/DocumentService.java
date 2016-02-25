@@ -40,7 +40,7 @@ public class DocumentService extends AbstractResourceService<Document> {
     // SIMILAR_TO Documents
     public List<String> listSimilars(String id){
         String uri = uriGenerator.from(Resource.Type.DOCUMENT, id);
-        return udm.find(Relation.Type.SIMILAR_TO_DOCUMENTS).in(Resource.Type.DOCUMENT,uri).stream().map(relation -> relation.getEndUri()).collect(Collectors.toList());
+        return udm.find(Resource.Type.DOCUMENT).in(Resource.Type.DOCUMENT,uri);
     }
 
     public void removeSimilars(String id){
