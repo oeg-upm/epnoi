@@ -67,13 +67,13 @@ public class DocumentRestRoute extends RestRoute {
 
                 // SIMILAR_TO
                 .get("/{id}/documents").description("List all documents similar to a document").outTypeList(String.class)
-                .produces("application/json").to("bean:"+SERVICE+"?method=listSimilars(${header.id})")
+                .produces("application/json").to("bean:"+SERVICE+"?method=listDocuments(${header.id})")
 
                 .delete("/{id}/documents").description("Remove all existing documents similar to a document")
-                .produces("application/json").to("bean:"+SERVICE+"?method=removeSimilars(${header.id})")
+                .produces("application/json").to("bean:"+SERVICE+"?method=removeDocuments(${header.id})")
 
                 .post("/{sid}/documents/{did}").description("Add a new document similar to a document")
-                .produces("application/json").to("bean:"+SERVICE+"?method=addSimilar(${header.did},${header.did})")
+                .produces("application/json").to("bean:"+SERVICE+"?method=addDocument(${header.did},${header.did})")
 
                 ;
 

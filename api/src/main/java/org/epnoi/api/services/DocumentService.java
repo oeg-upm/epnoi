@@ -38,17 +38,17 @@ public class DocumentService extends AbstractResourceService<Document> {
 
 
     // SIMILAR_TO Documents
-    public List<String> listSimilars(String id){
+    public List<String> listDocuments(String id){
         String uri = uriGenerator.from(Resource.Type.DOCUMENT, id);
         return udm.find(Resource.Type.DOCUMENT).in(Resource.Type.DOCUMENT,uri);
     }
 
-    public void removeSimilars(String id){
+    public void removeDocuments(String id){
         String uri = uriGenerator.from(Resource.Type.DOCUMENT, id);
         udm.delete(Relation.Type.SIMILAR_TO_DOCUMENTS).in(Resource.Type.DOCUMENT,uri);
     }
 
-    public void addSimilar(String startId, String endId){
+    public void addDocument(String startId, String endId){
         String startUri     = uriGenerator.from(Resource.Type.DOCUMENT, startId);
         String endUri       = uriGenerator.from(Resource.Type.DOCUMENT, endId);
         udm.save(Relation.newSimilarToDocuments(startUri,endUri));
