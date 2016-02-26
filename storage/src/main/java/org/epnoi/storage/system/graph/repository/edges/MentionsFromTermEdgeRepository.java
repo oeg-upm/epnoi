@@ -20,4 +20,10 @@ public interface MentionsFromTermEdgeRepository extends RelationGraphRepository<
     @Query("match (:Word)<-[r:MENTIONS]-(:Term)-[:APPEARED_IN]->(domain{uri:{0}}) return r")
     Iterable<MentionsFromTermEdge> findByDomain(String uri);
 
+    @Query("match (term{uri:{0}})-[r:MENTIONS]->(word) return r")
+    Iterable<MentionsFromTermEdge> findByTerm(String uri);
+
+    @Query("match (term)-[r:MENTIONS]->(word{uri:{0}}) return r")
+    Iterable<MentionsFromTermEdge> findByWord(String uri);
+
 }

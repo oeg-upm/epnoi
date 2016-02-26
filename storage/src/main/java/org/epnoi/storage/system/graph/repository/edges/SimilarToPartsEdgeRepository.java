@@ -20,4 +20,7 @@ public interface SimilarToPartsEdgeRepository extends RelationGraphRepository<Si
     @Query("match (:Part)-[r:SIMILAR_TO]-(:Part)-[:DESCRIBES]->(:Item)<-[:BUNDLES]-(:Document)<-[:CONTAINS]-(domain{uri:{0}}) return r")
     Iterable<SimilarToPartsEdge> findByDomain(String uri);
 
+    @Query("match (part{uri:{0}})-[r:SIMILAR_TO]-(p) return r")
+    Iterable<SimilarToPartsEdge> findByPart(String uri);
+
 }

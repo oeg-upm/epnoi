@@ -46,6 +46,32 @@ public class SearchRelationAction {
         return relations;
     }
 
+
+    /**
+     * Find relation attached to other resource (directly or indirectly)
+     * @param startUri
+     * @param endUri
+     * @return
+     */
+    public List<Relation> btw(String startUri, String endUri){
+        LOG.debug("Finding " + type.name() + "s between " + startUri + " and " + endUri);
+        List<Relation> relations = new ArrayList<>();
+        try{
+            helper.getSession().clean();
+            UnifiedTransaction transaction = helper.getSession().beginTransaction();
+
+            helper.getUnifiedEdgeGraphRepository().findBetween(type, startUri, endUri).forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
+
+            transaction.commit();
+            return relations;
+        }catch (ResultProcessingException e){
+            LOG.warn("exception while finding " + type +"s between " + startUri+ " and " + endUri+ ":: " + e.getMessage());
+        }catch (Exception e){
+            LOG.error("Unexpected error while finding " + type +"s between " + startUri+ " and " + endUri,e);
+        }
+        return relations;
+    }
+
     /**
      * Find relation attached to other resource (directly or indirectly)
      * @param referenceType

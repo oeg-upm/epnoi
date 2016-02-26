@@ -20,4 +20,7 @@ public interface EmergesInEdgeRepository extends RelationGraphRepository<Emerges
     @Query("match (:Topic)-[r:EMERGES_IN]->(domain{uri:{0}}) return r")
     Iterable<EmergesInEdge> findByDomain(String uri);
 
+    @Query("match ({uri:{0}})-[r:EMERGES_IN]->(domain) return r")
+    Iterable<EmergesInEdge> findByTopic(String uri);
+
 }

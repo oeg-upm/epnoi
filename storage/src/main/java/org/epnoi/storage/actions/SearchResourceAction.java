@@ -32,7 +32,7 @@ public class SearchResourceAction {
         LOG.debug("Finding " + type.name() + "s");
         List<String> uris = new ArrayList<>();
         try{
-            helper.getUnifiedColumnRepository().findAll(type).forEach(x -> uris.add(x.getUri()));
+            helper.getUnifiedNodeGraphRepository().findAll(type).forEach(x -> uris.add(x.getUri()));
             LOG.info(type.name() + "s: " + uris);
 
         }catch (ResultProcessingException e){

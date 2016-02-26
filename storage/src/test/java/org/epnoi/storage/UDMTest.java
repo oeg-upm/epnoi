@@ -11,7 +11,9 @@ import org.epnoi.model.modules.*;
 import org.epnoi.storage.generator.URIGenerator;
 import org.epnoi.storage.system.document.domain.WordDocument;
 import org.epnoi.storage.system.document.repository.WordDocumentRepository;
+import org.epnoi.storage.system.graph.domain.edges.SimilarToDocumentsEdge;
 import org.epnoi.storage.system.graph.repository.edges.DealsWithFromDocumentEdgeRepository;
+import org.epnoi.storage.system.graph.repository.edges.SimilarToDocumentsEdgeRepository;
 import org.epnoi.storage.system.graph.repository.nodes.DocumentGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.DomainGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.SourceGraphRepository;
@@ -87,13 +89,24 @@ public class UDMTest {
     UnifiedNodeGraphRepositoryFactory factory;
 
 
+    @Autowired
+    SimilarToDocumentsEdgeRepository similarToDocumentsEdgeRepository;
+
+
     @Test
     public void publish(){
         Domain domain = new Domain();
         domain.setUri("http://drinventor.eu/domains/7df34748-7fad-486e-a799-3bcd86a03499");
-        domain.setName("siggraph");
-        domain.setDescription("siggraph");
+//        domain.setName("siggraph");
+//        domain.setDescription("siggraph");
         eventBus.post(Event.from(domain),RoutingKey.of(Resource.Type.DOMAIN,Resource.State.UPDATED));
+    }
+
+    @Test
+    public void findRelations(){
+        String uri = "http://drinventor.eu/documents/af351b184d0bc10597573d31544a23a4";
+        List<Relation> result = udm.find(Relation.Type.BUNDLES).in(Resource.Type.DOCUMENT, uri);
+        System.out.println(result);
     }
 
 

@@ -84,7 +84,6 @@ public class DeleteRelationAction {
                     LOG.info("Deleted: "+type.name()+"[" + uri+"]");
                 });
 //                for (Relation pair : pairs) {
-//                    //TODO parelleize
 //                    helper.getUnifiedEdgeGraphRepository().delete(type,pair.getUri());
 //                    helper.getEventBus().post(Event.from(pair.getUri()), RoutingKey.of(type, Relation.State.DELETED));
 //                }

@@ -3,24 +3,20 @@ package org.epnoi.storage.documents;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.cbadenes.lab.test.IntegrationTest;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.client.utils.URIBuilder;
-import org.epnoi.model.Event;
-import org.epnoi.model.domain.relations.HypernymOf;
-import org.epnoi.model.domain.relations.Relation;
-import org.epnoi.model.domain.resources.*;
-import org.epnoi.model.modules.*;
+import org.epnoi.model.domain.resources.Document;
+import org.epnoi.model.domain.resources.Item;
+import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.modules.EventBus;
 import org.epnoi.storage.Config;
 import org.epnoi.storage.Helper;
 import org.epnoi.storage.UDM;
 import org.epnoi.storage.generator.URIGenerator;
-import org.epnoi.storage.system.document.domain.WordDocument;
 import org.epnoi.storage.system.document.repository.WordDocumentRepository;
 import org.epnoi.storage.system.graph.repository.edges.DealsWithFromDocumentEdgeRepository;
 import org.epnoi.storage.system.graph.repository.nodes.DocumentGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.DomainGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.SourceGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.UnifiedNodeGraphRepositoryFactory;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -34,10 +30,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -47,14 +43,14 @@ import java.util.stream.Collectors;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = Config.class)
 @TestPropertySource(properties = {
-        "epnoi.cassandra.contactpoints = wiener.dia.fi.upm.es",
+        "epnoi.cassandra.contactpoints = drinventor.dia.fi.upm.es",
         "epnoi.cassandra.port = 5011",
         "epnoi.cassandra.keyspace = research",
-        "epnoi.elasticsearch.contactpoints = wiener.dia.fi.upm.es",
+        "epnoi.elasticsearch.contactpoints = drinventor.dia.fi.upm.es",
         "epnoi.elasticsearch.port = 5021",
-        "epnoi.neo4j.contactpoints = wiener.dia.fi.upm.es",
+        "epnoi.neo4j.contactpoints = drinventor.dia.fi.upm.es",
         "epnoi.neo4j.port = 5030",
-        "epnoi.eventbus.host = wiener.dia.fi.upm.es"})
+        "epnoi.eventbus.host = drinventor.dia.fi.upm.es"})
 public class ListDocumentsTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(ListDocumentsTest.class);
@@ -102,6 +98,7 @@ public class ListDocumentsTest {
                 "a142-alexa",
                 "a148-daniels",
                 "a27-lee",
+
                 "a37-talvala",
                 "a38-zheng",
                 "a53-barbic",
@@ -148,60 +145,44 @@ public class ListDocumentsTest {
                 "p932-macintyre"});
 
 
+        List<String> newFiles = Arrays.asList(new String[]{"a111-li.pdf.ser",
+                "a21-adams.pdf.ser",
+                "a50-kaufmann.pdf.ser",
+                "a68-green.pdf.ser",
+                "a95-agrawal.pdf.ser",
+                "p1089-hasan.pdf.ser",
+                "p257-durand.pdf.ser",
+                "p368-liu.pdf.ser",
+                "p735-lawrence.pdf.ser"});
+
 
 //        udm.save(new Item());
 //
-//        List<String> uris = udm.find(Resource.Type.ITEM).all();
+        List<String> uris = udm.find(Resource.Type.DOCUMENT).all();
 //
-//        LOG.info("Item URIs: " + uris);
+        LOG.info("Item URIs: " + uris);
 
-//        List<Item> items = uris.stream().map(uri -> udm.read(Resource.Type.ITEM).byUri(uri).get().asItem()).collect(Collectors.toList());
-//
-////		items.forEach(item-> LOG.info("Item: " + item.getUri() + " -> " + item.getUrl()));
-//
-//		LOG.info("Items: " + items.size());
-//
-//        File baseFolder = new File("/Users/cbadenes/Documents/OEG/Projects/DrInventor/datasets/2nd-review");
-//        List<String> files = FolderUtils.listFiles(baseFolder);
-//
-//        HashMap<String,String> fileTable = new HashMap<>();
-//
-//        files.stream().map(path -> new File(path)).filter(file -> refFiles.contains(file.getName())).forEach(file->fileTable.put(file.getName(), StringUtils.substringAfter(file.getAbsolutePath(),baseFolder.getAbsolutePath())));
-//
-//
-//        String basedir = "/opt/drinventor/tomcat-background/../workspace/ftp/siggraph";
-//
-////        List<Document> documents = refFiles.stream().
-////                flatMap(refName -> items.stream().filter(item -> item.getUrl().contains(refName))).
-////                map(item -> udm.find(Resource.Type.DOCUMENT).by(Document.TITLE,item.getTitle())).
-////                map(docUris -> udm.read(Resource.Type.DOCUMENT).byUri(docUris.get(0)).get().asDocument()).
-////                collect(Collectors.toList());
-////        ;
-//
-//
-//        List<Reference> references = new ArrayList<>();
-//        for (String fileName : refFiles){
-//            LOG.info("File: " + fileName);
-//            try{
-//                Item item           = items.stream().filter(el -> el.getUrl().contains(fileName)).collect(Collectors.toList()).get(0);
-//                String docUri       = udm.find(Resource.Type.DOCUMENT).by(Document.TITLE,item.getTitle()).get(0);
-//                Document document   = udm.read(Resource.Type.DOCUMENT).byUri(docUri).get().asDocument();
-//
-//                Reference reference = new Reference();
-//                reference.setFileName(fileName);
-//                reference.setTitle(document.getTitle());
-//                reference.setUri(document.getUri());
-//                references.add(reference);
-//            }catch (Exception e){
-//                LOG.error("Error on file: " + fileName,e);
-//            }
-//
-//        }
-//
-//
-//        ObjectMapper mapper = new ObjectMapper();
-//
-//        mapper.writeValue(new File("documents.json"), references);
+        List<Document> documents = uris.stream().map(uri -> udm.read(Resource.Type.DOCUMENT).byUri(uri).get().asDocument()).filter(doc -> newFiles.contains(doc.getRetrievedFrom())).collect(Collectors.toList());
+
+        List<Reference> references = new ArrayList<>();
+        for (Document document : documents){
+            LOG.info("File: " + document);
+            try{
+                Reference reference = new Reference();
+                reference.setFileName(StringUtils.substringBefore(document.getRetrievedFrom(),".pdf") + ".pdf");
+                reference.setTitle(document.getTitle());
+                reference.setUri(document.getUri());
+                references.add(reference);
+            }catch (Exception e){
+                LOG.error("Error on file: " + document.getUri(),e);
+            }
+
+        }
+
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        mapper.writeValue(new File("new-documents.json"), references);
 
 
     }

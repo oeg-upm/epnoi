@@ -8,7 +8,27 @@ import lombok.Data;
 @Data
 public class DocumentI {
 
-    String name;
+    String title;
+
+    String subject;
+
+    String publishedOn;
+
+    String publishedBy;
+
+    String authoredOn;
+
+    String authoredBy;
+
+    String contributedBy;
+
+    String language;
 
     String description;
+
+    String rights;
+
+    String content;
+
+    String tokens;
 }

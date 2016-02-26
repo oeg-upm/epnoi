@@ -1,5 +1,6 @@
 package org.epnoi.storage.system.column;
 
+import com.datastax.driver.core.SocketOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +41,17 @@ public class ColumnConfig extends AbstractCassandraConfiguration{
     @Bean
     public CassandraClusterFactoryBean cluster(){
         CassandraClusterFactoryBean cluster = new CassandraClusterFactoryBean();
-        cluster.setContactPoints(hosts);
-        cluster.setPort(port);
-        cluster.setSocketOptions(getSocketOptions());
-        LOG.info("Initialized Cassandra connection to: " + hosts + " " + port);
+        try{
+            cluster.setContactPoints(hosts);
+            cluster.setPort(port);
+            SocketOptions options = new SocketOptions();
+            options.setReadTimeoutMillis(60000);
+            options.setConnectTimeoutMillis(20000);
+            cluster.setSocketOptions(options);
+            LOG.info("Initialized Cassandra connection to: " + hosts + " " + port);
+        }catch (Exception e){
+            LOG.error("Error configuring cassandra connection parameters: ",e);
+        }
         return cluster;
     }
 

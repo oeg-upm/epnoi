@@ -39,15 +39,6 @@ public abstract class AbstractRelationalService<T extends Relation> {
     public T create(T resource) throws Exception {
 
         LOG.info("Trying to create: " + resource);
-
-        if (Strings.isNullOrEmpty(resource.getUri())){
-            resource.setUri(uriGenerator.newFor(type));
-        }
-
-        if (Strings.isNullOrEmpty(resource.getCreationTime())){
-            resource.setCreationTime(TimeUtils.asISO());
-        }
-
         udm.save(resource);
         return resource;
     }

@@ -149,12 +149,9 @@ public class ParserTask implements Runnable {
 
 
             //TODO Temporal solution
-            Optional<Resource> res = helper.getUdm().read(Resource.Type.DOMAIN).byUri(domainUri);
-
-            if (res.isPresent()){
-                LOG.info("Notifying a new update in domain: " + domainUri);
-                helper.getEventBus().post(Event.from(res.get().asDomain()), RoutingKey.of(Resource.Type.DOMAIN,Resource.State.UPDATED));
-            }
+            Domain domain = Resource.newDomain();
+            domain.setUri(domainUri);
+            helper.getEventBus().post(Event.from(domain), RoutingKey.of(Resource.Type.DOMAIN,Resource.State.UPDATED));
 
         }catch (RuntimeException e){
             LOG.error("Error processing resource: " + file, e);

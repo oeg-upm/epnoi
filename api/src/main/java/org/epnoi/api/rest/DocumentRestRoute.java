@@ -2,10 +2,8 @@ package org.epnoi.api.rest;
 
 import org.apache.camel.model.rest.RestDefinition;
 import org.apache.camel.model.rest.RestsDefinition;
-import org.epnoi.api.model.DocumentI;
-import org.epnoi.api.model.SourceI;
+import org.epnoi.api.model.*;
 import org.epnoi.model.domain.resources.Document;
-import org.epnoi.model.domain.resources.Source;
 import org.springframework.stereotype.Component;
 
 /**
@@ -46,7 +44,7 @@ public class DocumentRestRoute extends RestRoute {
                 .produces("application/json").to("bean:"+SERVICE+"?method=update")
 
                 // BUNDLES
-                .get("/{id}/items").description("List all items provided by a "+SINGULAR).outTypeList(String.class)
+                .get("/{id}/items").description("List all items provided by a "+SINGULAR).outTypeList(RelationI.class)
                 .produces("application/json").to("bean:"+SERVICE+"?method=listItems(${header.id})")
 
                 .delete("/{id}/items").description("Remove all existing items from a "+SINGULAR)
@@ -56,24 +54,24 @@ public class DocumentRestRoute extends RestRoute {
                 .produces("application/json").to("bean:"+SERVICE+"?method=addItem(${header.did},${header.did})")
 
                 // DEALS_WITH
-                .get("/{id}/topics").description("List all topics dealt by a document").outTypeList(String.class)
+                .get("/{id}/topics").description("List all topics dealt by a document").outTypeList(RelationI.class)
                 .produces("application/json").to("bean:"+SERVICE+"?method=listTopics(${header.id})")
 
                 .delete("/{id}/topics").description("Remove all existing topics dealt by a document")
                 .produces("application/json").to("bean:"+SERVICE+"?method=removeTopics(${header.id})")
 
-                .post("/{sid}/topics/{did}").description("Add a new topic to a document")
-                .produces("application/json").to("bean:"+SERVICE+"?method=addTopic(${header.did},${header.did})")
+                .post("/{sid}/topics/{did}").description("Add a new topic to a document").type(WeightI.class)
+                .produces("application/json").to("bean:"+SERVICE+"?method=addTopic(${header.sid},${header.did},${body})")
 
                 // SIMILAR_TO
-                .get("/{id}/documents").description("List all documents similar to a document").outTypeList(String.class)
+                .get("/{id}/documents").description("List all documents similar to a document").outTypeList(RelationI.class)
                 .produces("application/json").to("bean:"+SERVICE+"?method=listDocuments(${header.id})")
 
                 .delete("/{id}/documents").description("Remove all existing documents similar to a document")
                 .produces("application/json").to("bean:"+SERVICE+"?method=removeDocuments(${header.id})")
 
-                .post("/{sid}/documents/{did}").description("Add a new document similar to a document")
-                .produces("application/json").to("bean:"+SERVICE+"?method=addDocument(${header.did},${header.did})")
+                .post("/{sid}/documents/{did}").description("Add a new document similar to a document").type(SimilarI.class)
+                .produces("application/json").to("bean:"+SERVICE+"?method=addDocument(${header.did},${header.did},${body})")
 
                 ;
 

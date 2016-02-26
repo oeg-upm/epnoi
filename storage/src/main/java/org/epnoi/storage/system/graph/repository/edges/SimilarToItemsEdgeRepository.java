@@ -20,4 +20,6 @@ public interface SimilarToItemsEdgeRepository extends RelationGraphRepository<Si
     @Query("match (domain{uri:{0}})-[:CONTAINS]->(:Document)-[:BUNDLES]->(:Item)-[r:SIMILAR_TO]-(:Item) return r")
     Iterable<SimilarToItemsEdge> findByDomain(String uri);
 
+    @Query("match (item{uri:{0}})-[r:SIMILAR_TO]-(i) return r")
+    Iterable<SimilarToItemsEdge> findByItem(String uri);
 }

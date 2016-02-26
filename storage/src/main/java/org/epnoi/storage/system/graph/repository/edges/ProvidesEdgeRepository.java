@@ -20,4 +20,9 @@ public interface ProvidesEdgeRepository extends RelationGraphRepository<Provides
     @Query("match (:Source)-[r:PROVIDES]->(:Document)<-[:CONTAINS]-(domain{uri:{0}}) return r")
     Iterable<ProvidesEdge> findByDomain(String uri);
 
+    @Query("match (source{uri:{0}})-[r:PROVIDES]->(document) return r")
+    Iterable<ProvidesEdge> findBySource(String uri);
+
+    @Query("match (source)-[r:PROVIDES]->(document{uri:{0}}) return r")
+    Iterable<ProvidesEdge> findByDocument(String uri);
 }

@@ -20,4 +20,10 @@ public interface TopicMentionsWordGraphRepository extends RelationGraphRepositor
     @Query("match (:Word)<-[r:MENTIONS]-(:Topic)-[:EMERGES_IN]->(domain{uri:{0}}) return r")
     Iterable<MentionsFromTopicEdge> findByDomain(String uri);
 
+    @Query("match (word)<-[r:MENTIONS]-(topic{uri:{0}}) return r")
+    Iterable<MentionsFromTopicEdge> findByTopic(String uri);
+
+    @Query("match (word{uri:{0}})<-[r:MENTIONS]-(topic) return r")
+    Iterable<MentionsFromTopicEdge> findByWord(String uri);
+
 }

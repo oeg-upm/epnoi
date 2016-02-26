@@ -79,6 +79,14 @@ public class UnifiedEdgeGraphRepository extends RepeatableActionExecutor impleme
         return (result.isPresent())? (Iterable<Relation>) result.get() : Collections.EMPTY_LIST;
     }
 
+    public Iterable<Relation> findBetween(Relation.Type type,String startUri, String endUri) {
+        Optional<Object> result = performRetries(0, "finding " + type + " between [" + startUri+ "] and [" + endUri + "]", () -> {
+            Iterable<Relation> relations =  factory.repositoryOf(type).findByNodes(startUri,endUri);
+            return relations;
+        });
+        return (result.isPresent())? (Iterable<Relation>) result.get() : Collections.EMPTY_LIST;
+    }
+
     @Override
     public Iterable<Relation> findBy(Relation.Type result,String field, String value) {
         return find("findBy",result,value,field);

@@ -1,6 +1,5 @@
 package org.epnoi.storage.system.graph.repository.edges;
 
-import org.epnoi.storage.system.graph.domain.edges.BundlesEdge;
 import org.epnoi.storage.system.graph.domain.edges.ComposesEdge;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.stereotype.Repository;
@@ -21,5 +20,8 @@ public interface ComposesEdgeRepository extends RelationGraphRepository<Composes
 
     @Query("match (:Source)-[r:COMPOSES]->(domain{uri:{0}}) return r")
     Iterable<ComposesEdge> findByDomain(String uri);
+
+    @Query("match (source{uri:{0}})-[r:COMPOSES]->(domain) return r")
+    Iterable<ComposesEdge> findBySource(String uri);
 
 }

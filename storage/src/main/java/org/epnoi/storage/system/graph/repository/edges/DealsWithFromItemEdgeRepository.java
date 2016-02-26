@@ -1,6 +1,5 @@
 package org.epnoi.storage.system.graph.repository.edges;
 
-import org.epnoi.storage.system.graph.domain.edges.ComposesEdge;
 import org.epnoi.storage.system.graph.domain.edges.DealsWithFromItemEdge;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.stereotype.Repository;
@@ -20,5 +19,11 @@ public interface DealsWithFromItemEdgeRepository extends RelationGraphRepository
 
     @Query("match (:Item)-[r:DEALS_WITH]->(:Topic)-[:EMERGES_IN]->(domain{uri:{0}}) return r")
     Iterable<DealsWithFromItemEdge> findByDomain(String uri);
+
+    @Query("match (item{uri:{0}})-[r:DEALS_WITH]->(topic) return r")
+    Iterable<DealsWithFromItemEdge> findByItem(String uri);
+
+    @Query("match (item)-[r:DEALS_WITH]->(topic{uri:{0}}) return r")
+    Iterable<DealsWithFromItemEdge> findByTopic(String uri);
 
 }

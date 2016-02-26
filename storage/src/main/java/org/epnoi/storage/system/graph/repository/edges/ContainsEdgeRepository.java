@@ -21,4 +21,7 @@ public interface ContainsEdgeRepository extends RelationGraphRepository<Contains
     @Query("match (domain{uri:{0}})-[r:CONTAINS]->(:Document) return r")
     Iterable<ContainsEdge> findByDomain(String uri);
 
+    @Query("match (domain)-[r:CONTAINS]->(document{uri:{0}}) return r")
+    Iterable<ContainsEdge> findByDocument(String uri);
+
 }

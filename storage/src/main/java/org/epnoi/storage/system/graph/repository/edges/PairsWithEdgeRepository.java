@@ -20,4 +20,7 @@ public interface PairsWithEdgeRepository extends RelationGraphRepository<PairsWi
     @Query("match (:Word)<-[r:PAIRS_WITH]-(:Word)-[:EMBEDDED_IN]->(domain{uri:{0}}) return r")
     Iterable<PairsWithEdge> findByDomain(String uri);
 
+    @Query("match (word{uri:{0}})-[r:PAIRS_WITH]-(w) return r")
+    Iterable<PairsWithEdge> findByWord(String uri);
+
 }
