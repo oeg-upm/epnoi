@@ -1,4 +1,4 @@
-package org.epnoi.api.model;
+package org.epnoi.api.model.resources;
 
 import lombok.Data;
 
@@ -20,7 +20,11 @@ public class DocumentI {
 
     String authoredBy;
 
+    String retrievedOn;
+
     String contributedBy;
+
+    String format;
 
     String language;
 

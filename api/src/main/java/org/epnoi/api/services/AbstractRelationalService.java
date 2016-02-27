@@ -1,9 +1,6 @@
 package org.epnoi.api.services;
 
-import com.google.common.base.Strings;
 import org.epnoi.model.domain.relations.Relation;
-import org.epnoi.model.domain.resources.Resource;
-import org.epnoi.model.utils.TimeUtils;
 import org.epnoi.storage.UDM;
 import org.epnoi.storage.generator.URIGenerator;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package org.epnoi.api.model;
+package org.epnoi.api.model.resources;
 
 import lombok.Data;
 

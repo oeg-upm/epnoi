@@ -14,6 +14,9 @@ public interface PairsWithEdgeRepository extends RelationGraphRepository<PairsWi
     @Override
     PairsWithEdge findOneByUri(String uri);
 
+    @Query("match (node1{uri:{0}})-[r:PAIRS_WITH]->(node2) return r")
+    Iterable<PairsWithEdge> fromNode(String start, String end);
+
     @Query("match (node1{uri:{0}})-[r:PAIRS_WITH]->(node2{uri:{1}}) return r")
     Iterable<PairsWithEdge> findByNodes(String start, String end);
 

@@ -103,10 +103,21 @@ public class UDMTest {
     }
 
     @Test
-    public void findRelations(){
-        String uri = "http://drinventor.eu/documents/af351b184d0bc10597573d31544a23a4";
-        List<Relation> result = udm.find(Relation.Type.BUNDLES).in(Resource.Type.DOCUMENT, uri);
-        System.out.println(result);
+    public void findSimilar(){
+
+        String startUri = "http://drinventor.eu/documents/c369c917fecf3b4828688bdb6677dd6e";
+        String endUri   = "http://drinventor.eu/documents/f6f36164961229eac1bf19431a3744a0";
+
+        try{
+//            List<Relation> result = udm.find(Relation.Type.SIMILAR_TO_DOCUMENTS).btw(startUri, endUri);
+//            System.out.println("1->" + result);
+
+            Iterable<SimilarToDocumentsEdge> result2 = similarToDocumentsEdgeRepository.findByNodes(startUri, endUri);
+            System.out.println("2->" + result2);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 

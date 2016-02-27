@@ -14,6 +14,9 @@ public interface SimilarToPartsEdgeRepository extends RelationGraphRepository<Si
     @Override
     SimilarToPartsEdge findOneByUri(String uri);
 
+//    @Query("match (node1{uri:{0}})-[r:SIMILAR_TO]->(node2) return r")
+//    Iterable<SimilarToPartsEdge> fromNode(String start, String end);
+
     @Query("match (node1{uri:{0}})-[r:SIMILAR_TO]->(node2{uri:{1}}) return r")
     Iterable<SimilarToPartsEdge> findByNodes(String start, String end);
 

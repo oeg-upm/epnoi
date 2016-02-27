@@ -39,6 +39,7 @@ public class ModelingTask implements Runnable{
 
     @Override
     public void run() {
+        //TODO Parallelize
         helper.getModelBuilder().execute(new TopicModeler(domain,helper));
         helper.getModelBuilder().execute(new WordEmbeddingModeler(domain,helper));
     }

@@ -21,6 +21,7 @@ import org.epnoi.storage.system.document.repository.WordDocumentRepository;
 import org.epnoi.storage.system.graph.domain.edges.BundlesEdge;
 import org.epnoi.storage.system.graph.domain.edges.SimilarToDocumentsEdge;
 import org.epnoi.storage.system.graph.domain.edges.SimilarToItemsEdge;
+import org.epnoi.storage.system.graph.domain.nodes.DocumentNode;
 import org.epnoi.storage.system.graph.repository.edges.*;
 import org.epnoi.storage.system.graph.repository.nodes.DocumentGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.DomainGraphRepository;
@@ -50,6 +51,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = GraphConfig.class)
 @TestPropertySource(properties = {
+        "epnoi.cassandra.contactpoints = drinventor.dia.fi.upm.es",
+        "epnoi.cassandra.port = 5011",
+        "epnoi.cassandra.keyspace = research",
+        "epnoi.elasticsearch.contactpoints = drinventor.dia.fi.upm.es",
+        "epnoi.elasticsearch.port = 5021",
         "epnoi.neo4j.contactpoints = drinventor.dia.fi.upm.es",
         "epnoi.neo4j.port = 5030",
         "epnoi.eventbus.host = drinventor.dia.fi.upm.es"})
@@ -61,6 +67,8 @@ public class GraphTest {
     @Autowired
     SimilarToDocumentsEdgeRepository similarToDocumentsEdgeRepository;
 
+    @Autowired
+    DocumentGraphRepository documentGraphRepository;
 
     @Autowired
     SimilarToItemsEdgeRepository similarToItemsEdgeRepository;
@@ -68,33 +76,38 @@ public class GraphTest {
     @Autowired
     SimilarToPartsEdgeRepository similarToPartsEdgeRepository;
 
+    @Autowired
+    SimilarToEdgeRepository similarToEdgeRepository;
 
     @Autowired
     BundlesEdgeRepository bundlesEdgeRepository;
 
 
 
+
     @Test
-    public void deleteSimilars(){
-//        udm.delete(Relation.Type.SIMILAR_TO_DOCUMENTS).in(Resource.Type.DOMAIN,"http://drinventor.eu/domains/7df34748-7fad-486e-a799-3bcd86a03499");
+    public void findSimilar(){
+
+        String startDocUri = "http://drinventor.eu/documents/c369c917fecf3b4828688bdb6677dd6e";
+        String endDocUri   = "http://drinventor.eu/documents/f6f36164961229eac1bf19431a3744a0";
+
+        String startItemUri = "http://drinventor.eu/items/c369c917fecf3b4828688bdb6677dd6e";
+        String endItemUri   = "http://drinventor.eu/items/715f6df41fdf75cb3d0db7fce050f301";
+
         try{
-            Iterable<SimilarToDocumentsEdge> result = similarToDocumentsEdgeRepository.findByDomain("http://drinventor.eu/domains/7df34748-7fad-486e-a799-3bcd86a03499");
-            System.out.println(result);
+//            Iterable<SimilarToDocumentsEdge> result = similarToDocumentsEdgeRepository.giveme(startUri, endUri);
+//            System.out.println("1->" + result);
+            System.out.println("1->" + similarToItemsEdgeRepository.findByNodes(startItemUri,endItemUri));
+            System.out.println("2->" + similarToDocumentsEdgeRepository.findByNodes(startDocUri, endDocUri));
+            System.out.println("3->" + similarToEdgeRepository.findDocumentsByNodes(startDocUri,endDocUri));
+//            System.out.println("3->" + similarToEdgeRepository.findItemsByNodes(startItemUri,endItemUri));
+
+//            Iterable<DocumentNode> result2 = documentGraphRepository.findByDocument(startUri);
+//            System.out.println(result2);
+
         }catch (Exception e){
-            LOG.error("Error",e);
+            e.printStackTrace();
         }
-    }
-
-    @Test
-    public void findItems(){
-
-        String relUri = "http://drinventor.eu/bundles/6c81b934-e9ee-46d7-a3f2-03713f2fabc1";
-        BundlesEdge result = bundlesEdgeRepository.findOneByUri(relUri);
-        System.out.println(result);
-
-        String uri = "http://drinventor.eu/documents/af351b184d0bc10597573d31544a23a4";
-        Iterable<BundlesEdge> results = bundlesEdgeRepository.findByDocument(uri);
-        System.out.println(results);
     }
 
 

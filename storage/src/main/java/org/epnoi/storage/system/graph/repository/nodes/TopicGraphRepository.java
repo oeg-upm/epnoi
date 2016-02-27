@@ -17,4 +17,19 @@ public interface TopicGraphRepository extends ResourceGraphRepository<TopicNode>
     @Query("match (topic)-[:EMERGES_IN]->(domain{uri:{0}}) return topic")
     Iterable<TopicNode> findByDomain(String uri);
 
+    @Query("match (topic)-[:MENTIONS]->(word{uri:{0}}) return topic")
+    Iterable<TopicNode> findByWord(String uri);
+
+    @Query("match (topic)<-[:DEALS_WITH]-(part{uri:{0}}) return topic")
+    Iterable<TopicNode> findByPart(String uri);
+
+    @Query("match (topic)<-[:DEALS_WITH]-(document{uri:{0}}) return topic")
+    Iterable<TopicNode> findByDocument(String uri);
+
+    @Query("match (topic)<-[:DEALS_WITH]-(item{uri:{0}}) return topic")
+    Iterable<TopicNode> findByItem(String uri);
+
+    @Query("match (topic)-[:MENTIONS]->(word)<-[:MENTIONS]-(term{uri:{0}}) return topic")
+    Iterable<TopicNode> findByTerm(String uri);
+
 }

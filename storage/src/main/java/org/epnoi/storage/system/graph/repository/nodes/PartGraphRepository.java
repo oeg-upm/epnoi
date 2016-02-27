@@ -20,4 +20,13 @@ public interface PartGraphRepository extends ResourceGraphRepository<PartNode> {
     @Query("match (part)-[:DESCRIBES]->(item{uri:{0}}) return part")
     Iterable<PartNode> findByItem(String uri);
 
+    @Query("match (part)-[:DEALS_WITH]->(topic{uri:{0}}) return part")
+    Iterable<PartNode> findByTopic(String uri);
+
+    @Query("match (part)-[:SIMILAR_TO]->(p{uri:{0}}) return part")
+    Iterable<PartNode> findByPart(String uri);
+
+    @Query("match (part)-[:DESCRIBES]->(item)<-[:BUNDLES]-(document{uri:{0}}) return part")
+    Iterable<PartNode> findByDocument(String uri);
+
 }

@@ -12,7 +12,7 @@ public interface RelationGraphRepository<T extends Edge> extends GraphRepository
 
     T findOneByUri(String uri);
 
-    Iterable<T> findByNodes(String startUri, String endUri);
-
-    Iterable<T> findByDomain(String uri);
+//    Iterable<T> findByNodes(String startUri, String endUri);
+//
+//    Iterable<T> findByDomain(String uri);
 }

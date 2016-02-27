@@ -15,6 +15,9 @@ public interface DealsWithFromPartEdgeRepository extends RelationGraphRepository
     @Override
     DealsWithFromPartEdge findOneByUri(String uri);
 
+    @Query("match (node1{uri:{0}})-[r:DEALS_WITH]->(node2) return r")
+    Iterable<DealsWithFromPartEdge> fromNode(String start, String end);
+
     @Query("match (node1{uri:{0}})-[r:DEALS_WITH]->(node2{uri:{1}}) return r")
     Iterable<DealsWithFromPartEdge> findByNodes(String start, String end);
 

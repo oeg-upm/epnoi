@@ -13,13 +13,25 @@ public interface WordGraphRepository extends ResourceGraphRepository<WordNode> {
     @Override
     WordNode findOneByUri(String uri);
 
+    @Query("match (w)-[:PAIRS_WITH]->(word{uri:{0}}) return w")
+    Iterable<WordNode> findByWord(String uri);
+
     @Query("match (w:Word)-[:EMBEDDED_IN]->(domain{uri:{0}}) return w")
     Iterable<WordNode> findByDomain(String uri);
+
+    @Query("match (w:Word)<-[:MENTIONS]-(term{uri:{0}}) return w")
+    Iterable<WordNode> findByTerm(String uri);
+
+    @Query("match (w:Word)<-[:MENTIONS]-(topic{uri:{0}}) return w")
+    Iterable<WordNode> findByTopic(String uri);
 
     @Query("match (in:Word)-[s{domain:{0}}]->(out:Word) delete s")
     void deletePairingInDomain(String uri);
 
     @Query("match (in:Word)-[e:EMBEDDED_IN]->(domain{uri:{0}}) delete e")
     void deleteEmbeddingInDomain(String uri);
+
+
+
 
 }

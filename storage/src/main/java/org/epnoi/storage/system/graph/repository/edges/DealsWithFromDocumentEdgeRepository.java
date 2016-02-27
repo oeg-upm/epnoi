@@ -14,6 +14,9 @@ public interface DealsWithFromDocumentEdgeRepository extends RelationGraphReposi
     @Override
     DealsWithFromDocumentEdge findOneByUri(String uri);
 
+    @Query("match (node1{uri:{0}})-[r:DEALS_WITH]->(node2) return r")
+    Iterable<DealsWithFromDocumentEdge> fromNode(String start, String end);
+
     @Query("match (node1{uri:{0}})-[r:DEALS_WITH]->(node2{uri:{1}}) return r")
     Iterable<DealsWithFromDocumentEdge> findByNodes(String start, String end);
 

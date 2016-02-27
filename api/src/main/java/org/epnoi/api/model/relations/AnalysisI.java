@@ -1,4 +1,4 @@
-package org.epnoi.api.model;
+package org.epnoi.api.model.relations;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import lombok.Data;
  * Created by cbadenes on 22/01/16.
  */
 @Data
-public class WeightI {
+public class AnalysisI {
 
     Double weight;
 }

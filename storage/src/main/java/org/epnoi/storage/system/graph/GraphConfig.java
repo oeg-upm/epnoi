@@ -35,7 +35,6 @@ public class GraphConfig extends Neo4jConfiguration{
     @Override
     @Bean
     public Neo4jServer neo4jServer() {
-        // Credentials : return new RemoteServer("http://localhost:7474",username,password);
         RemoteServer server = new RemoteServer("http://" + hosts + ":" +port);
         LOG.info("Initialized Neo4j connection to: " + hosts + " " + port);
         return server;
@@ -45,7 +44,7 @@ public class GraphConfig extends Neo4jConfiguration{
     @Bean
     public SessionFactory getSessionFactory() {
         // with domain entity base package(s)
-        return  new SessionFactory("org.epnoi.storage.system.graph.domain");
+        return new SessionFactory("org.epnoi.storage.system.graph.domain");
     }
 
     // needed for session in view in web-applications

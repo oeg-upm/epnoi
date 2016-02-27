@@ -14,7 +14,16 @@ public interface TermGraphRepository extends ResourceGraphRepository<TermNode> {
     @Override
     TermNode findOneByUri(String uri);
 
-    @Query("match (t:Term)-[:APPEARED_IN]->(domain{uri:{0}}) return t")
+    @Query("match (term)-[:APPEARED_IN]->(domain{uri:{0}}) return term")
     Iterable<TermNode> findByDomain(String uri);
+
+    @Query("match (term)-[:MENTIONS]->(word{uri:{0}}) return term")
+    Iterable<TermNode> findByWord(String uri);
+
+    @Query("match (term)-[:HYPERNYM_OF]->(t{uri:{0}}) return term")
+    Iterable<TermNode> findByTerm(String uri);
+
+    @Query("match (term)-[:MENTIONS]->(word)<-[:MENTIONS]-(topic{uri:{0}}) return term")
+    Iterable<TermNode> findByTopic(String uri);
 
 }

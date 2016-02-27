@@ -1,6 +1,8 @@
 package org.epnoi.api.services;
 
 import com.google.common.base.Strings;
+import org.epnoi.api.model.relations.RelationI;
+import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.storage.UDM;
 import org.epnoi.model.utils.TimeUtils;
@@ -77,8 +79,6 @@ public abstract class AbstractResourceService<T extends Resource> {
             return null; //TODO Handle empty result
         return (T) result.get();
     }
-
-
 
 
 }

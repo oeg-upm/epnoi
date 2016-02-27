@@ -1,6 +1,10 @@
 package org.epnoi.api.services;
 
-import org.epnoi.api.model.SourceI;
+import org.epnoi.api.model.relations.DealsI;
+import org.epnoi.api.model.relations.RelationI;
+import org.epnoi.api.model.relations.WeightDomainI;
+import org.epnoi.api.model.resources.SourceI;
+import org.epnoi.model.domain.relations.DealsWithFromPart;
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.domain.resources.Source;
@@ -53,10 +57,10 @@ public class SourceService extends AbstractResourceService<Source> {
     }
 
 
-    //PROVIDES
+    // PROVIDES -> Document
     public List<String> listDocuments(String id){
         String uri = uriGenerator.from(Resource.Type.SOURCE, id);
-        return udm.find(Resource.Type.DOCUMENT).in(Resource.Type.SOURCE,uri);
+        return udm.find(Resource.Type.DOCUMENT).in(Resource.Type.SOURCE, uri);
     }
 
     public void removeDocuments(String id){
@@ -64,17 +68,29 @@ public class SourceService extends AbstractResourceService<Source> {
         udm.delete(Relation.Type.PROVIDES).in(Resource.Type.SOURCE,uri);
     }
 
-    public void addDocument(String sourceId, String documentId){
-        String sourceUri    = uriGenerator.from(Resource.Type.SOURCE, sourceId);
-        String documentUri  = uriGenerator.from(Resource.Type.DOCUMENT, documentId);
-        udm.save(Relation.newProvides(sourceUri,documentUri));
+    public RelationI getDocuments(String startId, String endId){
+        String startUri     = uriGenerator.from(Resource.Type.SOURCE, startId);
+        String endUri       = uriGenerator.from(Resource.Type.DOCUMENT, endId);
+        Optional<RelationI> result = udm.find(Relation.Type.PROVIDES).btw(startUri, endUri).stream().map(relation -> new RelationI(relation.getUri(), relation.getCreationTime())).findFirst();
+        return (result.isPresent())? result.get() : new RelationI();
     }
 
+    public void addDocuments(String startId, String endId){
+        String startUri     = uriGenerator.from(Resource.Type.SOURCE, startId);
+        String endUri       = uriGenerator.from(Resource.Type.TOPIC, endId);
+        udm.save(Relation.newProvides(startUri,endUri));
+    }
 
-    // COMPOSES
+    public void removeDocuments(String startId, String endId){
+        String duri = uriGenerator.from(Resource.Type.SOURCE, startId);
+        String iuri = uriGenerator.from(Resource.Type.DOCUMENT, endId);
+        udm.find(Relation.Type.PROVIDES).btw(startId, endId).forEach(relation -> udm.delete(Relation.Type.PROVIDES).byUri(relation.getUri()));
+    }
+
+    // COMPOSES -> Document
     public List<String> listDomains(String id){
         String uri = uriGenerator.from(Resource.Type.SOURCE, id);
-        return udm.find(Resource.Type.DOMAIN).in(Resource.Type.SOURCE,uri);
+        return udm.find(Resource.Type.DOMAIN).in(Resource.Type.SOURCE, uri);
     }
 
     public void removeDomains(String id){
@@ -82,10 +98,23 @@ public class SourceService extends AbstractResourceService<Source> {
         udm.delete(Relation.Type.COMPOSES).in(Resource.Type.SOURCE,uri);
     }
 
-    public void addDomain(String sourceId, String documentId){
-        String sourceUri    = uriGenerator.from(Resource.Type.SOURCE, sourceId);
-        String domainUri  = uriGenerator.from(Resource.Type.DOMAIN, documentId);
-        udm.save(Relation.newComposes(sourceUri,domainUri));
+    public RelationI getDomains(String startId, String endId){
+        String startUri     = uriGenerator.from(Resource.Type.SOURCE, startId);
+        String endUri       = uriGenerator.from(Resource.Type.DOMAIN, endId);
+        Optional<RelationI> result = udm.find(Relation.Type.COMPOSES).btw(startUri, endUri).stream().map(relation -> new RelationI(relation.getUri(), relation.getCreationTime())).findFirst();
+        return (result.isPresent())? result.get() : new RelationI();
+    }
+
+    public void addDomains(String startId, String endId){
+        String startUri     = uriGenerator.from(Resource.Type.SOURCE, startId);
+        String endUri       = uriGenerator.from(Resource.Type.DOMAIN, endId);
+        udm.save(Relation.newProvides(startUri,endUri));
+    }
+
+    public void removeDomains(String startId, String endId){
+        String duri = uriGenerator.from(Resource.Type.SOURCE, startId);
+        String iuri = uriGenerator.from(Resource.Type.DOMAIN, endId);
+        udm.find(Relation.Type.COMPOSES).btw(startId, endId).forEach(relation -> udm.delete(Relation.Type.COMPOSES).byUri(relation.getUri()));
     }
 
 }

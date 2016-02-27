@@ -2,10 +2,7 @@ package org.epnoi.api.converters;
 
 import org.apache.camel.Converter;
 import org.apache.camel.TypeConversionException;
-import org.epnoi.api.model.ContainsI;
-import org.epnoi.api.model.DomainI;
-import org.epnoi.model.domain.relations.Contains;
-import org.epnoi.model.domain.relations.Relation;
+import org.epnoi.api.model.resources.DomainI;
 import org.epnoi.model.domain.resources.Domain;
 import org.epnoi.model.domain.resources.Resource;
 

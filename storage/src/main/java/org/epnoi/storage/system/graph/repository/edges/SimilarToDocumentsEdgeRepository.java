@@ -14,7 +14,10 @@ public interface SimilarToDocumentsEdgeRepository extends RelationGraphRepositor
     @Override
     SimilarToDocumentsEdge findOneByUri(String uri);
 
-    @Query("match (node1{uri:{0}})-[r:SIMILAR_TO]-(node2{uri:{1}}) return r")
+//    @Query("match (node1:Document{uri:{0}})-[r:SIMILAR_TO]->(node2) return r")
+//    Iterable<SimilarToDocumentsEdge> giveme(String start, String end);
+
+    @Query("match (node1:Document{uri:{0}})-[r:SIMILAR_TO]->(node2:Document{uri:{1}}) return r")
     Iterable<SimilarToDocumentsEdge> findByNodes(String start, String end);
 
     @Query("match (domain{uri:{0}})-[c:CONTAINS]->(d1:Document)-[r:SIMILAR_TO]->(d2:Document) return r")

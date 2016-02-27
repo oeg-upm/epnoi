@@ -1,8 +1,16 @@
 package org.epnoi.api.services;
 
+import org.epnoi.api.model.relations.DealsI;
+import org.epnoi.api.model.relations.RelationI;
+import org.epnoi.api.model.relations.SimilarI;
+import org.epnoi.api.model.relations.WeightDomainI;
+import org.epnoi.model.domain.relations.*;
 import org.epnoi.model.domain.resources.Part;
 import org.epnoi.model.domain.resources.Resource;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by cbadenes on 18/01/16.
@@ -13,4 +21,100 @@ public class PartService extends AbstractResourceService<Part> {
     public PartService() {
         super(Resource.Type.PART);
     }
+
+    // SIMILAR_TO -> Part
+    public List<String> listParts(String id){
+        String uri = uriGenerator.from(Resource.Type.PART, id);
+        return udm.find(Resource.Type.PART).in(Resource.Type.PART, uri);
+    }
+
+    public void removeParts(String id){
+        String uri = uriGenerator.from(Resource.Type.PART, id);
+        udm.delete(Relation.Type.SIMILAR_TO_PARTS).in(Resource.Type.PART,uri);
+    }
+
+    public SimilarI getParts(String startId, String endId){
+        String startUri     = uriGenerator.from(Resource.Type.PART, startId);
+        String endUri       = uriGenerator.from(Resource.Type.PART, endId);
+        Optional<SimilarI> result = udm.find(Relation.Type.SIMILAR_TO_PARTS).btw(startUri, endUri).stream().map(relation -> new SimilarI(relation.getUri(), relation.getCreationTime(), relation.getWeight(), ((SimilarTo)relation).getDomain())).findFirst();
+        return (result.isPresent())? result.get() : new SimilarI();
+    }
+
+    public void addParts(String startId, String endId, WeightDomainI weightI){
+        String startUri     = uriGenerator.from(Resource.Type.PART, startId);
+        String endUri       = uriGenerator.from(Resource.Type.PART, endId);
+        SimilarToParts relation = Relation.newSimilarToParts(startUri, endUri);
+        relation.setWeight(weightI.getWeight());
+        relation.setDomain(weightI.getDomain());
+        udm.save(relation);
+    }
+
+    public void removeParts(String startId, String endId){
+        String duri = uriGenerator.from(Resource.Type.PART, startId);
+        String iuri = uriGenerator.from(Resource.Type.PART, endId);
+        udm.find(Relation.Type.SIMILAR_TO_PARTS).btw(startId, endId).forEach(relation -> udm.delete(Relation.Type.SIMILAR_TO_PARTS).byUri(relation.getUri()));
+    }
+
+    // DESCRIBES -> Item
+    public List<String> listItems(String id){
+        String uri = uriGenerator.from(Resource.Type.PART, id);
+        return udm.find(Resource.Type.ITEM).in(Resource.Type.PART, uri);
+    }
+
+    public void removeItems(String id){
+        String uri = uriGenerator.from(Resource.Type.PART, id);
+        udm.delete(Relation.Type.DESCRIBES).in(Resource.Type.PART,uri);
+    }
+
+    public RelationI getItems(String startId, String endId){
+        String startUri     = uriGenerator.from(Resource.Type.PART, startId);
+        String endUri       = uriGenerator.from(Resource.Type.ITEM, endId);
+        Optional<RelationI> result = udm.find(Relation.Type.DESCRIBES).btw(startUri, endUri).stream().map(relation -> new RelationI(relation.getUri(), relation.getCreationTime())).findFirst();
+        return (result.isPresent())? result.get() : new RelationI();
+    }
+
+    public void addItems(String startId, String endId){
+        String startUri     = uriGenerator.from(Resource.Type.PART, startId);
+        String endUri       = uriGenerator.from(Resource.Type.ITEM, endId);
+        udm.save(Relation.newDescribes(startUri,endUri));
+    }
+
+    public void removeItems(String startId, String endId){
+        String duri = uriGenerator.from(Resource.Type.PART, startId);
+        String iuri = uriGenerator.from(Resource.Type.ITEM, endId);
+        udm.find(Relation.Type.DESCRIBES).btw(startId, endId).forEach(relation -> udm.delete(Relation.Type.DESCRIBES).byUri(relation.getUri()));
+    }
+
+    // DEALS_WITH -> Topic
+    public List<String> listTopics(String id){
+        String uri = uriGenerator.from(Resource.Type.PART, id);
+        return udm.find(Resource.Type.TOPIC).in(Resource.Type.PART, uri);
+    }
+
+    public void removeTopics(String id){
+        String uri = uriGenerator.from(Resource.Type.PART, id);
+        udm.delete(Relation.Type.DEALS_WITH_FROM_PART).in(Resource.Type.PART,uri);
+    }
+
+    public DealsI getTopics(String startId, String endId){
+        String startUri     = uriGenerator.from(Resource.Type.PART, startId);
+        String endUri       = uriGenerator.from(Resource.Type.TOPIC, endId);
+        Optional<DealsI> result = udm.find(Relation.Type.DEALS_WITH_FROM_PART).btw(startUri, endUri).stream().map(relation -> new DealsI(relation.getUri(), relation.getCreationTime(), relation.getWeight())).findFirst();
+        return (result.isPresent())? result.get() : new DealsI();
+    }
+
+    public void addTopics(String startId, String endId, WeightDomainI weightI){
+        String startUri     = uriGenerator.from(Resource.Type.PART, startId);
+        String endUri       = uriGenerator.from(Resource.Type.TOPIC, endId);
+        DealsWithFromPart deals = Relation.newDealsWithFromPart(startUri, endUri);
+        deals.setWeight(weightI.getWeight());
+        udm.save(deals);
+    }
+
+    public void removeTopics(String startId, String endId){
+        String duri = uriGenerator.from(Resource.Type.PART, startId);
+        String iuri = uriGenerator.from(Resource.Type.TOPIC, endId);
+        udm.find(Relation.Type.DEALS_WITH_FROM_PART).btw(startId, endId).forEach(relation -> udm.delete(Relation.Type.DEALS_WITH_FROM_PART).byUri(relation.getUri()));
+    }
+
 }

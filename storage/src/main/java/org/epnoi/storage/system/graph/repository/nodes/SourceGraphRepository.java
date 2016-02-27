@@ -17,4 +17,7 @@ public interface SourceGraphRepository extends ResourceGraphRepository<SourceNod
     @Query("match (source)-[:COMPOSES]->(domain{uri:{0}}) return source")
     Iterable<SourceNode> findByDomain(String uri);
 
+    @Query("match (source)-[:PROVIDES]->(document{uri:{0}}) return source")
+    Iterable<SourceNode> findByDocument(String uri);
+
 }
