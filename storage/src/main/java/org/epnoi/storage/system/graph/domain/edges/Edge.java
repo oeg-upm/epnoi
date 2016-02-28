@@ -24,6 +24,9 @@ public abstract class Edge<S extends Node,E extends Node> extends Relation{
     @Property
     private Double weight;
 
+    @Property
+    private String creationTime;
+
     @StartNode
     protected S startNode;
 

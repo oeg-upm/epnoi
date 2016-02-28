@@ -14,6 +14,8 @@ import org.springframework.data.neo4j.config.Neo4jConfiguration;
 import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
 import org.springframework.data.neo4j.server.Neo4jServer;
 import org.springframework.data.neo4j.server.RemoteServer;
+import org.springframework.data.neo4j.template.Neo4jOperations;
+import org.springframework.data.neo4j.template.Neo4jTemplate;
 
 /**
  * Created by cbadenes on 21/12/15.
@@ -39,6 +41,7 @@ public class GraphConfig extends Neo4jConfiguration{
         LOG.info("Initialized Neo4j connection to: " + hosts + " " + port);
         return server;
     }
+
 
     @Override
     @Bean

@@ -1,7 +1,10 @@
 package org.epnoi.api.services;
 
+import org.epnoi.api.model.relations.AnalysisI;
+import org.epnoi.api.model.relations.EmergesI;
 import org.epnoi.api.model.relations.MentionsI;
 import org.epnoi.api.model.relations.WeightTimesI;
+import org.epnoi.model.domain.relations.EmergesIn;
 import org.epnoi.model.domain.relations.Mentions;
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Resource;
@@ -52,5 +55,37 @@ public class TopicService extends AbstractResourceService<Topic> {
         String duri = uriGenerator.from(Resource.Type.TOPIC, startId);
         String iuri = uriGenerator.from(Resource.Type.WORD, endId);
         udm.find(Relation.Type.MENTIONS_FROM_TOPIC).btw(startId, endId).forEach(relation -> udm.delete(Relation.Type.MENTIONS_FROM_TOPIC).byUri(relation.getUri()));
+    }
+
+    // EMERGES_IN -> Domain
+    public List<String> listDomains(String id){
+        String uri = uriGenerator.from(Resource.Type.TOPIC, id);
+        return udm.find(Resource.Type.DOMAIN).in(Resource.Type.TOPIC, uri);
+    }
+
+    public void removeDomains(String id){
+        String uri = uriGenerator.from(Resource.Type.TOPIC, id);
+        udm.delete(Relation.Type.EMERGES_IN).in(Resource.Type.TOPIC,uri);
+    }
+
+    public EmergesI getDomains(String startId, String endId){
+        String startUri     = uriGenerator.from(Resource.Type.TOPIC, startId);
+        String endUri       = uriGenerator.from(Resource.Type.DOMAIN, endId);
+        Optional<EmergesI> result = udm.find(Relation.Type.EMERGES_IN).btw(startUri, endUri).stream().map(relation -> (EmergesIn) relation).map(relation -> new EmergesI(relation.getUri(), relation.getCreationTime(), relation.getAnalysis())).findFirst();
+        return (result.isPresent())? result.get() : new EmergesI();
+    }
+
+    public void addDomains(String startId, String endId, AnalysisI rel){
+        String startUri     = uriGenerator.from(Resource.Type.TOPIC, startId);
+        String endUri       = uriGenerator.from(Resource.Type.DOMAIN, endId);
+        EmergesIn relation = Relation.newEmergesIn(startUri, endUri);
+        relation.setAnalysis(rel.getAnalysis());
+        udm.save(relation);
+    }
+
+    public void removeDomains(String startId, String endId){
+        String duri = uriGenerator.from(Resource.Type.TOPIC, startId);
+        String iuri = uriGenerator.from(Resource.Type.DOMAIN, endId);
+        udm.find(Relation.Type.EMERGES_IN).btw(startId, endId).forEach(relation -> udm.delete(Relation.Type.EMERGES_IN).byUri(relation.getUri()));
     }
 }

@@ -1,8 +1,6 @@
 package org.epnoi.storage;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import es.cbadenes.lab.test.IntegrationTest;
-import org.apache.commons.lang.StringUtils;
 import org.epnoi.model.Event;
 import org.epnoi.model.domain.relations.HypernymOf;
 import org.epnoi.model.domain.relations.Relation;
@@ -13,7 +11,7 @@ import org.epnoi.storage.system.document.domain.WordDocument;
 import org.epnoi.storage.system.document.repository.WordDocumentRepository;
 import org.epnoi.storage.system.graph.domain.edges.SimilarToDocumentsEdge;
 import org.epnoi.storage.system.graph.repository.edges.DealsWithFromDocumentEdgeRepository;
-import org.epnoi.storage.system.graph.repository.edges.SimilarToDocumentsEdgeRepository;
+import org.epnoi.storage.system.graph.repository.edges.SimilarToEdgeRepository;
 import org.epnoi.storage.system.graph.repository.nodes.DocumentGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.DomainGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.SourceGraphRepository;
@@ -30,11 +28,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 /**
  * Created by cbadenes on 01/01/16.
@@ -90,7 +85,7 @@ public class UDMTest {
 
 
     @Autowired
-    SimilarToDocumentsEdgeRepository similarToDocumentsEdgeRepository;
+    SimilarToEdgeRepository similarToEdgeRepository;
 
 
     @Test
@@ -112,7 +107,7 @@ public class UDMTest {
 //            List<Relation> result = udm.find(Relation.Type.SIMILAR_TO_DOCUMENTS).btw(startUri, endUri);
 //            System.out.println("1->" + result);
 
-            Iterable<SimilarToDocumentsEdge> result2 = similarToDocumentsEdgeRepository.findByNodes(startUri, endUri);
+            Iterable result2 = similarToEdgeRepository.findDocumentsByNodes(startUri, endUri);
             System.out.println("2->" + result2);
 
         }catch (Exception e){
@@ -135,17 +130,10 @@ public class UDMTest {
     @Test
     public void read(){
 
-//        udm.delete(Resource.Type.TERM).all();
-//        udm.delete(Resource.Type.WORD).all();
+        String startUri = "http://drinventor.eu/documents/af351b184d0bc10597573d31544a23a4";
+        String endUri = "http://drinventor.eu/topics/72510e5c-f3b3-4a17-ab43-bc64b67a7db3";
 
-        Domain domain = Resource.newDomain();
-        domain.setUri("http://epnoi.org/domains/ce123683-512a-4f2a-a539-c77b666a8b79");
-        domain.setName("siggraph");
-//        udm.save(domain);
-
-        eventBus.post(Event.from(domain),RoutingKey.of(Resource.Type.DOMAIN,Resource.State.UPDATED));
-
-        assert true;
+        System.out.println(udm.find(Relation.Type.DEALS_WITH_FROM_DOCUMENT).btw(startUri, endUri));
     }
 
 

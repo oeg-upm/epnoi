@@ -19,7 +19,7 @@ public class UnifiedEdgeGraphRepositoryFactory {
     BundlesEdgeRepository bundlesEdgeRepository;
 
     @Autowired
-    SimilarToDocumentsEdgeRepository similarToDocumentsEdgeRepository;
+    SimilarToEdgeRepository similarToEdgeRepository;
 
     @Autowired
     ContainsEdgeRepository containsEdgeRepository;
@@ -28,16 +28,10 @@ public class UnifiedEdgeGraphRepositoryFactory {
     DealsWithFromItemEdgeRepository dealsWithFromItemEdgeRepository;
 
     @Autowired
-    SimilarToItemsEdgeRepository similarToItemsEdgeRepository;
-
-    @Autowired
     DealsWithFromPartEdgeRepository dealsWithFromPartEdgeRepository;
 
     @Autowired
     DescribesEdgeRepository describesEdgeRepository;
-
-    @Autowired
-    SimilarToPartsEdgeRepository similarToPartsEdgeRepository;
 
     @Autowired
     ComposesEdgeRepository composesEdgeRepository;
@@ -71,13 +65,13 @@ public class UnifiedEdgeGraphRepositoryFactory {
         switch (type){
             case BUNDLES: return bundlesEdgeRepository;
             case DEALS_WITH_FROM_DOCUMENT: return dealsWithFromDocumentEdgeRepository;
-            case SIMILAR_TO_DOCUMENTS: return similarToDocumentsEdgeRepository;
+            case SIMILAR_TO_DOCUMENTS: return similarToEdgeRepository;
             case CONTAINS: return containsEdgeRepository;
             case DEALS_WITH_FROM_ITEM: return dealsWithFromItemEdgeRepository;
-            case SIMILAR_TO_ITEMS: return similarToItemsEdgeRepository;
+            case SIMILAR_TO_ITEMS: return similarToEdgeRepository;
             case DEALS_WITH_FROM_PART: return dealsWithFromPartEdgeRepository;
             case DESCRIBES: return describesEdgeRepository;
-            case SIMILAR_TO_PARTS: return similarToPartsEdgeRepository;
+            case SIMILAR_TO_PARTS: return similarToEdgeRepository;
             case COMPOSES: return composesEdgeRepository;
             case PROVIDES: return providesEdgeRepository;
             case EMERGES_IN: return emergesInEdgeRepository;

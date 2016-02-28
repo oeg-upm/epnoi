@@ -22,7 +22,7 @@ public class WordService extends AbstractResourceService<Word> {
         super(Resource.Type.WORD);
     }
 
-    // MENTIONS -> Word
+    // PAIRS_WITH -> Word
     public List<String> listWords(String id){
         String uri = uriGenerator.from(Resource.Type.WORD, id);
         return udm.find(Resource.Type.WORD).in(Resource.Type.WORD, uri);

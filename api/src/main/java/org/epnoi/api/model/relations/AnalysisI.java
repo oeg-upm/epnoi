@@ -8,5 +8,5 @@ import lombok.Data;
 @Data
 public class AnalysisI {
 
-    Double weight;
+    String analysis;
 }

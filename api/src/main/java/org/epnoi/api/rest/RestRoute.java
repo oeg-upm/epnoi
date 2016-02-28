@@ -24,7 +24,7 @@ public abstract class RestRoute {
 
 
     protected RestDefinition addResourceCRUD(RestsDefinition definitions, Class inType, Class outType){
-        return definitions.rest("/" + plural).description("rest service for management of " + plural)
+        return definitions.rest("/" + plural).description("rest service for "+singular+" management")
 
                 .post().description("Add a new " + singular + "").type(inType).outType(outType)
                 .produces("application/json").to("bean:" + singular + "Service?method=create")

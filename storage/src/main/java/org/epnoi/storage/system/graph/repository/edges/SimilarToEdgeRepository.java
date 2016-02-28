@@ -11,13 +11,16 @@ import org.springframework.stereotype.Repository;
  * Created by cbadenes on 22/12/15.
  */
 @Repository
-public interface SimilarToEdgeRepository extends GraphRepository<SimilarToEdge> {
+public interface SimilarToEdgeRepository extends RelationGraphRepository<SimilarToEdge> {
 
     // To avoid a class type exception
     SimilarToEdge findOneByUri(String uri);
 
     @Query("match (node1:Document{uri:{0}})-[r:SIMILAR_TO]->(node2:Document{uri:{1}}) return r")
     Iterable<SimilarToDocumentsEdge> findDocumentsByNodes(String start, String end);
+
+    @Query("match (node1:Item{uri:{0}})-[r:SIMILAR_TO]->(node2:Item{uri:{1}}) return r")
+    Iterable<SimilarToItemsEdge> findItemsByNodes(String start, String end);
 
 //    @Query("match (node1:Item{uri:{0}})-[r:SIMILAR_TO]->(node2:Item{uri:{1}}) return r")
 //    Iterable<SimilarToItemsEdge> findItemsByNodes(String start, String end);

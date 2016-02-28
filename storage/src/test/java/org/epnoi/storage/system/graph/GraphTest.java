@@ -1,33 +1,11 @@
 package org.epnoi.storage.system.graph;
 
 import es.cbadenes.lab.test.IntegrationTest;
-import org.epnoi.model.Event;
-import org.epnoi.model.domain.relations.HypernymOf;
-import org.epnoi.model.domain.relations.Relation;
-import org.epnoi.model.domain.resources.Document;
-import org.epnoi.model.domain.resources.Domain;
-import org.epnoi.model.domain.resources.Resource;
-import org.epnoi.model.domain.resources.Source;
-import org.epnoi.model.modules.BindingKey;
-import org.epnoi.model.modules.EventBus;
-import org.epnoi.model.modules.EventBusSubscriber;
-import org.epnoi.model.modules.RoutingKey;
-import org.epnoi.storage.Config;
-import org.epnoi.storage.Helper;
-import org.epnoi.storage.UDM;
-import org.epnoi.storage.generator.URIGenerator;
-import org.epnoi.storage.system.document.domain.WordDocument;
-import org.epnoi.storage.system.document.repository.WordDocumentRepository;
-import org.epnoi.storage.system.graph.domain.edges.BundlesEdge;
-import org.epnoi.storage.system.graph.domain.edges.SimilarToDocumentsEdge;
-import org.epnoi.storage.system.graph.domain.edges.SimilarToItemsEdge;
-import org.epnoi.storage.system.graph.domain.nodes.DocumentNode;
+import org.epnoi.storage.system.graph.queries.GraphQueryExecutor;
 import org.epnoi.storage.system.graph.repository.edges.*;
 import org.epnoi.storage.system.graph.repository.nodes.DocumentGraphRepository;
-import org.epnoi.storage.system.graph.repository.nodes.DomainGraphRepository;
-import org.epnoi.storage.system.graph.repository.nodes.SourceGraphRepository;
-import org.epnoi.storage.system.graph.repository.nodes.UnifiedNodeGraphRepositoryFactory;
-import org.junit.Assert;
+import org.epnoi.storage.system.graph.queries.SimilarDocGraphQuery;
+import org.epnoi.storage.system.graph.queries.SimilarItemGraphQuery;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -38,11 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by cbadenes on 01/01/16.
@@ -65,16 +38,7 @@ public class GraphTest {
 
 
     @Autowired
-    SimilarToDocumentsEdgeRepository similarToDocumentsEdgeRepository;
-
-    @Autowired
     DocumentGraphRepository documentGraphRepository;
-
-    @Autowired
-    SimilarToItemsEdgeRepository similarToItemsEdgeRepository;
-
-    @Autowired
-    SimilarToPartsEdgeRepository similarToPartsEdgeRepository;
 
     @Autowired
     SimilarToEdgeRepository similarToEdgeRepository;
@@ -82,7 +46,21 @@ public class GraphTest {
     @Autowired
     BundlesEdgeRepository bundlesEdgeRepository;
 
+    @Autowired
+    Session session;
 
+    @Autowired
+    GraphQueryExecutor queryExecutor;
+
+//    @Autowired
+//    Neo4jTemplate template;
+
+
+    @Autowired
+    SimilarDocGraphQuery similarDocGraphQuery;
+
+    @Autowired
+    SimilarItemGraphQuery similarItemGraphQuery;
 
 
     @Test
@@ -94,11 +72,29 @@ public class GraphTest {
         String startItemUri = "http://drinventor.eu/items/c369c917fecf3b4828688bdb6677dd6e";
         String endItemUri   = "http://drinventor.eu/items/715f6df41fdf75cb3d0db7fce050f301";
 
+//        Neo4jTemplate template = new Neo4jTemplate(session);
+//        Map<String,String> params = new HashMap<>();
+//        params.put("0","http://drinventor.eu/documents/c369c917fecf3b4828688bdb6677dd6e");
+//        params.put("1","http://drinventor.eu/documents/f6f36164961229eac1bf19431a3744a0");
+//        Result result = template.query("match (node1:Document{uri:{0}})-[r:SIMILAR_TO]->(node2:Document{uri:{1}}) return r", params);
+//        System.out.println("Query Results: "+ result.queryResults());
+//
+//        params.put("0","http://drinventor.eu/items/c369c917fecf3b4828688bdb6677dd6e");
+//        params.put("1","http://drinventor.eu/items/715f6df41fdf75cb3d0db7fce050f301");
+//        Result result2 = template.query("match (node1:Item{uri:{0}})-[r:SIMILAR_TO]->(node2:Item{uri:{1}}) return r", params);
+//        System.out.println("Query Results: "+ result2.queryResults());
+
+
+        System.out.println("0->" + similarDocGraphQuery.execute(startDocUri, endDocUri));
+        System.out.println("1->" + similarItemGraphQuery.execute(startItemUri, endItemUri));
+
         try{
 //            Iterable<SimilarToDocumentsEdge> result = similarToDocumentsEdgeRepository.giveme(startUri, endUri);
 //            System.out.println("1->" + result);
-            System.out.println("1->" + similarToItemsEdgeRepository.findByNodes(startItemUri,endItemUri));
-            System.out.println("2->" + similarToDocumentsEdgeRepository.findByNodes(startDocUri, endDocUri));
+//            System.out.println("1->" + similarToItemsEdgeRepository.findByNodes(startItemUri,endItemUri));
+//            System.out.println("2->" + similarToDocumentsEdgeRepository.findByNodes(startDocUri, endDocUri));
+            System.out.println("2->" + similarToEdgeRepository.findItemsByNodes(startItemUri,endItemUri));
+
             System.out.println("3->" + similarToEdgeRepository.findDocumentsByNodes(startDocUri,endDocUri));
 //            System.out.println("3->" + similarToEdgeRepository.findItemsByNodes(startItemUri,endItemUri));
 
@@ -108,29 +104,6 @@ public class GraphTest {
         }catch (Exception e){
             e.printStackTrace();
         }
-    }
-
-
-    @Test
-    public void findByUri1(){
-        String uri = "http://drinventor.eu/similarities/f3087fda-02e4-4311-b491-0c91509b4e50";
-        Object result = similarToDocumentsEdgeRepository.findOneByUri(uri);
-        System.out.println(result);
-    }
-
-    @Test
-    public void findByUri2(){
-        String uri = "http://drinventor.eu/similarities/f3087fda-02e4-4311-b491-0c91509b4e50";
-        Object result = similarToItemsEdgeRepository.findOneByUri(uri);
-        System.out.println(result);
-    }
-
-
-    @Test
-    public void findByUri3(){
-        String uri = "http://drinventor.eu/similarities/f3087fda-02e4-4311-b491-0c91509b4e50";
-        Object result = similarToPartsEdgeRepository.findOneByUri(uri);
-        System.out.println(result);
     }
 
 }
