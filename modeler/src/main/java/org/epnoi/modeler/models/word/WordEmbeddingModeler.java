@@ -24,10 +24,15 @@ public class WordEmbeddingModeler extends ModelingTask {
 
     private static final Logger LOG = LoggerFactory.getLogger(WordEmbeddingModeler.class);
 
+    private final Topic topic;
+
+    private final ModelingHelper helper;
+
     private Domain domain;
 
-    public WordEmbeddingModeler(Document document, ModelingHelper modelingHelper) {
-        super(document, modelingHelper);
+    public WordEmbeddingModeler(Topic topic, ModelingHelper modelingHelper) {
+        this.topic = topic;
+        this.helper = modelingHelper;
     }
 
 
@@ -36,10 +41,10 @@ public class WordEmbeddingModeler extends ModelingTask {
 
         // TODO use a factory to avoid this explicit flow
 
-        List<String> domainUris = helper.getUdm().find(Resource.Type.DOMAIN).in(Resource.Type.DOCUMENT, document.getUri());
+        List<String> domainUris = helper.getUdm().find(Resource.Type.DOMAIN).in(Resource.Type.TOPIC, topic.getUri());
 
         if ((domainUris == null) || (domainUris.isEmpty())){
-            LOG.warn("Unknown domain from document: " + document);
+            LOG.warn("Unknown domain from topic: " + topic);
             return;
         }
 

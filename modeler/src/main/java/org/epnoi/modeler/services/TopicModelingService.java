@@ -1,6 +1,8 @@
 package org.epnoi.modeler.services;
 
 import org.epnoi.model.domain.resources.Document;
+import org.epnoi.modeler.models.topic.TopicModeler;
+import org.epnoi.modeler.models.word.WordEmbeddingModeler;
 import org.epnoi.modeler.scheduler.ModelingPoolExecutor;
 import org.epnoi.modeler.helper.ModelingHelper;
 import org.epnoi.model.domain.resources.Analysis;
@@ -9,21 +11,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * Created by cbadenes on 11/01/16.
  */
 @Component
-public class ModelingService {
+public class TopicModelingService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ModelingService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TopicModelingService.class);
 
-    private ConcurrentHashMap<String,ModelingPoolExecutor> executors;
+//    private ConcurrentHashMap<String,ModelingPoolExecutor> executors;
+
+    private ThreadPoolTaskScheduler threadpool;
+
+    private ScheduledFuture<?> task;
 
     @Value("${epnoi.modeler.delay}")
     protected Long delay;
@@ -33,17 +42,18 @@ public class ModelingService {
 
     @PostConstruct
     public void setup(){
-        this.executors = new ConcurrentHashMap<>();
+//        this.executors = new ConcurrentHashMap<>();
+        this.threadpool = new ThreadPoolTaskScheduler();
+        this.threadpool.setPoolSize(1);
+        this.threadpool.initialize();
     }
 
 
     public void buildModels(Document document){
         LOG.info("Plan a new task to build models for document: " + document);
-        ModelingPoolExecutor executor = executors.get(document.getUri());
-        if (executor == null){
-            executor = new ModelingPoolExecutor(document,helper,delay);
-        }
-        executors.put(document.getUri(),executor.buildModel());
+        //TODO Implement a Multi-Domain execution
+        if (task != null) task.cancel(false);
+        this.task = this.threadpool.schedule(new TopicModeler(document,helper), new Date(System.currentTimeMillis() + delay));
     }
 
     public String create(Domain domain){

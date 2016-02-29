@@ -4,7 +4,6 @@ import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.model.domain.resources.Document;
 import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.modeler.Config;
-import org.epnoi.model.domain.resources.Domain;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -27,7 +26,7 @@ public class ModelingServiceTest {
     private static final Logger LOG = LoggerFactory.getLogger(ModelingServiceTest.class);
 
     @Autowired
-    ModelingService service;
+    TopicModelingService service;
 
     @Test
     public void scheduleModelingTasks() throws InterruptedException {

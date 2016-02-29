@@ -22,10 +22,15 @@ public class TopicModeler extends ModelingTask {
 
     private static final Logger LOG = LoggerFactory.getLogger(TopicModeler.class);
 
+    private final Document document;
+
+    private final ModelingHelper helper;
+
     private Domain domain;
 
     public TopicModeler(Document document, ModelingHelper modelingHelper) {
-        super(document, modelingHelper);
+        this.document = document;
+        this.helper = modelingHelper;
     }
 
 
