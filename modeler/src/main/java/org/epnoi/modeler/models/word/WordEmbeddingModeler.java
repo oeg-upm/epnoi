@@ -14,6 +14,7 @@ import scala.collection.JavaConversions;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -23,8 +24,10 @@ public class WordEmbeddingModeler extends ModelingTask {
 
     private static final Logger LOG = LoggerFactory.getLogger(WordEmbeddingModeler.class);
 
-    public WordEmbeddingModeler(Domain domain, ModelingHelper modelingHelper) {
-        super(domain, modelingHelper);
+    private Domain domain;
+
+    public WordEmbeddingModeler(Document document, ModelingHelper modelingHelper) {
+        super(document, modelingHelper);
     }
 
 
@@ -32,6 +35,23 @@ public class WordEmbeddingModeler extends ModelingTask {
     public void run() {
 
         // TODO use a factory to avoid this explicit flow
+
+        List<String> domainUris = helper.getUdm().find(Resource.Type.DOMAIN).in(Resource.Type.DOCUMENT, document.getUri());
+
+        if ((domainUris == null) || (domainUris.isEmpty())){
+            LOG.warn("Unknown domain from document: " + document);
+            return;
+        }
+
+        Optional<Resource> result = helper.getUdm().read(Resource.Type.DOMAIN).byUri(domainUris.get(0));//TODO Handle more than one domain
+
+        if (!result.isPresent()){
+            LOG.warn("Unknown domain from uri: " + domainUris);
+            return;
+        }
+
+        domain = result.get().asDomain();
+
 
         try{
             //TODO Optimize using Spark.parallel
@@ -51,7 +71,7 @@ public class WordEmbeddingModeler extends ModelingTask {
             helper.getUdm().delete(Relation.Type.EMBEDDED_IN).in(Resource.Type.DOMAIN, domain.getUri());
 
             // Create the analysis
-            Analysis analysis = newAnalysis("Word-Embedding","W2V",Resource.Type.WORD.name());
+            Analysis analysis = newAnalysis("Word-Embedding","W2V",Resource.Type.WORD.name(),domain.getUri());
 
             // Build W2V Model
             W2VModel model = helper.getWordEmbeddingBuilder().build(analysis.getUri(), regularResources);

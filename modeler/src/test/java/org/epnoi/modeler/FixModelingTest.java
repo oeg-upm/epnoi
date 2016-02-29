@@ -22,6 +22,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.List;
+
 /**
  * Created by cbadenes on 13/01/16.
  */
@@ -52,7 +54,12 @@ public class FixModelingTest {
     @Test
     public void topicModel() throws InterruptedException {
 
-        udm.find(Resource.Type.DOMAIN).all().forEach(domain -> new TopicModeler(udm.read(Resource.Type.DOMAIN).byUri(domain).get().asDomain(),helper).run());
+
+        List<String> docs = udm.find(Resource.Type.DOCUMENT).all();
+
+        if (!docs.isEmpty()){
+            new TopicModeler(udm.read(Resource.Type.DOCUMENT).byUri(docs.get(0)).get().asDocument(),helper).run();
+        }
 
 
     }

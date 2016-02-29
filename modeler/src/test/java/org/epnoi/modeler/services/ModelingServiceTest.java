@@ -1,6 +1,8 @@
 package org.epnoi.modeler.services;
 
 import es.cbadenes.lab.test.IntegrationTest;
+import org.epnoi.model.domain.resources.Document;
+import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.modeler.Config;
 import org.epnoi.model.domain.resources.Domain;
 import org.junit.Test;
@@ -30,19 +32,16 @@ public class ModelingServiceTest {
     @Test
     public void scheduleModelingTasks() throws InterruptedException {
 
-        Domain domain1 = new Domain();
-        domain1.setUri("http://epnoi.org/domains/ad8ceb56-e5e4-488b-91be-96ce1a7f115a");
+        Document document = Resource.newDocument();
+        document.setUri("http://drinventor.eu/documents/c369c917fecf3b4828688bdb6677dd6e");
 
-        Domain domain2 = new Domain();
-        domain2.setUri("http://epnoi.org/domains/ad8ceb56-e5e4-488b-91be-96ce1a7f4444");
-
-        service.buildModels(domain1);
+        service.buildModels(document);
         Thread.sleep(1000);
-        service.buildModels(domain2);
-        service.buildModels(domain1);
+        service.buildModels(document);
+        service.buildModels(document);
         Thread.sleep(1000);
-        service.buildModels(domain1);
-        service.buildModels(domain2);
+        service.buildModels(document);
+        service.buildModels(document);
         Thread.sleep(1000);
 
         LOG.info("waiting for execution....");

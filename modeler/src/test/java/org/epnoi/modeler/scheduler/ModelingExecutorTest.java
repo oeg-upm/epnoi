@@ -1,6 +1,8 @@
 package org.epnoi.modeler.scheduler;
 
 import es.cbadenes.lab.test.IntegrationTest;
+import org.epnoi.model.domain.resources.Document;
+import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.modeler.Config;
 import org.epnoi.modeler.helper.ModelingHelper;
 import org.epnoi.model.domain.resources.Domain;
@@ -29,9 +31,10 @@ public class ModelingExecutorTest {
     @Test
     public void onlyOneTime() throws InterruptedException {
 
-        Domain domain = new Domain();
+        Document document = Resource.newDocument();
+        document.setUri("http://drinventor.eu/documents/c369c917fecf3b4828688bdb6677dd6e");
 
-        ModelingPoolExecutor modelingExecutor = new ModelingPoolExecutor(domain,helper,5000);
+        ModelingPoolExecutor modelingExecutor = new ModelingPoolExecutor(document,helper,5000);
 
         modelingExecutor.buildModel();
         Thread.sleep(1000);

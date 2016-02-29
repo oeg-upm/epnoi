@@ -1,5 +1,6 @@
 package org.epnoi.modeler.services;
 
+import org.epnoi.model.domain.resources.Document;
 import org.epnoi.modeler.scheduler.ModelingPoolExecutor;
 import org.epnoi.modeler.helper.ModelingHelper;
 import org.epnoi.model.domain.resources.Analysis;
@@ -36,13 +37,13 @@ public class ModelingService {
     }
 
 
-    public void buildModels(Domain domain){
-        LOG.info("Plan a new task to build models for domain: " + domain);
-        ModelingPoolExecutor executor = executors.get(domain.getUri());
+    public void buildModels(Document document){
+        LOG.info("Plan a new task to build models for document: " + document);
+        ModelingPoolExecutor executor = executors.get(document.getUri());
         if (executor == null){
-            executor = new ModelingPoolExecutor(domain,helper,delay);
+            executor = new ModelingPoolExecutor(document,helper,delay);
         }
-        executors.put(domain.getUri(),executor.buildModel());
+        executors.put(document.getUri(),executor.buildModel());
     }
 
     public String create(Domain domain){

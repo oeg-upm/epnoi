@@ -144,14 +144,7 @@ public class ParserTask implements Runnable {
             // Mentions from Part
             //TODO
 
-            // Relate it to Domain
-            helper.getUdm().save(Relation.newContains(domainUri,document.getUri()));
 
-
-            //TODO Temporal solution
-            Domain domain = Resource.newDomain();
-            domain.setUri(domainUri);
-            helper.getEventBus().post(Event.from(domain), RoutingKey.of(Resource.Type.DOMAIN,Resource.State.UPDATED));
 
         }catch (RuntimeException e){
             LOG.error("Error processing resource: " + file, e);
@@ -206,7 +199,10 @@ public class ParserTask implements Runnable {
         document.setTokens(tokens);
 
         helper.getUdm().save(document);
+        // Relate it to Source
         helper.getUdm().save(Relation.newProvides(sourceUri,document.getUri()));
+        // Relate it to Domain
+        helper.getUdm().save(Relation.newContains(domainUri,document.getUri()));
 
         return document;
     }

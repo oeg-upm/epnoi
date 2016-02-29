@@ -22,15 +22,33 @@ public class TopicModeler extends ModelingTask {
 
     private static final Logger LOG = LoggerFactory.getLogger(TopicModeler.class);
 
-    public TopicModeler(Domain domain, ModelingHelper modelingHelper) {
-        super(domain, modelingHelper);
+    private Domain domain;
+
+    public TopicModeler(Document document, ModelingHelper modelingHelper) {
+        super(document, modelingHelper);
     }
 
 
     @Override
     public void run() {
         //TODO Use of factory to avoid this explicit flow!
-        LOG.info("ready to create a new topic model for domain: " + domain);
+        LOG.info("ready to create a new topic model from document: " + document);
+
+        List<String> domainUris = helper.getUdm().find(Resource.Type.DOMAIN).in(Resource.Type.DOCUMENT, document.getUri());
+
+        if ((domainUris == null) || (domainUris.isEmpty())){
+            LOG.warn("Unknown domain from document: " + document);
+            return;
+        }
+
+        Optional<Resource> result = helper.getUdm().read(Resource.Type.DOMAIN).byUri(domainUris.get(0));//TODO Handle more than one domain
+
+        if (!result.isPresent()){
+            LOG.warn("Unknown domain from uri: " + domainUris);
+            return;
+        }
+
+        domain = result.get().asDomain();
 
         // Delete previous Topics
         helper.getUdm().find(Resource.Type.TOPIC).in(Resource.Type.DOMAIN,domain.getUri()).stream().forEach(topic -> helper.getUdm().delete(Resource.Type.TOPIC).byUri(topic));
@@ -85,7 +103,7 @@ public class TopicModeler extends ModelingTask {
                 throw new RuntimeException("No " + resourceType.name() + "s found in domain: " + domain.getUri());
 
             // Create the analysis
-            Analysis analysis = newAnalysis("Topic-Model","LDA with Evolutionary Algorithm parameterization",resourceType.name());
+            Analysis analysis = newAnalysis("Topic-Model","LDA with Evolutionary Algorithm parameterization",resourceType.name(),domain.getUri());
 
             // Persist Topic and Relations
             TopicModel model = helper.getTopicModelBuilder().build(analysis.getUri(), regularResources);

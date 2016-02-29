@@ -22,7 +22,7 @@ public class UriUtils {
             m.update(text.getBytes(),0,text.length());
             id = new BigInteger(1, m.digest()).toString(16);
         } catch (NoSuchAlgorithmException e) {
-            id = UUID.randomUUID().toString()
+            id = UUID.randomUUID().toString();
             LOG.warn("Error calculating MD5 from text. UUID will be used: " + id);
         }
         return id;

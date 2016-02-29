@@ -1,6 +1,7 @@
 package org.epnoi.modeler.scheduler;
 
 import org.epnoi.model.domain.resources.Analysis;
+import org.epnoi.model.domain.resources.Document;
 import org.epnoi.model.domain.resources.Domain;
 import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.utils.TimeUtils;
@@ -17,20 +18,20 @@ public class ModelingTask implements Runnable{
 
     private static final Logger LOG = LoggerFactory.getLogger(ModelingTask.class);
 
-    protected final Domain domain;
     protected final ModelingHelper helper;
+    protected final Document document;
 
-    public ModelingTask(Domain domain, ModelingHelper modelingHelper){
-        this.domain = domain;
+    public ModelingTask(Document document, ModelingHelper modelingHelper){
+        this.document = document;
         this.helper = modelingHelper;
     }
 
-    protected Analysis newAnalysis(String type, String configuration, String description){
+    protected Analysis newAnalysis(String type, String configuration, String description, String domainUri){
 
         Analysis analysis = Resource.newAnalysis();
         analysis.setUri(helper.getUriGenerator().newFor(Resource.Type.ANALYSIS));
         analysis.setCreationTime(TimeUtils.asISO());
-        analysis.setDomain(domain.getUri());
+        analysis.setDomain(domainUri);
         analysis.setType(type);
         analysis.setDescription(description);
         analysis.setConfiguration(configuration);
@@ -40,7 +41,7 @@ public class ModelingTask implements Runnable{
     @Override
     public void run() {
         //TODO Parallelize
-        helper.getModelBuilder().execute(new TopicModeler(domain,helper));
-        helper.getModelBuilder().execute(new WordEmbeddingModeler(domain,helper));
+        helper.getModelBuilder().execute(new TopicModeler(document,helper));
+        helper.getModelBuilder().execute(new WordEmbeddingModeler(document,helper));
     }
 }

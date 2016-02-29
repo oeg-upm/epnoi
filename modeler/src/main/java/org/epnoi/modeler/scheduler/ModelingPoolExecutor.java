@@ -1,5 +1,6 @@
 package org.epnoi.modeler.scheduler;
 
+import org.epnoi.model.domain.resources.Document;
 import org.epnoi.modeler.helper.ModelingHelper;
 import org.epnoi.model.domain.resources.Domain;
 import org.slf4j.Logger;
@@ -17,16 +18,16 @@ public class ModelingPoolExecutor {
 
     private static final Logger LOG = LoggerFactory.getLogger(ModelingPoolExecutor.class);
 
-    private final Domain domain;
     private final long delay;
     private final ModelingHelper helper;
+    private final Document document;
 
     private ThreadPoolTaskScheduler threadpool;
     private ScheduledFuture<?> task;
 
 
-    public ModelingPoolExecutor(Domain domain, ModelingHelper helper, long delayInMsecs) {
-        this.domain = domain;
+    public ModelingPoolExecutor(Document document, ModelingHelper helper, long delayInMsecs) {
+        this.document = document;
         this.delay  = delayInMsecs;
         this.helper = helper;
 
@@ -34,13 +35,13 @@ public class ModelingPoolExecutor {
         this.threadpool.setPoolSize(1);
         this.threadpool.initialize();
 
-        LOG.info("created a new modeling executor delayed by: " + delayInMsecs + "msecs for domain: " + domain);
+        LOG.info("created a new modeling executor delayed by: " + delayInMsecs + "msecs for document: " + document);
     }
 
     public ModelingPoolExecutor buildModel(){
         LOG.info("scheduling a new build model task");
         if (task != null) task.cancel(false);
-        this.task = this.threadpool.schedule(new ModelingTask(domain,helper), new Date(System.currentTimeMillis() + delay));
+        this.task = this.threadpool.schedule(new ModelingTask(document,helper), new Date(System.currentTimeMillis() + delay));
         return this;
     }
 }
