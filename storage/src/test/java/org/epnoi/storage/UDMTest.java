@@ -96,25 +96,7 @@ public class UDMTest {
         domain.setDescription("siggraph");
         eventBus.post(Event.from(domain),RoutingKey.of(Resource.Type.DOMAIN,Resource.State.UPDATED));
     }
-
-    @Test
-    public void findSimilar(){
-
-        String startUri = "http://drinventor.eu/documents/c369c917fecf3b4828688bdb6677dd6e";
-        String endUri   = "http://drinventor.eu/documents/f6f36164961229eac1bf19431a3744a0";
-
-        try{
-//            List<Relation> result = udm.find(Relation.Type.SIMILAR_TO_DOCUMENTS).btw(startUri, endUri);
-//            System.out.println("1->" + result);
-
-            Iterable result2 = similarToEdgeRepository.findDocumentsByNodes(startUri, endUri);
-            System.out.println("2->" + result2);
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
+    
 
     @Test
     public void removeSimilarities(){
