@@ -53,7 +53,8 @@ public abstract class SimilarityTask implements Runnable,Serializable {
         List<WeightedPair> similarities = compute(StreamSupport.stream(relations.spliterator(), false).map(rel -> new WeightedPair(rel.getStartUri(), rel.getEndUri(), rel.getWeight())).collect(Collectors.toList()));
 
         // Save similarities in ddbb
-        similarities.parallelStream().forEach(pair -> {
+        // TODO parallelStream does not work with graph-db
+        similarities.stream().forEach(pair -> {
                     LOG.info("Attaching " + similarityType + " based on " + pair);
                     SimilarTo simRel1 = null;
                     SimilarTo simRel2 = null;

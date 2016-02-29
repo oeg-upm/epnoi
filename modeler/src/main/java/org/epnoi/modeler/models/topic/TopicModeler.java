@@ -146,7 +146,8 @@ public class TopicModeler extends ModelingTask {
             ConcurrentHashMap<String,String> words = new ConcurrentHashMap<>();
 
             // Relate it to Words
-            topicData.getWords().parallelStream().forEach( wordDistribution -> {
+            // TODO parallelStream does not work with graph-db
+            topicData.getWords().stream().forEach( wordDistribution -> {
 
                 if (!words.contains(wordDistribution.getWord())){
                     List<String> result = helper.getUdm().find(Resource.Type.WORD).by(Word.CONTENT, wordDistribution.getWord());
@@ -176,8 +177,8 @@ public class TopicModeler extends ModelingTask {
             });
         }
 
-
-        model.getResources().keySet().parallelStream().forEach(resourceURI ->{
+        // TODO parallelStream does not work with graph-db
+        model.getResources().keySet().stream().forEach(resourceURI ->{
             for (TopicDistribution topicDistribution: model.getResources().get(resourceURI)){
                 // Relate resource  to Topic
                 String topicURI = topicTable.get(topicDistribution.getTopic());
