@@ -1,6 +1,7 @@
 package org.epnoi.storage.system.graph.queries;
 
 import org.epnoi.model.domain.relations.Relation;
+import org.epnoi.model.domain.resources.Resource;
 
 import java.util.List;
 
@@ -11,6 +12,8 @@ public interface GraphQuery<T extends Relation> {
 
     Relation.Type accept();
 
-    List<T> execute(String startUri, String endUri);
+    List<T> query(String startUri, String endUri);
+
+    void deleteIn(Resource.Type type, String uri);
 
 }

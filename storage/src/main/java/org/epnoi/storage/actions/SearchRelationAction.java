@@ -61,7 +61,7 @@ public class SearchRelationAction {
             UnifiedTransaction transaction = helper.getSession().beginTransaction();
 
             if (helper.getGraphQueryFactory().handle(type)){
-                helper.getGraphQueryFactory().of(type).execute(startUri,endUri).forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
+                helper.getGraphQueryFactory().of(type).query(startUri,endUri).forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
             }else{
                 helper.getUnifiedEdgeGraphRepository().findBetween(type, startUri, endUri).forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
             }

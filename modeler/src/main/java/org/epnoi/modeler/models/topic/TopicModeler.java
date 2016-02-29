@@ -107,9 +107,7 @@ public class TopicModeler extends ModelingTask {
 
             // Save Topic
             Topic topic = Resource.newTopic();
-            topic.setUri(helper.getUriGenerator().newFor(Resource.Type.TOPIC));
             topic.setAnalysis(analysis.getUri());
-            topic.setCreationTime(TimeUtils.asISO());
             topic.setContent(String.join(",",topicData.getWords().stream().map(wd -> wd.getWord()).collect(Collectors.toList())));
             helper.getUdm().save(topic);
 

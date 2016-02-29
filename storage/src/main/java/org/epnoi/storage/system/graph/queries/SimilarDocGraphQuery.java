@@ -3,10 +3,13 @@ package org.epnoi.storage.system.graph.queries;
 import org.apache.commons.beanutils.BeanUtils;
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.relations.SimilarToDocuments;
+import org.epnoi.model.domain.resources.Resource;
+import org.neo4j.ogm.session.result.QueryStatistics;
 import org.neo4j.ogm.session.result.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
@@ -29,11 +32,11 @@ public class SimilarDocGraphQuery implements GraphQuery<SimilarToDocuments> {
     }
 
     @Override
-    public List<SimilarToDocuments> execute(String startUri, String endUri) {
+    public List<SimilarToDocuments> query(String startUri, String endUri) {
         Map<String,String> params = new HashMap<>();
         params.put("0",startUri);
         params.put("1",endUri);
-        Result result = executor.execute("match (node1:Document{uri:{0}})-[r:SIMILAR_TO]->(node2:Document{uri:{1}}) return r", params);
+        Result result = executor.query("match (node1:Document{uri:{0}})-[r:SIMILAR_TO]->(node2:Document{uri:{1}}) return r", params);
 
         List<SimilarToDocuments> similars = new ArrayList<>();
 
@@ -51,5 +54,24 @@ public class SimilarDocGraphQuery implements GraphQuery<SimilarToDocuments> {
             }
         }
         return similars;
+    }
+
+
+    @Override
+    public void deleteIn(Resource.Type type, String uri){
+
+        Map<String,Object> params = new HashMap<>();
+        params.put("0",uri);
+
+        String query = "";
+        switch (type){
+            case DOMAIN:
+                query = "match (domain{uri:{0}})-[c:CONTAINS]->(d1:Document)-[r:SIMILAR_TO]->(d2:Document) delete r";
+                break;
+            default: query = "";
+        }
+
+        QueryStatistics result = executor.execute(query, params);
+        LOG.info("Result of query execution ["+ query + "] is: " + result);
     }
 }

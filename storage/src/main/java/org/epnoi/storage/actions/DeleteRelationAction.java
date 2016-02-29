@@ -75,19 +75,24 @@ public class DeleteRelationAction {
             helper.getSession().clean();
             UnifiedTransaction transaction = helper.getSession().beginTransaction();
 
-            Iterable<Relation> pairs = helper.getUnifiedEdgeGraphRepository().findIn(type,refType, uri);
-            if (pairs != null){
-                // TODO Check this
-                StreamSupport.stream(pairs.spliterator(), false).parallel().forEach(pair -> {
-                    helper.getUnifiedEdgeGraphRepository().delete(type,pair.getUri());
-                    helper.getEventBus().post(Event.from(pair.getUri()), RoutingKey.of(type, Relation.State.DELETED));
-                    LOG.info("Deleted: "+type.name()+"[" + uri+"]");
-                });
-//                for (Relation pair : pairs) {
-//                    helper.getUnifiedEdgeGraphRepository().delete(type,pair.getUri());
-//                    helper.getEventBus().post(Event.from(pair.getUri()), RoutingKey.of(type, Relation.State.DELETED));
-//                }
+            if (helper.getGraphQueryFactory().handle(type)){
+                helper.getGraphQueryFactory().of(type).deleteIn(refType,uri);
+            }else{
+                Iterable<Relation> pairs = helper.getUnifiedEdgeGraphRepository().findIn(type,refType, uri);
+                if (pairs != null){
+                    // TODO Check this
+                    StreamSupport.stream(pairs.spliterator(), false).parallel().forEach(pair -> {
+                        helper.getUnifiedEdgeGraphRepository().delete(type,pair.getUri());
+                        helper.getEventBus().post(Event.from(pair.getUri()), RoutingKey.of(type, Relation.State.DELETED));
+                        LOG.info("Deleted: "+type.name()+"[" + uri+"]");
+                    });
+    //                for (Relation pair : pairs) {
+    //                    helper.getUnifiedEdgeGraphRepository().delete(type,pair.getUri());
+    //                    helper.getEventBus().post(Event.from(pair.getUri()), RoutingKey.of(type, Relation.State.DELETED));
+    //                }
+                }
             }
+
 
             transaction.commit();
 

@@ -85,17 +85,17 @@ public class GraphTest {
 //        System.out.println("Query Results: "+ result2.queryResults());
 
 
-        System.out.println("0->" + similarDocGraphQuery.execute(startDocUri, endDocUri));
-        System.out.println("1->" + similarItemGraphQuery.execute(startItemUri, endItemUri));
+        System.out.println("0->" + similarDocGraphQuery.query(startDocUri, endDocUri));
+        System.out.println("1->" + similarItemGraphQuery.query(startItemUri, endItemUri));
 
         try{
 //            Iterable<SimilarToDocumentsEdge> result = similarToDocumentsEdgeRepository.giveme(startUri, endUri);
 //            System.out.println("1->" + result);
 //            System.out.println("1->" + similarToItemsEdgeRepository.findByNodes(startItemUri,endItemUri));
 //            System.out.println("2->" + similarToDocumentsEdgeRepository.findByNodes(startDocUri, endDocUri));
-            System.out.println("2->" + similarToEdgeRepository.findItemsByNodes(startItemUri,endItemUri));
+//            System.out.println("2->" + similarToEdgeRepository.findItemsByNodes(startItemUri,endItemUri));
 
-            System.out.println("3->" + similarToEdgeRepository.findDocumentsByNodes(startDocUri,endDocUri));
+//            System.out.println("3->" + similarToEdgeRepository.findDocumentsByNodes(startDocUri,endDocUri));
 //            System.out.println("3->" + similarToEdgeRepository.findItemsByNodes(startItemUri,endItemUri));
 
 //            Iterable<DocumentNode> result2 = documentGraphRepository.findByDocument(startUri);

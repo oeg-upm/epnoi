@@ -3,6 +3,8 @@ package org.epnoi.storage.system.graph.queries;
 import org.apache.commons.beanutils.BeanUtils;
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.relations.SimilarToItems;
+import org.epnoi.model.domain.resources.Resource;
+import org.neo4j.ogm.session.result.QueryStatistics;
 import org.neo4j.ogm.session.result.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,11 +31,11 @@ public class SimilarItemGraphQuery implements GraphQuery<SimilarToItems> {
     }
 
     @Override
-    public List<SimilarToItems> execute(String startUri, String endUri) {
+    public List<SimilarToItems> query(String startUri, String endUri) {
         Map<String,String> params = new HashMap<>();
         params.put("0",startUri);
         params.put("1",endUri);
-        Result result = executor.execute("match (node1:Item{uri:{0}})-[r:SIMILAR_TO]->(node2:Item{uri:{1}}) return r", params);
+        Result result = executor.query("match (node1:Item{uri:{0}})-[r:SIMILAR_TO]->(node2:Item{uri:{1}}) return r", params);
 
         List<SimilarToItems> similars = new ArrayList<>();
 
@@ -51,5 +53,23 @@ public class SimilarItemGraphQuery implements GraphQuery<SimilarToItems> {
             }
         }
         return similars;
+    }
+
+    @Override
+    public void deleteIn(Resource.Type type, String uri){
+
+        Map<String,Object> params = new HashMap<>();
+        params.put("0",uri);
+
+        String query = "";
+        switch (type){
+            case DOMAIN:
+                query = "match (domain{uri:{0}})-[c:CONTAINS]->(d1:Document)-[:BUNDLES]->(i:Item)-[r:SIMILAR_TO]->(i2:Item) delete r";
+                break;
+            default: query = "";
+        }
+
+        QueryStatistics result = executor.execute(query, params);
+        LOG.info("Result of query execution ["+ query + "] is: " + result);
     }
 }
