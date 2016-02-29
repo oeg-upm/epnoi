@@ -28,6 +28,12 @@ public class SaveResourceAction {
                 resource.setUri(helper.getUriGenerator().newFor(resource.getResourceType()));
             }
 
+            // Checking if exists
+            if (helper.getUnifiedColumnRepository().exists(resource.getResourceType(),resource.getUri())){
+                LOG.warn("Resource already exists: " + resource);
+                return;
+            }
+
             // column
             helper.getUnifiedColumnRepository().save(resource);
             // document

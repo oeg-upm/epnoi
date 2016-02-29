@@ -2,6 +2,7 @@ package org.epnoi.storage.generator;
 
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.utils.UriUtils;
 import org.epnoi.storage.UDM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,7 @@ public class URIGenerator {
     UDM udm;
 
     public String basedOnContent(Resource.Type resource, String content){
-        return new StringBuilder(base).append(resource.route()).append(SEPARATOR).append(getMD5(content)).toString();
+        return new StringBuilder(base).append(resource.route()).append(SEPARATOR).append(UriUtils.getMD5(content)).toString();
     }
 
     public String from(Resource.Type resource, String id){
@@ -57,20 +58,6 @@ public class URIGenerator {
         } while (udm.exists(type).withUri(uri));
         return uri;
     }
-
-    private String getMD5(String text){
-        String id;
-        try {
-            MessageDigest m = MessageDigest.getInstance("MD5");
-            m.update(text.getBytes(),0,text.length());
-            id = new BigInteger(1, m.digest()).toString(16);
-        } catch (NoSuchAlgorithmException e) {
-            id = getUUID();
-            LOG.warn("Error calculating MD5 from text. UUID will be used: " + id);
-        }
-        return id;
-    }
-
 
     private String getUUID(){
         return UUID.randomUUID().toString();

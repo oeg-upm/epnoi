@@ -7,6 +7,7 @@ import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.storage.system.graph.domain.edges.Edge;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.Property;
 
 /**
  * Created by cbadenes on 02/02/16.
@@ -21,6 +22,10 @@ public abstract class Node extends Resource {
 
     @Index(unique = true)
     String uri;
+
+    @Property
+    String creationTime;
+
 
     public abstract void add(Edge  edge);
 

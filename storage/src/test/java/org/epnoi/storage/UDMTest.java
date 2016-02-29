@@ -96,16 +96,18 @@ public class UDMTest {
         domain.setDescription("siggraph");
         eventBus.post(Event.from(domain),RoutingKey.of(Resource.Type.DOMAIN,Resource.State.UPDATED));
     }
-    
+
 
     @Test
-    public void removeSimilarities(){
+    public void findDomains(){
 
         Domain domain = Resource.newDomain();
-        domain.setUri("http://epnoi.org/domains/ce123683-512a-4f2a-a539-c77b666a8b79");
+        domain.setUri("http://drinventor.eu/domains/7df34748-7fad-486e-a799-3bcd86a03499");
         domain.setName("siggraph");
 
-        udm.find(Resource.Type.TOPIC).in(Resource.Type.DOMAIN,domain.getUri()).stream().forEach(topic -> udm.delete(Resource.Type.TOPIC).byUri(topic));
+        System.out.println(udm.find(Resource.Type.DOMAIN).in(Resource.Type.SOURCE,"http://drinventor.eu/sources/00729c4c-f449-40d5-ae83-482278e83e9a"));
+
+        System.out.println(udm.find(Resource.Type.DOMAIN).all());
     }
 
 

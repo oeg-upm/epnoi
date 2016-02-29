@@ -109,6 +109,7 @@ public class TopicModeler extends ModelingTask {
             Topic topic = Resource.newTopic();
             topic.setAnalysis(analysis.getUri());
             topic.setContent(String.join(",",topicData.getWords().stream().map(wd -> wd.getWord()).collect(Collectors.toList())));
+            topic.setUri(helper.getUriGenerator().basedOnContent(Resource.Type.TOPIC,topic.getContent()));
             helper.getUdm().save(topic);
 
             EmergesIn emerges = Relation.newEmergesIn(topic.getUri(), domain.getUri());
@@ -126,7 +127,7 @@ public class TopicModeler extends ModelingTask {
                 if (result != null && !result.isEmpty()){
                     wordURI = result.get(0);
                 }else {
-                    wordURI = helper.getUriGenerator().newFor(Resource.Type.WORD);
+                    wordURI = helper.getUriGenerator().basedOnContent(Resource.Type.WORD,wordDistribution.getWord());
 
                     // Create Word
                     Word word = Resource.newWord();
