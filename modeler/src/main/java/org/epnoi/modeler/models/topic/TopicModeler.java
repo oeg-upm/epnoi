@@ -112,7 +112,7 @@ public class TopicModeler extends ModelingTask {
             Analysis analysis = newAnalysis("Topic-Model","LDA with Evolutionary Algorithm parameterization",resourceType.name(),domain.getUri());
 
             // Persist Topic and Relations
-            TopicModel model = helper.getTopicModelBuilder().build(analysis.getUri(), regularResources);
+            TopicModel model = helper.getTopicModelBuilder().build(domain.getUri(), regularResources);
             persistModel(analysis,model,resourceType);
 
             // Save the analysis

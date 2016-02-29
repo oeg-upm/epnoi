@@ -39,7 +39,7 @@ public class DocumentCreatedEventHandler implements EventBusSubscriber {
 
     @Override
     public void handle(Event event) {
-        LOG.info("Domain updated event received: " + event);
+        LOG.info("Document created event received: " + event);
         try{
             Document document = event.to(Document.class);
             topicModelingService.buildModels(document);
