@@ -90,11 +90,9 @@ public class UDMTest {
 
     @Test
     public void publish(){
-        Domain domain = new Domain();
-        domain.setUri("http://drinventor.eu/domains/7df34748-7fad-486e-a799-3bcd86a03499");
-        domain.setName("siggraph");
-        domain.setDescription("siggraph");
-        eventBus.post(Event.from(domain),RoutingKey.of(Resource.Type.DOMAIN,Resource.State.UPDATED));
+        Document document = Resource.newDocument();
+        document.setUri("http://drinventor.eu/documents/c369c917fecf3b4828688bdb6677dd6e");
+        eventBus.post(Event.from(document),RoutingKey.of(Resource.Type.DOCUMENT,Resource.State.CREATED));
     }
 
 

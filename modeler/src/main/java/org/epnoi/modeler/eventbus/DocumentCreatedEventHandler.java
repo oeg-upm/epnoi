@@ -3,6 +3,9 @@ package org.epnoi.modeler.eventbus;
 import org.epnoi.model.Event;
 import org.epnoi.model.domain.resources.Document;
 import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.model.modules.BindingKey;
+import org.epnoi.model.modules.EventBus;
+import org.epnoi.model.modules.EventBusSubscriber;
 import org.epnoi.model.modules.RoutingKey;
 import org.epnoi.modeler.services.TopicModelingService;
 import org.slf4j.Logger;
@@ -10,19 +13,28 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+
 /**
  * Created by cbadenes on 11/01/16.
  */
 @Component
-public class DocumentCreatedEventHandler extends AbstractEventHandler {
+public class DocumentCreatedEventHandler implements EventBusSubscriber {
 
     private static final Logger LOG = LoggerFactory.getLogger(DocumentCreatedEventHandler.class);
 
     @Autowired
+    protected EventBus eventBus;
+
+    @Autowired
     TopicModelingService topicModelingService;
 
-    public DocumentCreatedEventHandler() {
-        super(RoutingKey.of(Resource.Type.DOCUMENT, Resource.State.CREATED));
+    @PostConstruct
+    public void init(){
+        BindingKey bindingKey = BindingKey.of(RoutingKey.of(Resource.Type.DOCUMENT, Resource.State.CREATED), "topic-modeler");
+        LOG.info("Trying to register as subscriber of '" + bindingKey + "' events ..");
+        eventBus.subscribe(this,bindingKey );
+        LOG.info("registered successfully");
     }
 
     @Override
