@@ -16,7 +16,7 @@ public interface WordGraphRepository extends ResourceGraphRepository<WordNode> {
     @Query("match (w)-[:PAIRS_WITH]->(word{uri:{0}}) return w")
     Iterable<WordNode> findByWord(String uri);
 
-    @Query("match (w:Word)-[:EMBEDDED_IN]->(domain{uri:{0}}) return w")
+    @Query("match (w:Word)<-[:MENTIONS]-(e)-[:EMERGES_IN|APPEARED_IN]->(domain{uri:{0}}) return w")
     Iterable<WordNode> findByDomain(String uri);
 
     @Query("match (w:Word)<-[:MENTIONS]-(term{uri:{0}}) return w")
