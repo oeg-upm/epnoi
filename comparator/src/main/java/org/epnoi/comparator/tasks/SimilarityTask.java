@@ -53,32 +53,32 @@ public abstract class SimilarityTask implements Runnable,Serializable {
         List<WeightedPair> similarities = compute(StreamSupport.stream(relations.spliterator(), false).map(rel -> new WeightedPair(rel.getStartUri(), rel.getEndUri(), rel.getWeight())).collect(Collectors.toList()));
 
         // Save similarities in ddbb
-        for (WeightedPair pair: similarities){
-            LOG.info("Attaching " + similarityType + " based on " + pair);
-            SimilarTo simRel1 = null;
-            SimilarTo simRel2 = null;
-            switch (similarityType) {
-                case SIMILAR_TO_DOCUMENTS:
-                    simRel1 = Relation.newSimilarToDocuments(pair.getUri1(), pair.getUri2());
-                    simRel2 = Relation.newSimilarToDocuments(pair.getUri2(), pair.getUri1());
-                    break;
-                case SIMILAR_TO_ITEMS:
-                    simRel1 = Relation.newSimilarToItems(pair.getUri1(), pair.getUri2());
-                    simRel2 = Relation.newSimilarToItems(pair.getUri2(), pair.getUri1());
-                    break;
-                case SIMILAR_TO_PARTS:
-                    simRel1 = Relation.newSimilarToParts(pair.getUri1(), pair.getUri2());
-                    simRel2 = Relation.newSimilarToParts(pair.getUri2(), pair.getUri1());
-                    break;
-            }
-            simRel1.setWeight(pair.getWeight());
-            simRel1.setDomain(analysis.getDomain());
-            simRel2.setWeight(pair.getWeight());
-            simRel2.setDomain(analysis.getDomain());
-            helper.getUdm().save(simRel1);
-            helper.getUdm().save(simRel2);
-
+        similarities.parallelStream().forEach(pair -> {
+                    LOG.info("Attaching " + similarityType + " based on " + pair);
+                    SimilarTo simRel1 = null;
+                    SimilarTo simRel2 = null;
+                    switch (similarityType) {
+                        case SIMILAR_TO_DOCUMENTS:
+                            simRel1 = Relation.newSimilarToDocuments(pair.getUri1(), pair.getUri2());
+                            simRel2 = Relation.newSimilarToDocuments(pair.getUri2(), pair.getUri1());
+                            break;
+                        case SIMILAR_TO_ITEMS:
+                            simRel1 = Relation.newSimilarToItems(pair.getUri1(), pair.getUri2());
+                            simRel2 = Relation.newSimilarToItems(pair.getUri2(), pair.getUri1());
+                            break;
+                        case SIMILAR_TO_PARTS:
+                            simRel1 = Relation.newSimilarToParts(pair.getUri1(), pair.getUri2());
+                            simRel2 = Relation.newSimilarToParts(pair.getUri2(), pair.getUri1());
+                            break;
+                    }
+                    simRel1.setWeight(pair.getWeight());
+                    simRel1.setDomain(analysis.getDomain());
+                    simRel2.setWeight(pair.getWeight());
+                    simRel2.setDomain(analysis.getDomain());
+                    helper.getUdm().save(simRel1);
+                    helper.getUdm().save(simRel2);
         }
+        );
 
     }
 

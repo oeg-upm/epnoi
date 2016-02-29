@@ -36,7 +36,7 @@ public class SearchRelationAction {
         List<Relation> relations = new ArrayList<>();
         try{
             helper.getUnifiedEdgeGraphRepository().findAll(type).forEach(x -> relations.add(Relation.class.cast(x)));
-            LOG.info(type.name() + "s: " + relations);
+            LOG.debug(type.name() + "s: " + relations);
 
         }catch (ResultProcessingException e){
             LOG.warn("getting all " + type,e.getMessage());

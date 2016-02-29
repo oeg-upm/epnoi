@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -142,36 +143,41 @@ public class TopicModeler extends ModelingTask {
 
             topicTable.put(topicData.getId(),topic.getUri());
 
+            ConcurrentHashMap<String,String> words = new ConcurrentHashMap<>();
+
             // Relate it to Words
-            for (WordDistribution wordDistribution : topicData.getWords()){
+            topicData.getWords().parallelStream().forEach( wordDistribution -> {
 
-                List<String> result = helper.getUdm().find(Resource.Type.WORD).by(Word.CONTENT, wordDistribution.getWord());
-                String wordURI;
-                if (result != null && !result.isEmpty()){
-                    wordURI = result.get(0);
-                }else {
-                    wordURI = helper.getUriGenerator().basedOnContent(Resource.Type.WORD,wordDistribution.getWord());
+                if (!words.contains(wordDistribution.getWord())){
+                    List<String> result = helper.getUdm().find(Resource.Type.WORD).by(Word.CONTENT, wordDistribution.getWord());
+                    String wordURI;
+                    if (result != null && !result.isEmpty()){
+                        wordURI = result.get(0);
+                    }else {
+                        wordURI = helper.getUriGenerator().basedOnContent(Resource.Type.WORD,wordDistribution.getWord());
 
-                    // Create Word
-                    Word word = Resource.newWord();
-                    word.setUri(wordURI);
-                    word.setCreationTime(TimeUtils.asISO());
-                    word.setContent(wordDistribution.getWord());
-                    helper.getUdm().save(word);
+                        // Create Word
+                        Word word = Resource.newWord();
+                        word.setUri(wordURI);
+                        word.setCreationTime(TimeUtils.asISO());
+                        word.setContent(wordDistribution.getWord());
+                        helper.getUdm().save(word);
 
+                    }
+                    words.put(wordDistribution.getWord(),wordURI);
                 }
+
+                String wordURI = words.get(wordDistribution.getWord());
 
                 // Relate Topic to Word (mentions)
                 MentionsFromTopic mentions = Relation.newMentionsFromTopic(topic.getUri(), wordURI);
                 mentions.setWeight(wordDistribution.getWeight());
                 helper.getUdm().save(mentions);
-            }
+            });
         }
 
 
-        Set<String> resourceURIs = model.getResources().keySet();
-        for (String resourceURI: resourceURIs){
-
+        model.getResources().keySet().parallelStream().forEach(resourceURI ->{
             for (TopicDistribution topicDistribution: model.getResources().get(resourceURI)){
                 // Relate resource  to Topic
                 String topicURI = topicTable.get(topicDistribution.getTopic());
@@ -190,7 +196,8 @@ public class TopicModeler extends ModelingTask {
                 relation.setWeight(topicDistribution.getWeight());
                 helper.getUdm().save(relation);
             }
-        }
+        });
+
         LOG.info("Topic Model saved in ddbb: " + model);
     }
 }

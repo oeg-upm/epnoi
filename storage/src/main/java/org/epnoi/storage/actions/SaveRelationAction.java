@@ -34,7 +34,7 @@ public class SaveRelationAction {
 
             transaction.commit();
 
-            LOG.info("Relation Saved: " + relation);
+            LOG.debug("Relation Saved: " + relation);
             //Publish the event
             helper.getEventBus().post(Event.from(relation), RoutingKey.of(relation.getType(), Relation.State.CREATED));
         }catch (Exception e){

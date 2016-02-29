@@ -38,7 +38,7 @@ public class DeleteRelationAction {
 
             transaction.commit();
 
-            LOG.info("Deleted All: "+type.name());
+            LOG.debug("Deleted All: "+type.name());
 
             //Publish the event
             // TODO
@@ -60,7 +60,7 @@ public class DeleteRelationAction {
 
             transaction.commit();
 
-            LOG.info("Deleted: "+type.name()+"[" + uri+"]");
+            LOG.debug("Deleted: "+type.name()+"[" + uri+"]");
 
             //Publish the event
             //TODO
@@ -84,7 +84,7 @@ public class DeleteRelationAction {
                     StreamSupport.stream(pairs.spliterator(), false).parallel().forEach(pair -> {
                         helper.getUnifiedEdgeGraphRepository().delete(type,pair.getUri());
                         helper.getEventBus().post(Event.from(pair.getUri()), RoutingKey.of(type, Relation.State.DELETED));
-                        LOG.info("Deleted: "+type.name()+"[" + uri+"]");
+                        LOG.debug("Deleted: "+type.name()+"[" + uri+"]");
                     });
     //                for (Relation pair : pairs) {
     //                    helper.getUnifiedEdgeGraphRepository().delete(type,pair.getUri());
@@ -96,7 +96,7 @@ public class DeleteRelationAction {
 
             transaction.commit();
 
-            LOG.info("Deleted: "+type.name()+" in " + refType + "[" + uri+"]");
+            LOG.debug("Deleted: "+type.name()+" in " + refType + "[" + uri+"]");
         }catch (Exception e){
             LOG.error("Unexpected error during delete of relations '"+ type + " in " + type +" by uri "+uri,e);
         }

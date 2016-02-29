@@ -1,12 +1,10 @@
 package org.epnoi.modeler.services;
 
-import org.epnoi.model.domain.resources.Document;
-import org.epnoi.modeler.models.topic.TopicModeler;
-import org.epnoi.modeler.models.word.WordEmbeddingModeler;
-import org.epnoi.modeler.scheduler.ModelingPoolExecutor;
-import org.epnoi.modeler.helper.ModelingHelper;
 import org.epnoi.model.domain.resources.Analysis;
+import org.epnoi.model.domain.resources.Document;
 import org.epnoi.model.domain.resources.Domain;
+import org.epnoi.modeler.helper.ModelingHelper;
+import org.epnoi.modeler.models.topic.TopicModeler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
 /**

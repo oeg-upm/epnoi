@@ -43,7 +43,7 @@ public class SaveResourceAction {
 
             transaction.commit();
 
-            LOG.info("Resource Saved: " + resource);
+            LOG.debug("Resource Saved: " + resource);
             //Publish the event
             helper.getEventBus().post(Event.from(resource), RoutingKey.of(resource.getResourceType(), Resource.State.CREATED));
         }catch (Exception e){

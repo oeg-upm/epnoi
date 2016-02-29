@@ -9,6 +9,7 @@ import scala.Tuple2;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by cbadenes on 11/01/16.
@@ -18,7 +19,7 @@ public class TopicModel implements Serializable{
     private static final Logger logger = LoggerFactory.getLogger(TopicModel.class);
 
     @Getter
-    private Map<String,List<TopicDistribution>> resources;
+    private ConcurrentHashMap<String,List<TopicDistribution>> resources;
 
     @Getter
     private final TopicConfiguration configuration;
@@ -34,7 +35,7 @@ public class TopicModel implements Serializable{
         this.id = id;
         this.configuration = configuration;
         this.topics = new LinkedList<>();
-        this.resources = new HashMap<>();
+        this.resources = new ConcurrentHashMap<>();
 
         // Loading topics
         for (int i = 0; i < topics.length; i++) {

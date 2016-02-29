@@ -33,7 +33,7 @@ public class SearchResourceAction {
         List<String> uris = new ArrayList<>();
         try{
             helper.getUnifiedNodeGraphRepository().findAll(type).forEach(x -> uris.add(x.getUri()));
-            LOG.info(type.name() + "s: " + uris);
+            LOG.debug(type.name() + "s: " + uris);
 
         }catch (ResultProcessingException e){
             LOG.warn("getting all " + type,e.getMessage());
@@ -59,7 +59,7 @@ public class SearchResourceAction {
             helper.getUnifiedNodeGraphRepository().findIn(type, referenceType,referenceURI).forEach(x -> uris.add(x.getUri()));
 
             transaction.commit();
-            LOG.info("In "+referenceType+": " + referenceURI + " found: ["+type + "]: " + uris);
+            LOG.debug("In "+referenceType+": " + referenceURI + " found: ["+type + "]: " + uris);
         }catch (ResultProcessingException e){
             LOG.warn("exception while finding " + type +"s in " + referenceType + ": " + referenceURI + ":: " + e.getMessage());
         }catch (Exception e){
@@ -84,7 +84,7 @@ public class SearchResourceAction {
             helper.getUnifiedColumnRepository().findBy(type, field,value).forEach(x -> uris.add(x.getUri()));
 
             transaction.commit();
-            LOG.info("By "+field+": '" + value+ "' found: ["+type + "]: " + uris);
+            LOG.debug("By "+field+": '" + value+ "' found: ["+type + "]: " + uris);
         }catch (ResultProcessingException e){
             LOG.warn("getting all " + type,e.getMessage());
         }catch (Exception e){

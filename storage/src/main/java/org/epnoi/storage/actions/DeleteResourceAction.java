@@ -45,7 +45,7 @@ public class DeleteResourceAction {
 
             transaction.commit();
 
-            LOG.info("Deleted All: "+type.name());
+            LOG.debug("Deleted All: "+type.name());
 
             //Publish the event
             // TODO
@@ -69,7 +69,7 @@ public class DeleteResourceAction {
 
             transaction.commit();
 
-            LOG.info("Deleted: "+type.name()+"[" + uri+"]");
+            LOG.debug("Deleted: "+type.name()+"[" + uri+"]");
 
             //Publish the event
 
