@@ -1,19 +1,15 @@
 package org.epnoi.harvester.executor;
 
 import es.cbadenes.lab.test.IntegrationTest;
-import org.epnoi.harvester.Config;
 import org.epnoi.harvester.annotator.helper.ParserHelper;
 import org.epnoi.model.domain.resources.File;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * Created by cbadenes on 01/03/16.
  */
+@Category(IntegrationTest.class)
 public class ParserTaskTest {
 
 
