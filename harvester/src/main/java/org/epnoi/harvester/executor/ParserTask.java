@@ -57,7 +57,7 @@ public class ParserTask implements Runnable {
                 annotatedDocument = fromSerialized(serializedPath);
             }else if (path.endsWith(".ser")){
                 // Serialized file
-                annotatedDocument = fromSerialized(path)
+                annotatedDocument = fromSerialized(path);
             }else{
                 // Parse document
                 annotatedDocument = annotateDocument(path);
