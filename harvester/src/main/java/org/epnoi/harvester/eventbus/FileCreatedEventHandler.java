@@ -32,7 +32,7 @@ public class FileCreatedEventHandler implements EventBusSubscriber {
     public void init(){
         RoutingKey routingKey = RoutingKey.of("file.created");
         LOG.info("Trying to register as subscriber of '" + routingKey + "' events ..");
-        eventBus.subscribe(this, BindingKey.of(routingKey, "harvester-source"));
+        eventBus.subscribe(this, BindingKey.of(routingKey, "harvester-file"));
         LOG.info("registered successfully");
     }
 
