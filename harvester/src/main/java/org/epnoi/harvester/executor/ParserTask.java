@@ -54,16 +54,15 @@ public class ParserTask implements Runnable {
 
             if (new java.io.File(serializedPath).exists()){
                 // Load Serialized Document
-                Optional<AnnotatedDocument> res = AnnotatedDocumentSerializer.from(serializedPath);
-                if (res.isPresent()){
-                    annotatedDocument = res.get();
-                } else{
-                    LOG.warn("Error deserializing document: " + path);
-                    annotatedDocument = annotateDocument(path);
-                }
+                annotatedDocument = fromSerialized(serializedPath);
+            }else if (path.endsWith(".ser")){
+                // Serialized file
+                annotatedDocument = fromSerialized(path)
             }else{
+                // Parse document
                 annotatedDocument = annotateDocument(path);
             }
+
 
 
             // Metainformation
@@ -124,6 +123,18 @@ public class ParserTask implements Runnable {
             // free memory
             if (annotatedDocument != null) annotatedDocument.clean();
         }
+    }
+
+    private AnnotatedDocument fromSerialized(String path){
+        AnnotatedDocument annotatedDocument;
+        Optional<AnnotatedDocument> res = AnnotatedDocumentSerializer.from(path);
+        if (res.isPresent()){
+            annotatedDocument = res.get();
+        } else{
+            LOG.warn("Error deserializing document: " + path);
+            annotatedDocument = annotateDocument(path);
+        }
+        return annotatedDocument;
     }
 
     private AnnotatedDocument annotateDocument(String path){
