@@ -98,7 +98,7 @@ public class StanfordParser {
 
         // Custom stopwords
 //        props.setProperty("customAnnotatorClass.stopword", "intoxicant.analytics.coreNlp.StopwordAnnotator");
-        props.setProperty("customAnnotatorClass.stopword", "org.epnoi.parser.annotator.stanford.StopWordAnnotatorWrapper");
+        props.setProperty("customAnnotatorClass.stopword", StopWordAnnotatorWrapper.class.getCanonicalName());
         props.setProperty(StopWordAnnotatorWrapper.STOPWORDS_LIST, customStopWordList);
 
         pipeline = new StanfordCoreNLP(props);
