@@ -1,5 +1,6 @@
 package org.epnoi.modeler.services;
 
+import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Analysis;
 import org.epnoi.model.domain.resources.Document;
 import org.epnoi.model.domain.resources.Domain;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
 /**
@@ -25,11 +27,10 @@ public class TopicModelingService {
 
     private static final Logger LOG = LoggerFactory.getLogger(TopicModelingService.class);
 
-//    private ConcurrentHashMap<String,ModelingPoolExecutor> executors;
+    private ConcurrentHashMap<String,ScheduledFuture<?>> tasks;
 
     private ThreadPoolTaskScheduler threadpool;
 
-    private ScheduledFuture<?> task;
 
     @Value("${epnoi.modeler.delay}")
     protected Long delay;
@@ -39,18 +40,21 @@ public class TopicModelingService {
 
     @PostConstruct
     public void setup(){
-//        this.executors = new ConcurrentHashMap<>();
+        this.tasks = new ConcurrentHashMap<>();
+
         this.threadpool = new ThreadPoolTaskScheduler();
-        this.threadpool.setPoolSize(1);
+        this.threadpool.setPoolSize(10);
         this.threadpool.initialize();
     }
 
 
-    public void buildModels(Document document){
-        LOG.info("Plan a new task to build models for document: " + document);
-        //TODO Implement a Multi-Domain execution
+    public void buildModels(Relation relation){
+        String domainUri = relation.getStartUri();
+        LOG.info("Planning a new task to build a topic models for the domain: " + domainUri);
+        ScheduledFuture<?> task = tasks.get(domainUri);
         if (task != null) task.cancel(false);
-        this.task = this.threadpool.schedule(new TopicModeler(document,helper), new Date(System.currentTimeMillis() + delay));
+        task = this.threadpool.schedule(new TopicModeler(domainUri,helper), new Date(System.currentTimeMillis() + delay));
+        tasks.put(domainUri,task);
     }
 
     public String create(Domain domain){

@@ -227,6 +227,72 @@
             <artifactId>pdfbox</artifactId>
         </dependency>
 
+        <!-- UPF Text Mining -->
+        <dependency>
+            <groupId>edu.upf.taln.dri</groupId>
+            <artifactId>lib</artifactId>
+            <version>${upf.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>grph</groupId>
+                    <artifactId>grph</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>mate.anna.extra</groupId>
+                    <artifactId>seg</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jtidy</groupId>
+                    <artifactId>jtidy</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.collections</groupId>
+                    <artifactId>google-collections</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Stanford Libraries -->
+        <dependency>
+            <groupId>edu.stanford.nlp</groupId>
+            <artifactId>stanford-corenlp</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>xalan</groupId>
+                    <artifactId>xalan</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>edu.stanford.nlp</groupId>
+            <artifactId>stanford-parser</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>edu.stanford.nlp</groupId>
+            <artifactId>stanford-corenlp</artifactId>
+            <classifier>models</classifier>
+        </dependency>
+        <dependency>
+            <groupId>intoxicant.analytics</groupId>
+            <artifactId>coreNlpExtensions</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+        </dependency>
+
         <!-- TEST: Camel  -->
         <dependency>
             <groupId>org.apache.camel</groupId>

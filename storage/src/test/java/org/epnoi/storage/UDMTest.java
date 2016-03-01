@@ -90,9 +90,16 @@ public class UDMTest {
 
     @Test
     public void publish(){
-        Document document = Resource.newDocument();
-        document.setUri("http://drinventor.eu/documents/c369c917fecf3b4828688bdb6677dd6e");
-        eventBus.post(Event.from(document),RoutingKey.of(Resource.Type.DOCUMENT,Resource.State.CREATED));
+//        Document document = Resource.newDocument();
+//        document.setUri("http://drinventor.eu/documents/c369c917fecf3b4828688bdb6677dd6e");
+//        eventBus.post(Event.from(document),RoutingKey.of(Resource.Type.DOCUMENT,Resource.State.CREATED));
+
+
+        Topic topic = Resource.newTopic();
+        topic.setUri("http://drinventor.eu/topics/7ae8a17e15a9b7aec4e58bc42543c5bd");
+        eventBus.post(Event.from(topic),RoutingKey.of(Resource.Type.TOPIC, Resource.State.CREATED));
+
+
     }
 
 
@@ -106,6 +113,12 @@ public class UDMTest {
         System.out.println(udm.find(Resource.Type.DOMAIN).in(Resource.Type.SOURCE,"http://drinventor.eu/sources/00729c4c-f449-40d5-ae83-482278e83e9a"));
 
         System.out.println(udm.find(Resource.Type.DOMAIN).all());
+
+
+        System.out.println("adding documents to domain...");
+        udm.find(Resource.Type.DOCUMENT).all().forEach(uri -> udm.save(Relation.newContains(domain.getUri(),uri)));
+
+
     }
 
 

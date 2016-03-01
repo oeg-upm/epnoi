@@ -1,5 +1,7 @@
 package org.epnoi.modeler.services;
 
+import org.epnoi.model.domain.relations.EmergesIn;
+import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Analysis;
 import org.epnoi.model.domain.resources.Domain;
 import org.epnoi.model.domain.resources.Topic;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
 /**
@@ -25,12 +28,9 @@ public class WordEmbeddingModelingService {
 
     private static final Logger LOG = LoggerFactory.getLogger(WordEmbeddingModelingService.class);
 
-    // TODO Multi Domain
-    //private ConcurrentHashMap<String,ModelingPoolExecutor> executors;
+    private ConcurrentHashMap<String,ScheduledFuture<?>> tasks;
 
     private ThreadPoolTaskScheduler threadpool;
-
-    private ScheduledFuture<?> task;
 
     @Value("${epnoi.modeler.delay}")
     protected Long delay;
@@ -40,20 +40,27 @@ public class WordEmbeddingModelingService {
 
     @PostConstruct
     public void setup(){
-//        this.executors = new ConcurrentHashMap<>();
+        this.tasks = new ConcurrentHashMap<>();
 
         this.threadpool = new ThreadPoolTaskScheduler();
-        this.threadpool.setPoolSize(1);
+        this.threadpool.setPoolSize(10);
         this.threadpool.initialize();
 
     }
 
 
-    public void buildModels(Topic topic){
+    public void buildModels(Relation relation){
+
+        String domainUri = relation.getEndUri();
+
         // TODO Implement Multi Domain
-        LOG.info("Plan a new task to build a word2vec model for words from: " + topic);
+        LOG.info("Planning a new task to build a word2vec model for words in domain: " + domainUri);
+
+        ScheduledFuture<?> task = tasks.get(domainUri);
         if (task != null) task.cancel(false);
-        this.task = this.threadpool.schedule(new WordEmbeddingModeler(topic,helper), new Date(System.currentTimeMillis() + delay));
+        task = this.threadpool.schedule(new WordEmbeddingModeler(domainUri,helper), new Date(System.currentTimeMillis() + delay));
+        tasks.put(domainUri,task);
+
     }
 
     public String create(Domain domain){

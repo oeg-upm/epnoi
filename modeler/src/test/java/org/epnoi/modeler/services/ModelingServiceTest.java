@@ -1,6 +1,8 @@
 package org.epnoi.modeler.services;
 
 import es.cbadenes.lab.test.IntegrationTest;
+import org.epnoi.model.domain.relations.Contains;
+import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Document;
 import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.modeler.Config;
@@ -31,16 +33,15 @@ public class ModelingServiceTest {
     @Test
     public void scheduleModelingTasks() throws InterruptedException {
 
-        Document document = Resource.newDocument();
-        document.setUri("http://drinventor.eu/documents/c369c917fecf3b4828688bdb6677dd6e");
+        Contains contains = Relation.newContains("http://drinventor.eu/domains/7df34748-7fad-486e-a799-3bcd86a03499","http://drinventor.eu/documents/c369c917fecf3b4828688bdb6677dd6e");
 
-        service.buildModels(document);
+        service.buildModels(contains);
         Thread.sleep(1000);
-        service.buildModels(document);
-        service.buildModels(document);
+        service.buildModels(contains);
+        service.buildModels(contains);
         Thread.sleep(1000);
-        service.buildModels(document);
-        service.buildModels(document);
+        service.buildModels(contains);
+        service.buildModels(contains);
         Thread.sleep(1000);
 
         LOG.info("waiting for execution....");

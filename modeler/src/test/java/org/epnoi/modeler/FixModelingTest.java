@@ -54,13 +54,8 @@ public class FixModelingTest {
     @Test
     public void topicModel() throws InterruptedException {
 
-
-        List<String> docs = udm.find(Resource.Type.DOCUMENT).all();
-
-        if (!docs.isEmpty()){
-            new TopicModeler(udm.read(Resource.Type.DOCUMENT).byUri(docs.get(0)).get().asDocument(),helper).run();
-        }
-
+        String domainUri = "http://drinventor.eu/domains/7df34748-7fad-486e-a799-3bcd86a03499";
+        new TopicModeler(domainUri,helper).run();
 
     }
 

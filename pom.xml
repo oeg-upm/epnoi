@@ -140,7 +140,6 @@
         <module>storage</module>
         <module>comparator</module>
         <module>api</module>
-        <module>parser</module>
         <module>model</module>
         <module>harvester</module>
         <module>hoarder</module>

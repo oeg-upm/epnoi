@@ -1,6 +1,8 @@
 package org.epnoi.modeler.eventbus;
 
 import org.epnoi.model.Event;
+import org.epnoi.model.domain.relations.EmergesIn;
+import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.domain.resources.Topic;
 import org.epnoi.model.modules.BindingKey;
@@ -31,7 +33,7 @@ public class TopicCreatedEventHandler implements EventBusSubscriber {
 
     @PostConstruct
     public void init(){
-        BindingKey bindingKey = BindingKey.of(RoutingKey.of(Resource.Type.TOPIC, Resource.State.CREATED), "word-modeler");
+        BindingKey bindingKey = BindingKey.of(RoutingKey.of(Relation.Type.EMERGES_IN, Relation.State.CREATED), "word-modeler");
         LOG.info("Trying to register as subscriber of '" + bindingKey + "' events ..");
         eventBus.subscribe(this,bindingKey );
         LOG.info("registered successfully");
@@ -41,8 +43,8 @@ public class TopicCreatedEventHandler implements EventBusSubscriber {
     public void handle(Event event) {
         LOG.info("Topic created event received: " + event);
         try{
-            Topic topic = event.to(Topic.class);
-            wordEmbeddingModelingService.buildModels(topic);
+            Relation relation = event.to(Relation.class);
+            wordEmbeddingModelingService.buildModels(relation);
         } catch (Exception e){
             // TODO Notify to event-bus when source has not been added
             LOG.error("Error scheduling a new topic model from domain: " + event, e);

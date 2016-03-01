@@ -24,14 +24,14 @@ public class WordEmbeddingModeler extends ModelingTask {
 
     private static final Logger LOG = LoggerFactory.getLogger(WordEmbeddingModeler.class);
 
-    private final Topic topic;
-
     private final ModelingHelper helper;
+
+    private final String domainUri;
 
     private Domain domain;
 
-    public WordEmbeddingModeler(Topic topic, ModelingHelper modelingHelper) {
-        this.topic = topic;
+    public WordEmbeddingModeler(String domainUri, ModelingHelper modelingHelper) {
+        this.domainUri = domainUri;
         this.helper = modelingHelper;
     }
 
@@ -40,18 +40,10 @@ public class WordEmbeddingModeler extends ModelingTask {
     public void run() {
 
         // TODO use a factory to avoid this explicit flow
-
-        List<String> domainUris = helper.getUdm().find(Resource.Type.DOMAIN).in(Resource.Type.TOPIC, topic.getUri());
-
-        if ((domainUris == null) || (domainUris.isEmpty())){
-            LOG.warn("Unknown domain from topic: " + topic);
-            return;
-        }
-
-        Optional<Resource> result = helper.getUdm().read(Resource.Type.DOMAIN).byUri(domainUris.get(0));//TODO Handle more than one domain
+        Optional<Resource> result = helper.getUdm().read(Resource.Type.DOMAIN).byUri(domainUri);
 
         if (!result.isPresent()){
-            LOG.warn("Unknown domain from uri: " + domainUris);
+            LOG.warn("Unknown domain from uri: " + domainUri);
             return;
         }
 
@@ -79,7 +71,7 @@ public class WordEmbeddingModeler extends ModelingTask {
             Analysis analysis = newAnalysis("Word-Embedding","W2V",Resource.Type.WORD.name(),domain.getUri());
 
             // Build W2V Model
-            W2VModel model = helper.getWordEmbeddingBuilder().build(analysis.getUri(), regularResources);
+            W2VModel model = helper.getWordEmbeddingBuilder().build(domain.getUri(), regularResources);
 
             // Make relations
             // First Create

@@ -23,14 +23,14 @@ public class TopicModeler extends ModelingTask {
 
     private static final Logger LOG = LoggerFactory.getLogger(TopicModeler.class);
 
-    private final Document document;
-
     private final ModelingHelper helper;
+
+    private final String domainUri;
 
     private Domain domain;
 
-    public TopicModeler(Document document, ModelingHelper modelingHelper) {
-        this.document = document;
+    public TopicModeler(String domainUri, ModelingHelper modelingHelper) {
+        this.domainUri = domainUri;
         this.helper = modelingHelper;
     }
 
@@ -38,22 +38,15 @@ public class TopicModeler extends ModelingTask {
     @Override
     public void run() {
         //TODO Use of factory to avoid this explicit flow!
-        LOG.info("ready to create a new topic model from document: " + document);
-
-        List<String> domainUris = helper.getUdm().find(Resource.Type.DOMAIN).in(Resource.Type.DOCUMENT, document.getUri());
-
-        if ((domainUris == null) || (domainUris.isEmpty())){
-            LOG.warn("Unknown domain from document: " + document);
-            return;
-        }
-
-        Optional<Resource> result = helper.getUdm().read(Resource.Type.DOMAIN).byUri(domainUris.get(0));//TODO Handle more than one domain
+        LOG.info("ready to create a new topic model for domain: " + domainUri);
+        Optional<Resource> result = helper.getUdm().read(Resource.Type.DOMAIN).byUri(domainUri);
 
         if (!result.isPresent()){
-            LOG.warn("Unknown domain from uri: " + domainUris);
+            LOG.warn("Unknown domain from uri: " + domainUri);
             return;
         }
 
+        // Load domain info
         domain = result.get().asDomain();
 
         // Delete previous Topics
