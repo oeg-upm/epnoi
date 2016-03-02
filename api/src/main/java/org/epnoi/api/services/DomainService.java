@@ -39,7 +39,7 @@ public class DomainService extends AbstractResourceService<Domain> {
         String startUri     = uriGenerator.from(Resource.Type.DOMAIN, startId);
         String endUri       = uriGenerator.from(Resource.Type.DOCUMENT, endId);
         Optional<RelationI> result = udm.find(Relation.Type.CONTAINS).btw(startUri, endUri).stream().map(relation -> new RelationI(relation.getUri(), relation.getCreationTime())).findFirst();
-        return (result.isPresent())? result.get() : new RelationI();
+        return (result.isPresent())? result.get() : null;
     }
 
     public void addDocuments(String startId, String endId){

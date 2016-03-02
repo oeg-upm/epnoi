@@ -1,10 +1,13 @@
 package org.epnoi.storage.system.graph.queries;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.epnoi.model.domain.relations.MentionsFromTopic;
 import org.epnoi.model.domain.relations.PairsWith;
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.relations.SimilarToParts;
 import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.storage.system.graph.domain.nodes.TopicNode;
+import org.epnoi.storage.system.graph.domain.nodes.WordNode;
 import org.neo4j.ogm.session.result.QueryStatistics;
 import org.neo4j.ogm.session.result.Result;
 import org.slf4j.Logger;
@@ -54,6 +57,42 @@ public class PairsWithGraphQuery implements GraphQuery<PairsWith> {
             }
         }
         return similars;
+    }
+
+    @Override
+    public List<PairsWith> inDomain(String uri) {
+        Map<String,String> params = new HashMap<>();
+        params.put("0",uri);
+        Result result = executor.query("match (d:Domain{uri:{0}})<-[:EMBEDDED_IN]-(w1:Word)-[r:PAIRS_WITH]->(w2:Word) return r,w1,w2", params);
+
+        List<PairsWith> relations = new ArrayList<>();
+
+        Iterator<Map<String, Object>> it = result.queryResults().iterator();
+        while(it.hasNext()){
+            try {
+                Map<String, Object> map = it.next();
+
+                Map rValues = (Map) map.get("r");
+                PairsWith relation = new PairsWith();
+                BeanUtils.populate(relation,rValues);
+
+                Map sValues = (Map) map.get("w1");
+                WordNode sNode = new WordNode();
+                BeanUtils.populate(sNode,sValues);
+
+                Map eValues = (Map) map.get("w2");
+                WordNode eNode = new WordNode();
+                BeanUtils.populate(eNode,eValues);
+
+                relation.setStartUri(sNode.getUri());
+                relation.setEndUri(eNode.getUri());
+
+                relations.add(relation);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                LOG.error("Error getting pairs_with relations from: " + uri ,e);
+            }
+        }
+        return relations;
     }
 
     @Override

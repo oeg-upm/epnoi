@@ -14,6 +14,8 @@ public interface GraphQuery<T extends Relation> {
 
     List<T> query(String startUri, String endUri);
 
+    List<T> inDomain(String uri);
+
     void deleteIn(Resource.Type type, String uri);
 
 }

@@ -16,7 +16,7 @@ import org.neo4j.ogm.annotation.*;
 @RelationshipEntity(type="BUNDLES")
 @Data
 @EqualsAndHashCode(of={"uri"}, callSuper = true)
-@ToString(of = {"id","uri"},callSuper = true)
+@ToString(of = {"uri"},callSuper = true)
 public class BundlesEdge extends Edge<DocumentNode,ItemNode>{
 
     @Override

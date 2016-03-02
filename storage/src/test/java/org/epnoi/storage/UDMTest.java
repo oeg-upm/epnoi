@@ -2,6 +2,7 @@ package org.epnoi.storage;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.model.Event;
+import org.epnoi.model.domain.relations.Contains;
 import org.epnoi.model.domain.relations.HypernymOf;
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.*;
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -95,29 +97,39 @@ public class UDMTest {
 //        eventBus.post(Event.from(document),RoutingKey.of(Resource.Type.DOCUMENT,Resource.State.CREATED));
 
 
-        Topic topic = Resource.newTopic();
-        topic.setUri("http://drinventor.eu/topics/7ae8a17e15a9b7aec4e58bc42543c5bd");
-        eventBus.post(Event.from(topic),RoutingKey.of(Resource.Type.TOPIC, Resource.State.CREATED));
+//        Topic topic = Resource.newTopic();
+//        topic.setUri("http://drinventor.eu/topics/7ae8a17e15a9b7aec4e58bc42543c5bd");
+//        eventBus.post(Event.from(topic),RoutingKey.of(Resource.Type.TOPIC, Resource.State.CREATED));
 
+
+        Contains relation = Relation.newContains("http://drinventor.eu/domains/7df34748-7fad-486e-a799-3bcd86a03499", "http://drinventor.eu/documents/c369c917fecf3b4828688bdb6677dd6e");
+        eventBus.post(Event.from(relation), RoutingKey.of(Relation.Type.CONTAINS,Relation.State.CREATED));
 
     }
 
 
     @Test
-    public void findDomains(){
+    public void fixModel(){
+
+
+//        udm.delete(Resource.Type.TOPIC).all();
+//        udm.delete(Resource.Type.WORD).all();
+//        udm.delete(Resource.Type.TERM).all();
+
 
         Domain domain = Resource.newDomain();
         domain.setUri("http://drinventor.eu/domains/7df34748-7fad-486e-a799-3bcd86a03499");
         domain.setName("siggraph");
-
-        System.out.println(udm.find(Resource.Type.DOMAIN).in(Resource.Type.SOURCE,"http://drinventor.eu/sources/00729c4c-f449-40d5-ae83-482278e83e9a"));
-
-        System.out.println(udm.find(Resource.Type.DOMAIN).all());
-
-
-        System.out.println("adding documents to domain...");
+//
+//        System.out.println(udm.find(Resource.Type.DOMAIN).in(Resource.Type.SOURCE,"http://drinventor.eu/sources/00729c4c-f449-40d5-ae83-482278e83e9a"));
+//
+//        System.out.println(udm.find(Resource.Type.DOMAIN).all());
+//
+//
+//        System.out.println("adding documents to domain...");
         udm.find(Resource.Type.DOCUMENT).all().forEach(uri -> udm.save(Relation.newContains(domain.getUri(),uri)));
 
+//        udm.find(Resource.Type.DOCUMENT).all().forEach(uri -> udm.save(Relation.newBundles(uri, StringUtils.replace(uri,"documents","items"))));
 
     }
 

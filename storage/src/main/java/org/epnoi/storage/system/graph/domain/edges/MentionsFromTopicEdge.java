@@ -14,7 +14,7 @@ import org.neo4j.ogm.annotation.*;
 @RelationshipEntity(type="MENTIONS")
 @Data
 @EqualsAndHashCode(of={"uri"}, callSuper = true)
-@ToString(of = {"id","uri"},callSuper = true)
+@ToString(of = {"uri"},callSuper = true)
 public class MentionsFromTopicEdge extends Edge<TopicNode,WordNode> {
 
     @Property

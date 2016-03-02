@@ -37,7 +37,7 @@ public class ItemService extends AbstractResourceService<Item> {
         String startUri     = uriGenerator.from(Resource.Type.ITEM, startId);
         String endUri       = uriGenerator.from(Resource.Type.TOPIC, endId);
         Optional<DealsI> result = udm.find(Relation.Type.DEALS_WITH_FROM_ITEM).btw(startUri, endUri).stream().map(relation -> new DealsI(relation.getUri(), relation.getCreationTime(), relation.getWeight())).findFirst();
-        return (result.isPresent())? result.get() : new DealsI();
+        return (result.isPresent())? result.get() : null;
     }
 
     public void addTopics(String startId, String endId, WeightI weightI){
@@ -70,7 +70,7 @@ public class ItemService extends AbstractResourceService<Item> {
         String startUri     = uriGenerator.from(Resource.Type.ITEM, startId);
         String endUri       = uriGenerator.from(Resource.Type.ITEM, endId);
         Optional<SimilarI> result = udm.find(Relation.Type.SIMILAR_TO_ITEMS).btw(startUri, endUri).stream().map(relation -> new SimilarI(relation.getUri(), relation.getCreationTime(), relation.getWeight(), ((SimilarTo)relation).getDomain())).findFirst();
-        return (result.isPresent())? result.get() : new SimilarI();
+        return (result.isPresent())? result.get() : null;
     }
 
     public void addItems(String startId, String endId, WeightDomainI weightI){

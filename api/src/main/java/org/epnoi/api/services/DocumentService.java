@@ -3,6 +3,7 @@ package org.epnoi.api.services;
 import org.apache.commons.beanutils.BeanUtils;
 import org.epnoi.api.model.relations.*;
 import org.epnoi.api.model.resources.DocumentI;
+import org.epnoi.api.model.resources.DocumentRI;
 import org.epnoi.model.domain.relations.DealsWithFromDocument;
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.relations.SimilarToDocuments;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +30,14 @@ public class DocumentService extends AbstractResourceService<Document> {
         super(Resource.Type.DOCUMENT);
     }
 
+
+    public Document get(String id){
+        Document document = super.get(id);
+        // TODO Pending to be included by a query parameter
+        document.setContent(null);
+        document.setTokens(null);
+        return document;
+    }
 
     public Document create(DocumentI resource) throws Exception {
         LOG.info("Trying to create: " + resource);
@@ -56,7 +66,7 @@ public class DocumentService extends AbstractResourceService<Document> {
         String startUri     = uriGenerator.from(Resource.Type.DOCUMENT, startId);
         String endUri       = uriGenerator.from(Resource.Type.ITEM, endId);
         Optional<RelationI> result = udm.find(Relation.Type.BUNDLES).btw(startUri, endUri).stream().map(relation -> new RelationI(relation.getUri(), relation.getCreationTime())).findFirst();
-        return (result.isPresent())? result.get() : new RelationI();
+        return (result.isPresent())? result.get() : null;
     }
 
     public void addItems(String startId, String endId){
@@ -87,7 +97,7 @@ public class DocumentService extends AbstractResourceService<Document> {
         String startUri     = uriGenerator.from(Resource.Type.DOCUMENT, startId);
         String endUri       = uriGenerator.from(Resource.Type.DOCUMENT, endId);
         Optional<SimilarI> result = udm.find(Relation.Type.SIMILAR_TO_DOCUMENTS).btw(startUri, endUri).stream().map(relation -> new SimilarI(relation.getUri(), relation.getCreationTime(),relation.getWeight(), ((SimilarToDocuments)relation).getDomain())).findFirst();
-        return (result.isPresent())? result.get() : new SimilarI();
+        return (result.isPresent())? result.get() : null;
     }
 
     public void addDocuments(String startId, String endId, WeightDomainI rel){

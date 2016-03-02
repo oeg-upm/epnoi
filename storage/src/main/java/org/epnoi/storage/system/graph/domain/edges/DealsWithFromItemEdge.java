@@ -18,7 +18,7 @@ import org.neo4j.ogm.annotation.*;
 @RelationshipEntity(type="DEALS_WITH")
 @Data
 @EqualsAndHashCode(of={"uri"}, callSuper = true)
-@ToString(of = {"id","uri"},callSuper = true)
+@ToString(of = {"uri"},callSuper = true)
 public class DealsWithFromItemEdge extends Edge<ItemNode,TopicNode> {
 
     @Override

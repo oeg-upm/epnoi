@@ -15,7 +15,7 @@ import org.neo4j.ogm.annotation.RelationshipEntity;
 @RelationshipEntity(type="EMERGES_IN")
 @Data
 @EqualsAndHashCode(of={"uri"}, callSuper = true)
-@ToString(of = {"id","uri"},callSuper = true)
+@ToString(of = {"uri"},callSuper = true)
 public class EmergesInEdge extends Edge<PartNode,ItemNode> {
 
     @Property

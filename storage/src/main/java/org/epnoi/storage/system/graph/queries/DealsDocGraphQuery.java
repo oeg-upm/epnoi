@@ -4,6 +4,8 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.epnoi.model.domain.relations.DealsWithFromDocument;
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.storage.system.graph.domain.nodes.DocumentNode;
+import org.epnoi.storage.system.graph.domain.nodes.TopicNode;
 import org.neo4j.ogm.session.result.QueryStatistics;
 import org.neo4j.ogm.session.result.Result;
 import org.slf4j.Logger;
@@ -29,6 +31,43 @@ public class DealsDocGraphQuery implements GraphQuery<DealsWithFromDocument> {
     public Relation.Type accept() {
         return Relation.Type.DEALS_WITH_FROM_DOCUMENT;
     }
+
+    @Override
+    public List<DealsWithFromDocument> inDomain(String uri) {
+        Map<String,String> params = new HashMap<>();
+        params.put("0",uri);
+        Result result = executor.query("match (domain:Domain{uri:{0}})-[c:CONTAINS]->(d:Document)-[r:DEALS_WITH]->(t:Topic) return r,d,t", params);
+
+        List<DealsWithFromDocument> similars = new ArrayList<>();
+
+        Iterator<Map<String, Object>> it = result.queryResults().iterator();
+        while(it.hasNext()){
+            try {
+                Map<String, Object> map = it.next();
+
+                Map rValues = (Map) map.get("r");
+                DealsWithFromDocument dealsWith = new DealsWithFromDocument();
+                BeanUtils.populate(dealsWith,rValues);
+
+                Map dValues = (Map) map.get("d");
+                DocumentNode dNode = new DocumentNode();
+                BeanUtils.populate(dNode,dValues);
+
+                Map tValues = (Map) map.get("t");
+                TopicNode tNode = new TopicNode();
+                BeanUtils.populate(tNode,tValues);
+
+                dealsWith.setStartUri(dNode.getUri());
+                dealsWith.setEndUri(tNode.getUri());
+
+                similars.add(dealsWith);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                LOG.error("Error getting deals_with relation from: " + uri ,e);
+            }
+        }
+        return similars;
+    }
+
 
     @Override
     public List<DealsWithFromDocument> query(String startUri, String endUri) {

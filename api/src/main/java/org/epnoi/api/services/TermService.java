@@ -37,7 +37,7 @@ public class TermService extends AbstractResourceService<Term> {
         String startUri     = uriGenerator.from(Resource.Type.TERM, startId);
         String endUri       = uriGenerator.from(Resource.Type.DOMAIN, endId);
         Optional<AppearedI> result = udm.find(Relation.Type.APPEARED_IN).btw(startUri, endUri).stream().map(relation -> (AppearedIn) relation).map(relation -> new AppearedI(relation.getUri(), relation.getCreationTime(), relation.getCvalue(), relation.getTimes(), relation.getConsensus(), relation.getPertinence(), relation.getSubtermOf(), relation.getSupertermOf(), relation.getTermhood(), relation.getProbability())).findFirst();
-        return (result.isPresent())? result.get() : new AppearedI();
+        return (result.isPresent())? result.get() : null;
     }
 
     public void addDomains(String startId, String endId, ProbabilityI rel){
@@ -76,7 +76,7 @@ public class TermService extends AbstractResourceService<Term> {
         String startUri     = uriGenerator.from(Resource.Type.TERM, startId);
         String endUri       = uriGenerator.from(Resource.Type.WORD, endId);
         Optional<MentionsI> result = udm.find(Relation.Type.MENTIONS_FROM_TERM).btw(startUri, endUri).stream().map(relation -> (Mentions) relation).map(relation -> new MentionsI(relation.getUri(), relation.getCreationTime(), relation.getTimes(), relation.getWeight())).findFirst();
-        return (result.isPresent())? result.get() : new MentionsI();
+        return (result.isPresent())? result.get() : null;
     }
 
     public void addWords(String startId, String endId, WeightTimesI rel){

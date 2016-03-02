@@ -17,7 +17,7 @@ import org.neo4j.ogm.annotation.*;
 @RelationshipEntity(type="CONTAINS")
 @Data
 @EqualsAndHashCode(of={"uri"}, callSuper = true)
-@ToString(of = {"id","uri"},callSuper = true)
+@ToString(of = {"uri"},callSuper = true)
 public class ContainsEdge extends Edge<DomainNode,DocumentNode>{
 
 

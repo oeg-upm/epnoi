@@ -37,7 +37,7 @@ public class WordService extends AbstractResourceService<Word> {
         String startUri     = uriGenerator.from(Resource.Type.WORD, startId);
         String endUri       = uriGenerator.from(Resource.Type.WORD, endId);
         Optional<SimilarI> result = udm.find(Relation.Type.PAIRS_WITH).btw(startUri, endUri).stream().map(relation -> (PairsWith) relation).map(relation -> new SimilarI(relation.getUri(), relation.getCreationTime(), relation.getWeight(), relation.getDomain())).findFirst();
-        return (result.isPresent())? result.get() : new SimilarI();
+        return (result.isPresent())? result.get() : null;
     }
 
     public void addWords(String startId, String endId, WeightDomainI rel){
@@ -71,7 +71,7 @@ public class WordService extends AbstractResourceService<Word> {
         String startUri     = uriGenerator.from(Resource.Type.WORD, startId);
         String endUri       = uriGenerator.from(Resource.Type.DOMAIN, endId);
         Optional<EmbeddedI> result = udm.find(Relation.Type.EMBEDDED_IN).btw(startUri, endUri).stream().map(relation -> (EmbeddedIn) relation).map(relation -> new EmbeddedI(relation.getUri(), relation.getCreationTime(), relation.getVector())).findFirst();
-        return (result.isPresent())? result.get() : new EmbeddedI();
+        return (result.isPresent())? result.get() : null;
     }
 
     public void addDomains(String startId, String endId, VectorI rel){

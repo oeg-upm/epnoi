@@ -2,8 +2,11 @@ package org.epnoi.storage.system.graph.queries;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.epnoi.model.domain.relations.Relation;
+import org.epnoi.model.domain.relations.SimilarToDocuments;
 import org.epnoi.model.domain.relations.SimilarToItems;
 import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.storage.system.graph.domain.nodes.DocumentNode;
+import org.epnoi.storage.system.graph.domain.nodes.ItemNode;
 import org.neo4j.ogm.session.result.QueryStatistics;
 import org.neo4j.ogm.session.result.Result;
 import org.slf4j.Logger;
@@ -53,6 +56,42 @@ public class SimilarItemGraphQuery implements GraphQuery<SimilarToItems> {
             }
         }
         return similars;
+    }
+
+    @Override
+    public List<SimilarToItems> inDomain(String uri) {
+        Map<String,String> params = new HashMap<>();
+        params.put("0",uri);
+        Result result = executor.query("match (d:Domain{uri:{0}})-[:CONTAINS]->(d:Document)-[:BUNDLES]->(i1:Item)-[r:SIMILAR_TO]->(i2:Item) return r,i1,i2", params);
+
+        List<SimilarToItems> relations = new ArrayList<>();
+
+        Iterator<Map<String, Object>> it = result.queryResults().iterator();
+        while(it.hasNext()){
+            try {
+                Map<String, Object> map = it.next();
+
+                Map rValues = (Map) map.get("r");
+                SimilarToItems relation = new SimilarToItems();
+                BeanUtils.populate(relation,rValues);
+
+                Map sValues = (Map) map.get("i1");
+                ItemNode sNode = new ItemNode();
+                BeanUtils.populate(sNode,sValues);
+
+                Map eValues = (Map) map.get("i2");
+                ItemNode eNode = new ItemNode();
+                BeanUtils.populate(eNode,eValues);
+
+                relation.setStartUri(sNode.getUri());
+                relation.setEndUri(eNode.getUri());
+
+                relations.add(relation);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                LOG.error("Error getting similar_to relations btw items from: " + uri ,e);
+            }
+        }
+        return relations;
     }
 
     @Override

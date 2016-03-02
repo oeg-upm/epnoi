@@ -14,7 +14,7 @@ import org.neo4j.ogm.annotation.RelationshipEntity;
 @RelationshipEntity(type="SIMILAR_TO")
 @Data
 @EqualsAndHashCode(of={"uri"}, callSuper = true)
-@ToString(of = {"id","uri"},callSuper = true)
+@ToString(of = {"uri"},callSuper = true)
 public class SimilarToEdge extends Edge<ItemNode,ItemNode> {
 
     @Property

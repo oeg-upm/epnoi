@@ -14,7 +14,7 @@ import org.neo4j.ogm.annotation.RelationshipEntity;
 @RelationshipEntity(type="DESCRIBES")
 @Data
 @EqualsAndHashCode(of={"uri"}, callSuper = true)
-@ToString(of = {"id","uri"},callSuper = true)
+@ToString(of = {"uri"},callSuper = true)
 public class DescribesEdge extends Edge<PartNode,ItemNode> {
 
 

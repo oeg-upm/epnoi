@@ -37,7 +37,7 @@ public class PartService extends AbstractResourceService<Part> {
         String startUri     = uriGenerator.from(Resource.Type.PART, startId);
         String endUri       = uriGenerator.from(Resource.Type.PART, endId);
         Optional<SimilarI> result = udm.find(Relation.Type.SIMILAR_TO_PARTS).btw(startUri, endUri).stream().map(relation -> new SimilarI(relation.getUri(), relation.getCreationTime(), relation.getWeight(), ((SimilarTo)relation).getDomain())).findFirst();
-        return (result.isPresent())? result.get() : new SimilarI();
+        return (result.isPresent())? result.get() : null;
     }
 
     public void addParts(String startId, String endId, WeightDomainI weightI){
@@ -70,7 +70,7 @@ public class PartService extends AbstractResourceService<Part> {
         String startUri     = uriGenerator.from(Resource.Type.PART, startId);
         String endUri       = uriGenerator.from(Resource.Type.ITEM, endId);
         Optional<RelationI> result = udm.find(Relation.Type.DESCRIBES).btw(startUri, endUri).stream().map(relation -> new RelationI(relation.getUri(), relation.getCreationTime())).findFirst();
-        return (result.isPresent())? result.get() : new RelationI();
+        return (result.isPresent())? result.get() : null;
     }
 
     public void addItems(String startId, String endId){
@@ -100,7 +100,7 @@ public class PartService extends AbstractResourceService<Part> {
         String startUri     = uriGenerator.from(Resource.Type.PART, startId);
         String endUri       = uriGenerator.from(Resource.Type.TOPIC, endId);
         Optional<DealsI> result = udm.find(Relation.Type.DEALS_WITH_FROM_PART).btw(startUri, endUri).stream().map(relation -> new DealsI(relation.getUri(), relation.getCreationTime(), relation.getWeight())).findFirst();
-        return (result.isPresent())? result.get() : new DealsI();
+        return (result.isPresent())? result.get() : null;
     }
 
     public void addTopics(String startId, String endId, WeightDomainI weightI){

@@ -14,7 +14,7 @@ import org.neo4j.ogm.annotation.*;
 @RelationshipEntity(type="PROVIDES")
 @Data
 @EqualsAndHashCode(of={"uri"}, callSuper = true)
-@ToString(of = {"id","uri"},callSuper = true)
+@ToString(of = {"uri"},callSuper = true)
 public class ProvidesEdge extends Edge<TermNode,WordNode> {
 
 

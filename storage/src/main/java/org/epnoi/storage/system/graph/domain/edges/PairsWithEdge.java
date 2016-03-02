@@ -16,7 +16,7 @@ import org.neo4j.ogm.annotation.*;
 @RelationshipEntity(type="PAIRS_WITH")
 @Data
 @EqualsAndHashCode(of={"uri"}, callSuper = true)
-@ToString(of = {"id","uri"},callSuper = true)
+@ToString(of = {"uri"},callSuper = true)
 public class PairsWithEdge extends Edge<WordNode,WordNode> {
 
     @Property

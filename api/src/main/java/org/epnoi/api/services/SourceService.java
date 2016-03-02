@@ -72,7 +72,7 @@ public class SourceService extends AbstractResourceService<Source> {
         String startUri     = uriGenerator.from(Resource.Type.SOURCE, startId);
         String endUri       = uriGenerator.from(Resource.Type.DOCUMENT, endId);
         Optional<RelationI> result = udm.find(Relation.Type.PROVIDES).btw(startUri, endUri).stream().map(relation -> new RelationI(relation.getUri(), relation.getCreationTime())).findFirst();
-        return (result.isPresent())? result.get() : new RelationI();
+        return (result.isPresent())? result.get() : null;
     }
 
     public void addDocuments(String startId, String endId){
@@ -102,7 +102,7 @@ public class SourceService extends AbstractResourceService<Source> {
         String startUri     = uriGenerator.from(Resource.Type.SOURCE, startId);
         String endUri       = uriGenerator.from(Resource.Type.DOMAIN, endId);
         Optional<RelationI> result = udm.find(Relation.Type.COMPOSES).btw(startUri, endUri).stream().map(relation -> new RelationI(relation.getUri(), relation.getCreationTime())).findFirst();
-        return (result.isPresent())? result.get() : new RelationI();
+        return (result.isPresent())? result.get() : null;
     }
 
     public void addDomains(String startId, String endId){

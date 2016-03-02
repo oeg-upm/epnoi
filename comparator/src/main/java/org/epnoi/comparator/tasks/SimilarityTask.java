@@ -42,7 +42,7 @@ public abstract class SimilarityTask implements Runnable,Serializable {
     public void run() {
         // Delete previous similarities
         LOG.debug("deleting existing similarities: " + similarityType);
-        // TODO this action will remove other relations
+        // TODO BUG in Neo4j: this action will remove other relations
         helper.getUdm().delete(similarityType).in(Resource.Type.DOMAIN, analysis.getDomain());
 
         // Get topic distributions

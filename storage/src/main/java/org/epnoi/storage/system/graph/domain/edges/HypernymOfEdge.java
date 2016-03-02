@@ -14,7 +14,7 @@ import org.neo4j.ogm.annotation.RelationshipEntity;
 @RelationshipEntity(type="HYPERNYM_OF")
 @Data
 @EqualsAndHashCode(of={"uri"}, callSuper = true)
-@ToString(of = {"id","uri"},callSuper = true)
+@ToString(of = {"uri"},callSuper = true)
 public class HypernymOfEdge extends Edge<TermNode,TermNode> {
 
     @Property

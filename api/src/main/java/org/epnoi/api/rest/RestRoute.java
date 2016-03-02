@@ -29,10 +29,13 @@ public abstract class RestRoute {
                 .post().description("Add a new " + singular + "").type(inType).outType(outType)
                 .produces("application/json").to("bean:" + singular + "Service?method=create")
 
-                .get("/").description("List all existing " + plural + "").outTypeList(String.class)
+                .get("/")
+                .description("List all existing " + plural + "").outTypeList(String.class)
                 .produces("application/json").to("bean:" + singular + "Service?method=list")
 
-                .get("/{id}").description("More details about  a " + singular + " by id").outType(outType)
+                .get("/{id}")
+                .description("More details about  a " + singular + " by id").outType(outType)
+//                .param().name("verbose").type(RestParamType.query).defaultValue("false").description("Verbose order details").endParam()
                 .produces("application/json").to("bean:" + singular + "Service?method=get(${header.id})")
 
                 .delete("/").description("Remove all existing " + plural + "")

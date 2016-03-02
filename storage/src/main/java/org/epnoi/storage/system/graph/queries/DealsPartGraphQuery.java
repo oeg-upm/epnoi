@@ -1,9 +1,13 @@
 package org.epnoi.storage.system.graph.queries;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.epnoi.model.domain.relations.DealsWithFromItem;
 import org.epnoi.model.domain.relations.DealsWithFromPart;
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.storage.system.graph.domain.nodes.ItemNode;
+import org.epnoi.storage.system.graph.domain.nodes.PartNode;
+import org.epnoi.storage.system.graph.domain.nodes.TopicNode;
 import org.neo4j.ogm.session.result.QueryStatistics;
 import org.neo4j.ogm.session.result.Result;
 import org.slf4j.Logger;
@@ -53,6 +57,42 @@ public class DealsPartGraphQuery implements GraphQuery<DealsWithFromPart> {
             }
         }
         return similars;
+    }
+
+    @Override
+    public List<DealsWithFromPart> inDomain(String uri) {
+        Map<String,String> params = new HashMap<>();
+        params.put("0",uri);
+        Result result = executor.query("match (domain:Domain{uri:{0}})-[c:CONTAINS]->(d:Document)-[:BUNDLES]->(i:Item)<-[:DESCRIBES]-(p:Part)-[r:DEALS_WITH]->(t:Topic) return r,p,t", params);
+
+        List<DealsWithFromPart> deals = new ArrayList<>();
+
+        Iterator<Map<String, Object>> it = result.queryResults().iterator();
+        while(it.hasNext()){
+            try {
+                Map<String, Object> map = it.next();
+
+                Map rValues = (Map) map.get("r");
+                DealsWithFromPart dealsWith = new DealsWithFromPart();
+                BeanUtils.populate(dealsWith,rValues);
+
+                Map pValues = (Map) map.get("p");
+                PartNode pNode = new PartNode();
+                BeanUtils.populate(pNode,pValues);
+
+                Map tValues = (Map) map.get("t");
+                TopicNode tNode = new TopicNode();
+                BeanUtils.populate(tNode,tValues);
+
+                dealsWith.setStartUri(pNode.getUri());
+                dealsWith.setEndUri(tNode.getUri());
+
+                deals.add(dealsWith);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                LOG.error("Error getting deals_with for part relation from: " + uri ,e);
+            }
+        }
+        return deals;
     }
 
 

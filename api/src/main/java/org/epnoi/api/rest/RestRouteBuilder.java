@@ -2,7 +2,6 @@ package org.epnoi.api.rest;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
-import org.epnoi.model.domain.resources.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +39,7 @@ public class RestRouteBuilder extends RouteBuilder {
                 .componentProperty("maxThreads","10")
                 .componentProperty("maxConnectionsPerHost","-1")
                 .componentProperty("maxTotalConnections","-1")
+                .dataFormatProperty("include", "NON_NULL")
                 .dataFormatProperty("prettyPrint", "true")
                 .dataFormatProperty("json.in.disableFeatures", "FAIL_ON_UNKNOWN_PROPERTIES,ADJUST_DATES_TO_CONTEXT_TIME_ZONE")
 //                .dataFormatProperty("json.out.disableFeatures", "WRITE_NULL_MAP_VALUES")
