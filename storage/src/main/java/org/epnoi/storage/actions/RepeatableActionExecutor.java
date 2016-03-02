@@ -1,6 +1,8 @@
 package org.epnoi.storage.actions;
 
+import org.apache.http.client.HttpResponseException;
 import org.epnoi.storage.exception.RepositoryNotFound;
+import org.neo4j.ogm.session.result.ResultProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,19 +40,28 @@ public abstract class RepeatableActionExecutor {
     protected Optional<Object> performRetries(Integer retries, String id, RepeatableAction function){
         try {
             return Optional.of(function.run());
+        }catch (ResultProcessingException e){
+
+            if (e.getCause() instanceof HttpResponseException){
+                if (retries > MAX_RETRIES){
+                    LOG.error("Error executing "+id+" after " + MAX_RETRIES + " retries",e);
+                    return Optional.empty();
+                }
+                else{
+                    LOG.info("Trying to retry "+id+": " + retries);
+                    waitForRetry(retries);
+                    return performRetries(++retries,id,function);
+                }
+            }else{
+                LOG.warn("Error on operation: " + id, e);
+                return Optional.empty();
+            }
         }catch (RepositoryNotFound e){
             LOG.debug(e.getMessage());
             return Optional.empty();
         }catch (Exception e){
-            if (retries > MAX_RETRIES){
-                LOG.error("Error executing "+id+" after " + MAX_RETRIES + " retries",e);
-                return Optional.empty();
-            }
-            else{
-                LOG.info("Trying to retry "+id+": " + retries);
-                waitForRetry(retries);
-                return performRetries(++retries,id,function);
-            }
+            LOG.error("Error on operation: " + id, e);
+            return Optional.empty();
         }
     }
 }

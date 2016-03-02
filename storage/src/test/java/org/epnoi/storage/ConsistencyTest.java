@@ -44,11 +44,11 @@ public class ConsistencyTest {
         udm.delete(Resource.Type.ANY).all();
 
         int NUM_WORDS           = 3;
-        int NUM_TERMS           = 5;
+        int NUM_TERMS           = 10;
         int NUM_DOC_TOPICS      = 2;
-        int NUM_ITEM_TOPICS     = 3;
-        int NUM_PART_TOPICS     = 3;
-        int NUM_DOCUMENTS       = 5;
+        int NUM_ITEM_TOPICS     = 5;
+        int NUM_PART_TOPICS     = 8;
+        int NUM_DOCUMENTS       = 10;
         int NUM_ITEMS           = 1;
         int NUM_PARTS           = 8;
 
@@ -67,7 +67,7 @@ public class ConsistencyTest {
             udm.save(word);
             udm.save(Relation.newEmbeddedIn(word.getUri(),domain.getUri()));
         });
-
+        // -> pairs_with
         words.forEach(w1 -> {
             words.forEach(w2 -> {
                 udm.save(Relation.newPairsWith(w1.getUri(),w2.getUri()));
@@ -81,6 +81,12 @@ public class ConsistencyTest {
             udm.save(term);
             udm.save(Relation.newAppearedIn(term.getUri(),domain.getUri()));
             words.forEach(word -> udm.save(Relation.newMentionsFromTerm(term.getUri(),word.getUri())));
+        });
+        // hypernym_of
+        terms.forEach(t1 ->{
+            terms.forEach(t2 ->{
+                udm.save(Relation.newHypernymOf(t1.getUri(),t2.getUri()));
+            });
         });
 
         // Topics
@@ -137,6 +143,7 @@ public class ConsistencyTest {
             items.addAll(internalItems);
         });
 
+        // -> similar_to document
         documents.forEach(d1 -> {
             documents.forEach(d2 -> {
                 udm.save(Relation.newSimilarToDocuments(d1.getUri(),d2.getUri()));
@@ -144,7 +151,21 @@ public class ConsistencyTest {
         });
 
 
-        // TEST 1: After insertions
+        // -> similar_to item
+        items.forEach(i1 ->{
+            items.forEach(i2 -> {
+                udm.save(Relation.newSimilarToItems(i1.getUri(),i2.getUri()));
+            });
+        });
+
+        // -> similar_to item
+        parts.forEach(p1 ->{
+            parts.forEach(p2 -> {
+                udm.save(Relation.newSimilarToParts(p1.getUri(),p2.getUri()));
+            });
+        });
+
+
         Assert.assertEquals(NUM_DOCUMENTS, udm.find(Resource.Type.DOCUMENT).in(Resource.Type.DOMAIN,domain.getUri()).size());
         Assert.assertEquals(NUM_TERMS, udm.find(Resource.Type.TERM).in(Resource.Type.DOMAIN,domain.getUri()).size());
         Assert.assertEquals(NUM_WORDS, udm.find(Resource.Type.WORD).in(Resource.Type.DOMAIN,domain.getUri()).size());
@@ -152,17 +173,56 @@ public class ConsistencyTest {
         Assert.assertEquals(NUM_DOCUMENTS*NUM_ITEMS*NUM_PARTS, udm.find(Resource.Type.PART).in(Resource.Type.DOMAIN,domain.getUri()).size());
         Assert.assertEquals(NUM_DOC_TOPICS+NUM_ITEM_TOPICS+NUM_PART_TOPICS, udm.find(Resource.Type.TOPIC).in(Resource.Type.DOMAIN,domain.getUri()).size());
 
-        // Delete Topics
-        //udm.find(Resource.Type.TOPIC).in(Resource.Type.DOMAIN,domain.getUri()).stream().forEach(topic -> udm.delete(Resource.Type.TOPIC).byUri(topic));
-        udm.delete(Relation.Type.PAIRS_WITH).in(Resource.Type.DOMAIN,domain.getUri());
+        System.out.println("Delete Topics");
+        udm.find(Resource.Type.TOPIC).in(Resource.Type.DOMAIN,domain.getUri()).stream().forEach(topic -> udm.delete(Resource.Type.TOPIC).byUri(topic));
 
-        // TEST 1: After deletion
         Assert.assertEquals(NUM_DOCUMENTS, udm.find(Resource.Type.DOCUMENT).in(Resource.Type.DOMAIN,domain.getUri()).size());
         Assert.assertEquals(NUM_TERMS, udm.find(Resource.Type.TERM).in(Resource.Type.DOMAIN,domain.getUri()).size());
         Assert.assertEquals(NUM_WORDS, udm.find(Resource.Type.WORD).in(Resource.Type.DOMAIN,domain.getUri()).size());
         Assert.assertEquals(NUM_DOCUMENTS*NUM_ITEMS, udm.find(Resource.Type.ITEM).in(Resource.Type.DOMAIN,domain.getUri()).size());
         Assert.assertEquals(NUM_DOCUMENTS*NUM_ITEMS*NUM_PARTS, udm.find(Resource.Type.PART).in(Resource.Type.DOMAIN,domain.getUri()).size());
         Assert.assertEquals(0, udm.find(Resource.Type.TOPIC).in(Resource.Type.DOMAIN,domain.getUri()).size());
+
+        System.out.println("Delete PAIR_WITH");
+        udm.delete(Relation.Type.PAIRS_WITH).in(Resource.Type.DOMAIN,domain.getUri());
+
+        Assert.assertEquals(NUM_DOCUMENTS, udm.find(Resource.Type.DOCUMENT).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(NUM_TERMS, udm.find(Resource.Type.TERM).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(NUM_WORDS, udm.find(Resource.Type.WORD).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(NUM_DOCUMENTS*NUM_ITEMS, udm.find(Resource.Type.ITEM).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(NUM_DOCUMENTS*NUM_ITEMS*NUM_PARTS, udm.find(Resource.Type.PART).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(0, udm.find(Resource.Type.TOPIC).in(Resource.Type.DOMAIN,domain.getUri()).size());
+
+        System.out.println("Delete SIMILAR_TO DOCUMENT");
+        udm.delete(Relation.Type.SIMILAR_TO_DOCUMENTS).in(Resource.Type.DOMAIN,domain.getUri());
+
+        Assert.assertEquals(NUM_DOCUMENTS, udm.find(Resource.Type.DOCUMENT).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(NUM_TERMS, udm.find(Resource.Type.TERM).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(NUM_WORDS, udm.find(Resource.Type.WORD).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(NUM_DOCUMENTS*NUM_ITEMS, udm.find(Resource.Type.ITEM).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(NUM_DOCUMENTS*NUM_ITEMS*NUM_PARTS, udm.find(Resource.Type.PART).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(0, udm.find(Resource.Type.TOPIC).in(Resource.Type.DOMAIN,domain.getUri()).size());
+
+        System.out.println("Delete SIMILAR_TO ITEMS");
+        udm.delete(Relation.Type.SIMILAR_TO_ITEMS).in(Resource.Type.DOMAIN,domain.getUri());
+
+        Assert.assertEquals(NUM_DOCUMENTS, udm.find(Resource.Type.DOCUMENT).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(NUM_TERMS, udm.find(Resource.Type.TERM).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(NUM_WORDS, udm.find(Resource.Type.WORD).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(NUM_DOCUMENTS*NUM_ITEMS, udm.find(Resource.Type.ITEM).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(NUM_DOCUMENTS*NUM_ITEMS*NUM_PARTS, udm.find(Resource.Type.PART).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(0, udm.find(Resource.Type.TOPIC).in(Resource.Type.DOMAIN,domain.getUri()).size());
+
+        System.out.println("Delete SIMILAR_TO PARTS");
+        udm.delete(Relation.Type.SIMILAR_TO_PARTS).in(Resource.Type.DOMAIN,domain.getUri());
+
+        Assert.assertEquals(NUM_DOCUMENTS, udm.find(Resource.Type.DOCUMENT).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(NUM_TERMS, udm.find(Resource.Type.TERM).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(NUM_WORDS, udm.find(Resource.Type.WORD).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(NUM_DOCUMENTS*NUM_ITEMS, udm.find(Resource.Type.ITEM).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(NUM_DOCUMENTS*NUM_ITEMS*NUM_PARTS, udm.find(Resource.Type.PART).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(0, udm.find(Resource.Type.TOPIC).in(Resource.Type.DOMAIN,domain.getUri()).size());
+
     }
 
 }
