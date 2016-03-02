@@ -102,18 +102,27 @@ public class UDMTest {
 //        eventBus.post(Event.from(topic),RoutingKey.of(Resource.Type.TOPIC, Resource.State.CREATED));
 
 
-        Analysis analysis = Resource.newAnalysis();
-        analysis.setType("topic-model");
-        analysis.setDescription("item");
-        analysis.setDomain("http://drinventor.eu/domains/7df34748-7fad-486e-a799-3bcd86a03499");
-        eventBus.post(Event.from(analysis), RoutingKey.of(Resource.Type.ANALYSIS,Resource.State.CREATED));
+        // For Comparator
+//        Analysis analysis = Resource.newAnalysis();
+//        analysis.setType("topic-model");
+//        analysis.setDescription("item");
+//        analysis.setDomain("http://drinventor.eu/domains/7df34748-7fad-486e-a799-3bcd86a03499");
+//        eventBus.post(Event.from(analysis), RoutingKey.of(Resource.Type.ANALYSIS,Resource.State.CREATED));
 
 
-//        Contains relation = Relation.newContains("http://drinventor.eu/domains/7df34748-7fad-486e-a799-3bcd86a03499", "http://drinventor.eu/documents/c369c917fecf3b4828688bdb6677dd6e");
-//        eventBus.post(Event.from(relation), RoutingKey.of(Relation.Type.CONTAINS,Relation.State.CREATED));
+        // For Modeler
+        Contains relation = Relation.newContains("http://drinventor.eu/domains/7df34748-7fad-486e-a799-3bcd86a03499", "http://drinventor.eu/documents/c369c917fecf3b4828688bdb6677dd6e");
+        eventBus.post(Event.from(relation), RoutingKey.of(Relation.Type.CONTAINS,Relation.State.CREATED));
 
     }
 
+    @Test
+    public void summary(){
+
+        Arrays.stream(Resource.Type.values()).forEach(type -> System.out.println(">"+type.name() + ": " + udm.find(type).all().size() ));
+        Arrays.stream(Relation.Type.values()).forEach(type -> System.out.println(">"+type.name() + ": " + udm.find(type).all().size() ));
+
+    }
 
     @Test
     public void fixModel(){
@@ -134,13 +143,13 @@ public class UDMTest {
 //
 //
 
-//        System.out.println("adding documents to domain...");
-//        udm.find(Resource.Type.DOCUMENT).all().forEach(uri -> udm.save(Relation.newContains(domain.getUri(),uri)));
+        System.out.println("adding documents to domain...");
+        udm.find(Resource.Type.DOCUMENT).all().forEach(uri -> udm.save(Relation.newContains(domain.getUri(),uri)));
 
-        List<String> items = udm.find(Resource.Type.ITEM).all();
-        System.out.println("Total Items: " + items.size());
-        List<String> itemsInDomain = udm.find(Resource.Type.ITEM).in(Resource.Type.DOMAIN, domain.getUri());
-        System.out.println("Items in Domain: " + itemsInDomain.size());
+//        List<String> items = udm.find(Resource.Type.ITEM).all();
+//        System.out.println("Total Items: " + items.size());
+//        List<String> itemsInDomain = udm.find(Resource.Type.ITEM).in(Resource.Type.DOMAIN, domain.getUri());
+//        System.out.println("Items in Domain: " + itemsInDomain.size());
 
 
 

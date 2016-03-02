@@ -18,4 +18,6 @@ public interface GraphQuery<T extends Relation> {
 
     void deleteIn(Resource.Type type, String uri);
 
+    List<String> findAll();
+
 }

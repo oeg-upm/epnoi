@@ -35,8 +35,14 @@ public class SearchRelationAction {
         LOG.debug("Finding " + type.name() + "s");
         List<Relation> relations = new ArrayList<>();
         try{
-            helper.getUnifiedEdgeGraphRepository().findAll(type).forEach(x -> relations.add(Relation.class.cast(x)));
-            LOG.debug(type.name() + "s: " + relations);
+
+            if (helper.getGraphQueryFactory().handle(type)){
+                helper.getGraphQueryFactory().of(type).findAll().forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
+            }else{
+                helper.getUnifiedEdgeGraphRepository().findAll(type).forEach(x -> relations.add(Relation.class.cast(x)));
+            }
+
+            LOG.trace(type.name() + "s: " + relations);
 
         }catch (ResultProcessingException e){
             LOG.warn("getting all " + type,e.getMessage());

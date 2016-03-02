@@ -113,4 +113,24 @@ public class DealsPartGraphQuery implements GraphQuery<DealsWithFromPart> {
         LOG.info("Result of query execution ["+ query + "] is: " + result);
     }
 
+    @Override
+    public List<String> findAll() {
+        Result result = executor.query("match (node1:Part)-[r:DEALS_WITH]->(node2:Topic) return r", new HashMap<>());
+
+        List<String> relations = new ArrayList<>();
+
+        Iterator<Map<String, Object>> it = result.queryResults().iterator();
+        while(it.hasNext()){
+            try {
+                Map values = (Map) it.next().get("r");
+                DealsWithFromPart relation = new DealsWithFromPart();
+                BeanUtils.populate(relation,values);
+                relations.add(relation.getUri());
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                LOG.error("Error getting all relations",e);
+            }
+        }
+        return relations;
+    }
+
 }

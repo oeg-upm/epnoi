@@ -112,4 +112,24 @@ public class PairsWithGraphQuery implements GraphQuery<PairsWith> {
         QueryStatistics result = executor.execute(query, params);
         LOG.info("Result of query execution ["+ query + "] is: " + result);
     }
+
+    @Override
+    public List<String> findAll() {
+        Result result = executor.query("match (node1:Word)-[r:PAIRS_WITH]->(node2:Word) return r", new HashMap<>());
+
+        List<String> relations = new ArrayList<>();
+
+        Iterator<Map<String, Object>> it = result.queryResults().iterator();
+        while(it.hasNext()){
+            try {
+                Map values = (Map) it.next().get("r");
+                PairsWith relation = new PairsWith();
+                BeanUtils.populate(relation,values);
+                relations.add(relation.getUri());
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                LOG.error("Error getting all relations",e);
+            }
+        }
+        return relations;
+    }
 }

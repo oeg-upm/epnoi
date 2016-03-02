@@ -33,7 +33,7 @@ public class SearchResourceAction {
         List<String> uris = new ArrayList<>();
         try{
             helper.getUnifiedNodeGraphRepository().findAll(type).forEach(x -> uris.add(x.getUri()));
-            LOG.debug(type.name() + "s: " + uris);
+            LOG.trace(type.name() + "s: " + uris);
 
         }catch (ResultProcessingException e){
             LOG.warn("getting all " + type,e.getMessage());
