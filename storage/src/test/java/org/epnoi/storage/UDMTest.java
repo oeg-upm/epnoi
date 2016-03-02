@@ -126,10 +126,20 @@ public class UDMTest {
 //        System.out.println(udm.find(Resource.Type.DOMAIN).all());
 //
 //
-//        System.out.println("adding documents to domain...");
-        udm.find(Resource.Type.DOCUMENT).all().forEach(uri -> udm.save(Relation.newContains(domain.getUri(),uri)));
 
-//        udm.find(Resource.Type.DOCUMENT).all().forEach(uri -> udm.save(Relation.newBundles(uri, StringUtils.replace(uri,"documents","items"))));
+//        System.out.println("adding documents to domain...");
+//        udm.find(Resource.Type.DOCUMENT).all().forEach(uri -> udm.save(Relation.newContains(domain.getUri(),uri)));
+
+        List<String> items = udm.find(Resource.Type.ITEM).all();
+        System.out.println("Total Items: " + items.size());
+        List<String> itemsInDomain = udm.find(Resource.Type.ITEM).in(Resource.Type.DOMAIN, domain.getUri());
+        System.out.println("Items in Domain: " + itemsInDomain.size());
+
+
+
+//        System.out.println("adding items to document to domain...");
+//        udm.find(Resource.Type.DOCUMENT).all().forEach(uri -> udm.save(Relation.newContains(domain.getUri(),uri)));
+
 
     }
 

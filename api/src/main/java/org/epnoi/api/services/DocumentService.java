@@ -34,8 +34,10 @@ public class DocumentService extends AbstractResourceService<Document> {
     public Document get(String id){
         Document document = super.get(id);
         // TODO Pending to be included by a query parameter
-        document.setContent(null);
-        document.setTokens(null);
+        if (document != null){
+            document.setContent(null);
+            document.setTokens(null);
+        }
         return document;
     }
 

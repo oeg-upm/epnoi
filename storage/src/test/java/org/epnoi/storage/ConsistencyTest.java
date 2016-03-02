@@ -68,6 +68,13 @@ public class ConsistencyTest {
             udm.save(Relation.newEmbeddedIn(word.getUri(),domain.getUri()));
         });
 
+        words.forEach(w1 -> {
+            words.forEach(w2 -> {
+                udm.save(Relation.newPairsWith(w1.getUri(),w2.getUri()));
+            });
+        });
+
+
         // Terms
         List<Term> terms = IntStream.range(0, NUM_TERMS).mapToObj(i -> Resource.newTerm()).collect(Collectors.toList());
         terms.forEach(term -> {
@@ -98,14 +105,13 @@ public class ConsistencyTest {
             udm.save(topic);
             udm.save(Relation.newEmergesIn(topic.getUri(),domain.getUri()));
             words.forEach(word -> udm.save(Relation.newMentionsFromTopic(topic.getUri(),word.getUri())));
-
         });
 
         // Documents
         List<Part> parts            = new ArrayList<>();
         List<Item> items            = new ArrayList<>();
         List<Document> documents    = IntStream.range(0, NUM_DOCUMENTS).mapToObj(i -> Resource.newDocument()).collect(Collectors.toList());
-        documents.parallelStream().forEach(doc -> {
+        documents.forEach(doc -> {
             udm.save(doc);
             udm.save(Relation.newProvides(source.getUri(),doc.getUri()));
             udm.save(Relation.newContains(domain.getUri(),doc.getUri()));
@@ -129,8 +135,12 @@ public class ConsistencyTest {
 
             });
             items.addAll(internalItems);
+        });
 
-
+        documents.forEach(d1 -> {
+            documents.forEach(d2 -> {
+                udm.save(Relation.newSimilarToDocuments(d1.getUri(),d2.getUri()));
+            });
         });
 
 
@@ -143,7 +153,8 @@ public class ConsistencyTest {
         Assert.assertEquals(NUM_DOC_TOPICS+NUM_ITEM_TOPICS+NUM_PART_TOPICS, udm.find(Resource.Type.TOPIC).in(Resource.Type.DOMAIN,domain.getUri()).size());
 
         // Delete Topics
-        udm.find(Resource.Type.TOPIC).in(Resource.Type.DOMAIN,domain.getUri()).stream().forEach(topic -> udm.delete(Resource.Type.TOPIC).byUri(topic));
+        //udm.find(Resource.Type.TOPIC).in(Resource.Type.DOMAIN,domain.getUri()).stream().forEach(topic -> udm.delete(Resource.Type.TOPIC).byUri(topic));
+        udm.delete(Relation.Type.PAIRS_WITH).in(Resource.Type.DOMAIN,domain.getUri());
 
         // TEST 1: After deletion
         Assert.assertEquals(NUM_DOCUMENTS, udm.find(Resource.Type.DOCUMENT).in(Resource.Type.DOMAIN,domain.getUri()).size());
