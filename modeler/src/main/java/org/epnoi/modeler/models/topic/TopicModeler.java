@@ -50,13 +50,13 @@ public class TopicModeler extends ModelingTask {
         domain = result.get().asDomain();
 
         // Delete previous Topics
-        helper.getUdm().find(Resource.Type.TOPIC).in(Resource.Type.DOMAIN,domain.getUri()).stream().forEach(topic -> helper.getUdm().delete(Resource.Type.TOPIC).byUri(topic));
+        //helper.getUdm().find(Resource.Type.TOPIC).in(Resource.Type.DOMAIN,domain.getUri()).stream().forEach(topic -> helper.getUdm().delete(Resource.Type.TOPIC).byUri(topic));
 
         // Documents
-        buildModelfor(Resource.Type.DOCUMENT);
+        //buildModelfor(Resource.Type.DOCUMENT);
 
         // Items
-        buildModelfor(Resource.Type.ITEM);
+        //buildModelfor(Resource.Type.ITEM);
 
         // Parts
         buildModelfor(Resource.Type.PART);
