@@ -103,16 +103,17 @@ public class UDMTest {
 
 
         // For Comparator
-//        Analysis analysis = Resource.newAnalysis();
-//        analysis.setType("topic-model");
-//        analysis.setDescription("item");
-//        analysis.setDomain("http://drinventor.eu/domains/7df34748-7fad-486e-a799-3bcd86a03499");
-//        eventBus.post(Event.from(analysis), RoutingKey.of(Resource.Type.ANALYSIS,Resource.State.CREATED));
+        Analysis analysis = Resource.newAnalysis();
+        analysis.setType("topic-model");
+        //analysis.setDescription("item");
+        analysis.setDescription("part");
+        analysis.setDomain("http://drinventor.eu/domains/7df34748-7fad-486e-a799-3bcd86a03499");
+        eventBus.post(Event.from(analysis), RoutingKey.of(Resource.Type.ANALYSIS,Resource.State.CREATED));
 
 
         // For Modeler
-        Contains relation = Relation.newContains("http://drinventor.eu/domains/7df34748-7fad-486e-a799-3bcd86a03499", "http://drinventor.eu/documents/c369c917fecf3b4828688bdb6677dd6e");
-        eventBus.post(Event.from(relation), RoutingKey.of(Relation.Type.CONTAINS,Relation.State.CREATED));
+//        Contains relation = Relation.newContains("http://drinventor.eu/domains/7df34748-7fad-486e-a799-3bcd86a03499", "http://drinventor.eu/documents/c369c917fecf3b4828688bdb6677dd6e");
+//        eventBus.post(Event.from(relation), RoutingKey.of(Relation.Type.CONTAINS,Relation.State.CREATED));
 
     }
 

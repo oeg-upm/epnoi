@@ -47,7 +47,7 @@ public abstract class SimilarityTask implements Runnable,Serializable {
 
         // Get topic distributions
         Iterable<Relation> relations = helper.getUdm().find(dealsType).in(Resource.Type.DOMAIN, analysis.getDomain());
-        LOG.debug("Read "+dealsType+": " + relations);
+        LOG.trace("Read "+dealsType+": " + relations);
 
         // Calculate Similarities
         List<WeightedPair> similarities = compute(StreamSupport.stream(relations.spliterator(), false).map(rel -> new WeightedPair(rel.getStartUri(), rel.getEndUri(), rel.getWeight())).collect(Collectors.toList()));
@@ -100,6 +100,7 @@ public abstract class SimilarityTask implements Runnable,Serializable {
         List<WeightedPair> similarities = topicDistributions.
                 cartesian(topicDistributions).
                 filter(x -> x._1().getUri().compareTo(x._2().getUri()) > 0).
+                filter(x -> x._1().getRelationships().size() == x._2().getRelationships().size()).
                 map(x -> new WeightedPair(x._1().getUri(), x._2().getUri(), RelationalSimilarity.between(x._1().getRelationships(), x._2().getRelationships()))).
                 filter(x -> x.getWeight() > threshold).
                 collect();
