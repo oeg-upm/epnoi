@@ -1,7 +1,7 @@
 package org.epnoi.storage.session;
 
 import org.epnoi.storage.actions.RepeatableActionExecutor;
-import org.neo4j.ogm.session.transaction.Transaction;
+import org.neo4j.ogm.transaction.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

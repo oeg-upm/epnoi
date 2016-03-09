@@ -1,15 +1,13 @@
 package org.epnoi.storage.system.graph.queries;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.epnoi.model.domain.relations.MentionsFromTerm;
 import org.epnoi.model.domain.relations.MentionsFromTopic;
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Resource;
-import org.epnoi.storage.system.graph.domain.nodes.TermNode;
 import org.epnoi.storage.system.graph.domain.nodes.TopicNode;
 import org.epnoi.storage.system.graph.domain.nodes.WordNode;
-import org.neo4j.ogm.session.result.QueryStatistics;
-import org.neo4j.ogm.session.result.Result;
+import org.neo4j.ogm.model.QueryStatistics;
+import org.neo4j.ogm.model.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,5 +128,10 @@ public class MentionsTopicGraphQuery implements GraphQuery<MentionsFromTopic> {
             }
         }
         return relations;
+    }
+
+    @Override
+    public void save(Relation relation) {
+        LOG.error("Not implemented yet");
     }
 }

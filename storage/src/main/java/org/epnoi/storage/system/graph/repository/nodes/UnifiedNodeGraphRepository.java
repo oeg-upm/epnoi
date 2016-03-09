@@ -5,6 +5,7 @@ import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.utils.ResourceUtils;
 import org.epnoi.storage.actions.RepeatableActionExecutor;
 import org.epnoi.storage.system.Repository;
+import org.epnoi.storage.system.graph.GraphIdFactory;
 import org.epnoi.storage.system.graph.domain.nodes.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

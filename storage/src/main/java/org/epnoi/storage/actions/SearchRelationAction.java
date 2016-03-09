@@ -5,12 +5,10 @@ import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.utils.ResourceUtils;
 import org.epnoi.storage.Helper;
 import org.epnoi.storage.session.UnifiedTransaction;
-import org.neo4j.ogm.session.result.ResultProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -44,8 +42,8 @@ public class SearchRelationAction {
 
             LOG.trace(type.name() + "s: " + relations);
 
-        }catch (ResultProcessingException e){
-            LOG.warn("getting all " + type,e.getMessage());
+//        }catch (ResultProcessingException e){
+//            LOG.warn("getting all " + type,e.getMessage());
         }catch (Exception e){
             LOG.error("Unexpected error while getting all " + type,e);
         }
@@ -74,8 +72,8 @@ public class SearchRelationAction {
 
             transaction.commit();
             return relations;
-        }catch (ResultProcessingException e){
-            LOG.warn("exception while finding " + type +"s between " + startUri+ " and " + endUri+ ":: " + e.getMessage());
+//        }catch (ResultProcessingException e){
+//            LOG.warn("exception while finding " + type +"s between " + startUri+ " and " + endUri+ ":: " + e.getMessage());
         }catch (Exception e){
             LOG.error("Unexpected error while finding " + type +"s between " + startUri+ " and " + endUri,e);
         }
@@ -103,8 +101,8 @@ public class SearchRelationAction {
 
             transaction.commit();
             return relations;
-        }catch (ResultProcessingException e){
-            LOG.warn("exception while finding " + type +"s in " + referenceType + ": " + referenceURI + ":: " + e.getMessage());
+//        }catch (ResultProcessingException e){
+//            LOG.warn("exception while finding " + type +"s in " + referenceType + ": " + referenceURI + ":: " + e.getMessage());
         }catch (Exception e){
             LOG.error("Unexpected error while finding " + type +"s in " + referenceType + ": " + referenceURI,e);
         }
@@ -128,8 +126,8 @@ public class SearchRelationAction {
 
             transaction.commit();
             return relations;
-        }catch (ResultProcessingException e){
-            LOG.warn("getting all " + type,e.getMessage());
+//        }catch (ResultProcessingException e){
+//            LOG.warn("getting all " + type,e.getMessage());
         }catch (Exception e){
             LOG.error("Unexpected error while getting all " + type,e);
         }

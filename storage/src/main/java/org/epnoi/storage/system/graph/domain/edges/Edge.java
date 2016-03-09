@@ -18,7 +18,7 @@ public abstract class Edge<S extends Node,E extends Node> extends Relation{
     @GraphId
     protected Long id;
 
-    @Index(unique = true)
+    @Property
     protected String uri;
 
     @Property

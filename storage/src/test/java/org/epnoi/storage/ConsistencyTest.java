@@ -3,10 +3,15 @@ package org.epnoi.storage;
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.*;
+import org.joda.time.Interval;
+import org.joda.time.Period;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.neo4j.ogm.session.Neo4jSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -14,6 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -34,23 +40,28 @@ import java.util.stream.IntStream;
         "epnoi.eventbus.host = wiig.dia.fi.upm.es"})
 public class ConsistencyTest {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ConsistencyTest.class);
 
     @Autowired
     UDM udm;
 
     @Test
-    public void transitiveRelationships(){
+    public void transitiveRelationships() throws InterruptedException {
 
         udm.delete(Resource.Type.ANY).all();
 
-        int NUM_WORDS           = 3;
-        int NUM_TERMS           = 10;
-        int NUM_DOC_TOPICS      = 2;
+        int NUM_WORDS           = 100;
+        int NUM_TERMS           = 100;
+        int NUM_DOC_TOPICS      = 6;
         int NUM_ITEM_TOPICS     = 5;
-        int NUM_PART_TOPICS     = 8;
-        int NUM_DOCUMENTS       = 10;
+        int NUM_PART_TOPICS     = 11;
+        int NUM_DOCUMENTS       = 100;
         int NUM_ITEMS           = 1;
         int NUM_PARTS           = 8;
+
+
+
+        Long start = System.currentTimeMillis();
 
         // Source
         Source source = Resource.newSource();
@@ -67,12 +78,6 @@ public class ConsistencyTest {
             udm.save(word);
             udm.save(Relation.newEmbeddedIn(word.getUri(),domain.getUri()));
         });
-        // -> pairs_with
-        words.forEach(w1 -> {
-            words.forEach(w2 -> {
-                udm.save(Relation.newPairsWith(w1.getUri(),w2.getUri()));
-            });
-        });
 
 
         // Terms
@@ -82,6 +87,7 @@ public class ConsistencyTest {
             udm.save(Relation.newAppearedIn(term.getUri(),domain.getUri()));
             words.forEach(word -> udm.save(Relation.newMentionsFromTerm(term.getUri(),word.getUri())));
         });
+
         // hypernym_of
         terms.forEach(t1 ->{
             terms.forEach(t2 ->{
@@ -113,6 +119,9 @@ public class ConsistencyTest {
             words.forEach(word -> udm.save(Relation.newMentionsFromTopic(topic.getUri(),word.getUri())));
         });
 
+        // Join
+        ForkJoinPool.commonPool().awaitTermination(10, TimeUnit.SECONDS);
+
         // Documents
         List<Part> parts            = new ArrayList<>();
         List<Item> items            = new ArrayList<>();
@@ -143,6 +152,9 @@ public class ConsistencyTest {
             items.addAll(internalItems);
         });
 
+        // Join
+        ForkJoinPool.commonPool().awaitTermination(10, TimeUnit.SECONDS);
+
         // -> similar_to document
         documents.forEach(d1 -> {
             documents.forEach(d2 -> {
@@ -165,10 +177,13 @@ public class ConsistencyTest {
             });
         });
 
+        Period period = new Interval(start, System.currentTimeMillis()).toPeriod();
+        System.out.println("Time inserting data: " + period.getMinutes() + " minutes, " + period.getSeconds() + " seconds");
+
 
         Assert.assertEquals(NUM_DOCUMENTS, udm.find(Resource.Type.DOCUMENT).in(Resource.Type.DOMAIN,domain.getUri()).size());
-        Assert.assertEquals(NUM_TERMS, udm.find(Resource.Type.TERM).in(Resource.Type.DOMAIN,domain.getUri()).size());
         Assert.assertEquals(NUM_WORDS, udm.find(Resource.Type.WORD).in(Resource.Type.DOMAIN,domain.getUri()).size());
+        Assert.assertEquals(NUM_TERMS, udm.find(Resource.Type.TERM).in(Resource.Type.DOMAIN,domain.getUri()).size());
         Assert.assertEquals(NUM_DOCUMENTS*NUM_ITEMS, udm.find(Resource.Type.ITEM).in(Resource.Type.DOMAIN,domain.getUri()).size());
         Assert.assertEquals(NUM_DOCUMENTS*NUM_ITEMS*NUM_PARTS, udm.find(Resource.Type.PART).in(Resource.Type.DOMAIN,domain.getUri()).size());
         Assert.assertEquals(NUM_DOC_TOPICS+NUM_ITEM_TOPICS+NUM_PART_TOPICS, udm.find(Resource.Type.TOPIC).in(Resource.Type.DOMAIN,domain.getUri()).size());
@@ -222,6 +237,9 @@ public class ConsistencyTest {
         Assert.assertEquals(NUM_DOCUMENTS*NUM_ITEMS, udm.find(Resource.Type.ITEM).in(Resource.Type.DOMAIN,domain.getUri()).size());
         Assert.assertEquals(NUM_DOCUMENTS*NUM_ITEMS*NUM_PARTS, udm.find(Resource.Type.PART).in(Resource.Type.DOMAIN,domain.getUri()).size());
         Assert.assertEquals(0, udm.find(Resource.Type.TOPIC).in(Resource.Type.DOMAIN,domain.getUri()).size());
+
+
+
 
     }
 

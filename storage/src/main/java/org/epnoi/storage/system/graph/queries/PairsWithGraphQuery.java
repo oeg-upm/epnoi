@@ -1,15 +1,12 @@
 package org.epnoi.storage.system.graph.queries;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.epnoi.model.domain.relations.MentionsFromTopic;
 import org.epnoi.model.domain.relations.PairsWith;
 import org.epnoi.model.domain.relations.Relation;
-import org.epnoi.model.domain.relations.SimilarToParts;
 import org.epnoi.model.domain.resources.Resource;
-import org.epnoi.storage.system.graph.domain.nodes.TopicNode;
 import org.epnoi.storage.system.graph.domain.nodes.WordNode;
-import org.neo4j.ogm.session.result.QueryStatistics;
-import org.neo4j.ogm.session.result.Result;
+import org.neo4j.ogm.model.QueryStatistics;
+import org.neo4j.ogm.model.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,5 +128,22 @@ public class PairsWithGraphQuery implements GraphQuery<PairsWith> {
             }
         }
         return relations;
+    }
+
+    @Override
+    public void save(Relation relation) {
+        PairsWith pairsWith = relation.asPairsWith();
+
+
+        Map<String,Object> params = new HashMap<>();
+        params.put("0",pairsWith.getStartUri());
+        params.put("1",pairsWith.getEndUri());
+        params.put("2",pairsWith.getUri());
+        params.put("3",pairsWith.getCreationTime());
+        params.put("4",pairsWith.getDomain());
+        params.put("5",pairsWith.getWeight());
+
+        Result result = executor.query("MATCH (a:Word),(b:Word) WHERE a.uri = {0} AND b.uri = {1} CREATE (a)-[r:PAIRS_WITH { uri : {2}, creationTime : {3}, domain : {4}, weight: {5}}]->(b) RETURN r", params);
+        LOG.debug("Relation inserted",result.iterator().next());
     }
 }

@@ -20,4 +20,6 @@ public interface GraphQuery<T extends Relation> {
 
     List<String> findAll();
 
+    void save(Relation relation);
+
 }

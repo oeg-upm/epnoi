@@ -7,7 +7,7 @@
         </encoder>
     </appender>
 
-    <logger name="org.epnoi.storage" level="DEBUG"/>
+    <logger name="org.epnoi.storage" level="INFO"/>
 
     <root level="info">
         <appender-ref ref="STDOUT" />

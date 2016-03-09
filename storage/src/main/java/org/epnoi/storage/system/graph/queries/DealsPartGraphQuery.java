@@ -1,15 +1,14 @@
 package org.epnoi.storage.system.graph.queries;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.epnoi.model.domain.relations.DealsWithFromItem;
+import org.epnoi.model.domain.relations.DealsWithFromDocument;
 import org.epnoi.model.domain.relations.DealsWithFromPart;
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Resource;
-import org.epnoi.storage.system.graph.domain.nodes.ItemNode;
 import org.epnoi.storage.system.graph.domain.nodes.PartNode;
 import org.epnoi.storage.system.graph.domain.nodes.TopicNode;
-import org.neo4j.ogm.session.result.QueryStatistics;
-import org.neo4j.ogm.session.result.Result;
+import org.neo4j.ogm.model.QueryStatistics;
+import org.neo4j.ogm.model.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +130,27 @@ public class DealsPartGraphQuery implements GraphQuery<DealsWithFromPart> {
             }
         }
         return relations;
+    }
+
+    @Override
+    public void save(Relation relation) {
+        DealsWithFromPart edge = relation.asDealsWithFromPart();
+
+
+        Map<String,Object> params = new HashMap<>();
+        params.put("0",edge.getStartUri());
+        params.put("1",edge.getEndUri());
+        params.put("2",edge.getUri());
+        params.put("3",edge.getCreationTime());
+        params.put("4",edge.getWeight());
+
+        LOG.trace("Trying to create DEALS_IN_FROM_ITEM relation");
+        try{
+            QueryStatistics result = executor.execute("MATCH (a:Item),(b:Topic) WHERE a.uri = {0} AND b.uri = {1} CREATE (a)-[r:DEALS_WITH { uri : {2}, creationTime : {3}, weight: {4}}]->(b) RETURN r", params);
+            LOG.debug("created DEALS_IN_FROM_ITEM relation: -> " +result.getRelationshipsCreated());
+        }catch (Exception e){
+            LOG.error("Error on DEALS_IN_FROM_ITEM",e);
+        }
     }
 
 }

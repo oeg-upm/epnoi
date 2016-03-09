@@ -4,13 +4,17 @@
 	<parent>
 		<groupId>org.epnoi</groupId>
 		<artifactId>epnoi</artifactId>
-		<version>0.2-SNAPSHOT</version>
+		<version>0.3-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>epnoi-storage</artifactId>
 	<packaging>jar</packaging>
 	<name>epnoi storage</name>
 	<description>epnoi storage</description>
+
+	<properties>
+			<neo4j.version>2.3.2</neo4j.version>
+	</properties>
 
 	<dependencies>
 
@@ -37,34 +41,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>org.hectorclient</groupId>
-			<artifactId>hector-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.mapdb</groupId>
-			<artifactId>mapdb</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.solr</groupId>
-			<artifactId>solr-solrj</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>jena-virtuoso</groupId>
-			<artifactId>jena-virtuoso</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>virtuoso-jdbc3</groupId>
-			<artifactId>virtuoso-jdbc3</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>virtuoso-jdbc4</groupId>
-			<artifactId>virtuoso-jdbc4</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-		</dependency>
 
 		<!-- Spring Data Libraries -->
 		<dependency>
@@ -88,10 +64,72 @@
 			<artifactId>spring-data-neo4j</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-ogm-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-ogm-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-ogm-http-driver</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-commons</artifactId>
+		</dependency>
 
+
+		<!-- Neo4J Maven Libraries -->
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.data</groupId>-->
+			<!--<artifactId>spring-data-neo4j</artifactId>-->
+			<!--<version>${sdn.version}</version>-->
+			<!--<type>test-jar</type>-->
+		<!--</dependency>-->
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>4.0.34.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-kernel</artifactId>
+			<version>${neo4j.version}</version>
+			<!--<type>test-jar</type>-->
+		</dependency>
+
+		<!--<dependency>-->
+			<!--<groupId>org.neo4j.app</groupId>-->
+			<!--<artifactId>neo4j-server</artifactId>-->
+			<!--<version>${neo4j.version}</version>-->
+			<!--<type>test-jar</type>-->
+		<!--</dependency>-->
+
+		<!--<dependency>-->
+			<!--<groupId>org.neo4j</groupId>-->
+			<!--<artifactId>neo4j-ogm</artifactId>-->
+			<!--<version>${neo4j-ogm.version}</version>-->
+			<!--<type>test-jar</type>-->
+			<!--<scope>test</scope>-->
+		<!--</dependency>-->
+
+		<!--<dependency>-->
+			<!--<groupId>org.neo4j.test</groupId>-->
+			<!--<artifactId>neo4j-harness</artifactId>-->
+			<!--<version>${neo4j.version}</version>-->
+			<!--&lt;!&ndash;<scope>test</scope>&ndash;&gt;-->
+		<!--</dependency>-->
 
 
 	</dependencies>

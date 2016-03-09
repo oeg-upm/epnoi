@@ -1,21 +1,24 @@
 package org.epnoi.storage.system.graph.queries;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.epnoi.model.domain.relations.DealsWithFromPart;
 import org.epnoi.model.domain.relations.EmbeddedIn;
 import org.epnoi.model.domain.relations.PairsWith;
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Resource;
+import org.epnoi.storage.system.graph.GraphIdFactory;
+import org.epnoi.storage.system.graph.domain.edges.EmbeddedInEdge;
 import org.epnoi.storage.system.graph.domain.nodes.DomainNode;
-import org.epnoi.storage.system.graph.domain.nodes.PartNode;
-import org.epnoi.storage.system.graph.domain.nodes.TopicNode;
 import org.epnoi.storage.system.graph.domain.nodes.WordNode;
-import org.neo4j.ogm.session.result.QueryStatistics;
-import org.neo4j.ogm.session.result.Result;
+import org.neo4j.helpers.TransactionTemplate;
+import org.neo4j.ogm.model.QueryStatistics;
+import org.neo4j.ogm.model.Result;
+import org.neo4j.ogm.response.model.RelationshipModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -30,6 +33,9 @@ public class EmbeddedInGraphQuery implements GraphQuery<EmbeddedIn> {
 
     @Autowired
     GraphQueryExecutor executor;
+
+    @Autowired
+    GraphIdFactory graphIdFactory;
 
     @Override
     public Relation.Type accept() {
@@ -48,12 +54,11 @@ public class EmbeddedInGraphQuery implements GraphQuery<EmbeddedIn> {
         Iterator<Map<String, Object>> it = result.queryResults().iterator();
         while(it.hasNext()){
             try {
-                Map values = (Map) it.next().get("r");
-                EmbeddedIn pairsWith = new EmbeddedIn();
-                BeanUtils.populate(pairsWith,values);
-                pairsWith.setStartUri(startUri);
-                pairsWith.setEndUri(endUri);
-                similars.add(pairsWith);
+
+                EmbeddedInEdge edge = (EmbeddedInEdge) it.next().get("r");
+                EmbeddedIn embeddedIn = new EmbeddedIn();
+                BeanUtils.copyProperties(embeddedIn,edge);
+                similars.add(embeddedIn);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 LOG.error("Error getting similar_to relation between: " + startUri +" and " + endUri,e);
             }
@@ -133,6 +138,28 @@ public class EmbeddedInGraphQuery implements GraphQuery<EmbeddedIn> {
             }
         }
         return relations;
+    }
+
+    @Override
+    public void save(Relation relation) {
+        EmbeddedIn edge = relation.asEmbeddedIn();
+
+
+        Map<String,Object> params = new HashMap<>();
+        params.put("0",edge.getStartUri());
+        params.put("1",edge.getEndUri());
+        params.put("2",edge.getUri());
+        params.put("3",edge.getCreationTime());
+        params.put("4",edge.getVector());
+        params.put("5",edge.getWeight());
+
+        LOG.trace("Trying to create EMBEDDED_IN relation");
+        try{
+            QueryStatistics result = executor.execute("MATCH (a:Word),(b:Domain) WHERE a.uri = {0} AND b.uri = {1} CREATE (a)-[r:EMBEDDED_IN { uri : {2}, creationTime : {3}, vector : {4}, weight: {5}}]->(b) RETURN r", params);
+            LOG.debug("created EMBEDDED_IN relation: -> " +result.getRelationshipsCreated());
+        }catch (Exception e){
+            LOG.error("Error on EMBEDDED_IN",e);
+        }
     }
 
 }
