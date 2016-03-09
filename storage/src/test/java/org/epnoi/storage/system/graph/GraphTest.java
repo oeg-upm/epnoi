@@ -1,11 +1,11 @@
 package org.epnoi.storage.system.graph;
 
 import es.cbadenes.lab.test.IntegrationTest;
-import org.epnoi.storage.system.graph.queries.GraphQueryExecutor;
+import org.epnoi.storage.system.graph.template.TemplateExecutor;
 import org.epnoi.storage.system.graph.repository.edges.*;
 import org.epnoi.storage.system.graph.repository.nodes.DocumentGraphRepository;
-import org.epnoi.storage.system.graph.queries.SimilarDocGraphQuery;
-import org.epnoi.storage.system.graph.queries.SimilarItemGraphQuery;
+import org.epnoi.storage.system.graph.template.SimilarDocTemplateGraph;
+import org.epnoi.storage.system.graph.template.SimilarItemTemplateGraph;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -50,17 +50,17 @@ public class GraphTest {
     Session session;
 
     @Autowired
-    GraphQueryExecutor queryExecutor;
+    TemplateExecutor queryExecutor;
 
 //    @Autowired
 //    Neo4jTemplate template;
 
 
     @Autowired
-    SimilarDocGraphQuery similarDocGraphQuery;
+    SimilarDocTemplateGraph similarDocGraphQuery;
 
     @Autowired
-    SimilarItemGraphQuery similarItemGraphQuery;
+    SimilarItemTemplateGraph similarItemGraphQuery;
 
 
     @Test

@@ -9,8 +9,7 @@ import org.epnoi.storage.system.column.repository.UnifiedColumnRepository;
 import org.epnoi.storage.system.document.repository.UnifiedDocumentRepository;
 import org.epnoi.storage.system.graph.repository.edges.UnifiedEdgeGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.UnifiedNodeGraphRepository;
-import org.epnoi.storage.system.graph.queries.GraphQueryFactory;
-import org.neo4j.ogm.session.Neo4jSession;
+import org.epnoi.storage.system.graph.template.GraphQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package org.epnoi.storage.system.graph.queries;
+package org.epnoi.storage.system.graph.template;
 
 import org.epnoi.model.domain.relations.Relation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +16,19 @@ import java.util.Map;
 public class GraphQueryFactory {
 
     @Autowired
-    List<GraphQuery> graphQueries;
+    List<TemplateGraph> graphQueries;
 
-    Map<Relation.Type, GraphQuery> queryTable;
+    Map<Relation.Type, TemplateGraph> queryTable;
 
     @PostConstruct
     public void setup(){
         queryTable = new HashMap<>();
-        for (GraphQuery graphQuery : graphQueries){
-            queryTable.put(graphQuery.accept(),graphQuery);
+        for (TemplateGraph templateGraph : graphQueries){
+            queryTable.put(templateGraph.accept(), templateGraph);
         }
     }
 
-    public GraphQuery of(Relation.Type type){
+    public TemplateGraph of(Relation.Type type){
         return queryTable.get(type);
     }
 

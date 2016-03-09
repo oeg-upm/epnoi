@@ -48,6 +48,8 @@ public class ConsistencyTest {
     @Test
     public void transitiveRelationships() throws InterruptedException {
 
+
+
         udm.delete(Resource.Type.ANY).all();
 
         int NUM_WORDS           = 100;
