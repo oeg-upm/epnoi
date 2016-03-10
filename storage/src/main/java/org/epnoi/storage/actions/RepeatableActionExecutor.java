@@ -49,7 +49,7 @@ public abstract class RepeatableActionExecutor {
                     return Optional.empty();
                 }
                 else{
-                    LOG.info("Trying to retry "+id+": " + retries);
+                    LOG.warn("Trying to retry "+id+": " + retries);
                     waitForRetry(retries);
                     return performRetries(++retries,id,function);
                 }

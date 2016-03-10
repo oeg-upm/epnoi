@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
@@ -61,12 +62,12 @@ public abstract class TemplateGraph<T extends Relation> {
 
         if (!result.isPresent()) return Collections.EMPTY_LIST;
 
-        List<T> res = StreamSupport.stream(
-                Spliterators.spliteratorUnknownSize(result.get().queryResults().iterator(), Spliterator.ORDERED), false).
+        Stream<T> out = StreamSupport.stream(result.get().queryResults().spliterator(), false).
                 map(x -> unifiedEdgeGraphRepositoryFactory.mappingOf(type).cast(x.get("r"))).
-                map(edge -> (T) ResourceUtils.map(edge, Relation.classOf(type))).
-                collect(Collectors.toList());
-        return res;
+                map(edge -> (T) ResourceUtils.map(edge, Relation.classOf(type)));
+
+        return out.collect(Collectors.toList());
+
     }
 
     public List<T> inDomain(String uri) {
@@ -76,11 +77,12 @@ public abstract class TemplateGraph<T extends Relation> {
 
         if (!result.isPresent()) return Collections.EMPTY_LIST;
 
-        return StreamSupport.stream(
+        Stream<T> out = StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(result.get().queryResults().iterator(), Spliterator.ORDERED), false).
                 map(x -> unifiedEdgeGraphRepositoryFactory.mappingOf(type).cast(x.get("r"))).
-                map(edge -> (T) ResourceUtils.map(edge,Relation.classOf(type))).
-                collect(Collectors.toList());
+                map(edge -> (T) ResourceUtils.map(edge, Relation.classOf(type)));
+
+        return out.collect(Collectors.toList());
     }
 
     public void deleteIn(Resource.Type type, String uri){
@@ -121,7 +123,7 @@ public abstract class TemplateGraph<T extends Relation> {
         LOG.trace("Trying to create "+type.name()+" relation");
         try{
             String extraParams = Strings.isNullOrEmpty(parameters.toExpression())? "": ","+parameters.toExpression();
-            QueryStatistics result = executor.execute("MATCH (a:"+startNodeLabel+"),(b:+"+endNodeLabel+") WHERE a.uri = {0} AND b.uri = {1} CREATE (a)-[r:"+relationLabel+" { uri : {2}, creationTime : {3}, weight : {4}, "+extraParams+" } ]->(b) RETURN r", parameters.getParams());
+            QueryStatistics result = executor.execute("MATCH (a:"+startNodeLabel+"),(b:"+endNodeLabel+") WHERE a.uri = {0} AND b.uri = {1} CREATE (a)-[r:"+relationLabel+" { uri : {2}, creationTime : {3}, weight : {4} "+extraParams+" } ]->(b) RETURN r", parameters.getParams());
             LOG.debug("created "+type.name()+" relation: -> " +result.getRelationshipsCreated());
         }catch (Exception e){
             LOG.error("Error on "+type.name(),e);

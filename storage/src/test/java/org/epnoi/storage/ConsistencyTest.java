@@ -46,6 +46,11 @@ public class ConsistencyTest {
     UDM udm;
 
     @Test
+    public void deleteAll() throws InterruptedException {
+        udm.delete(Resource.Type.ANY).all();
+    }
+
+    @Test
     public void transitiveRelationships() throws InterruptedException {
 
 
@@ -54,8 +59,8 @@ public class ConsistencyTest {
 
         int NUM_WORDS           = 100;
         int NUM_TERMS           = 100;
-        int NUM_DOC_TOPICS      = 6;
-        int NUM_ITEM_TOPICS     = 5;
+        int NUM_DOC_TOPICS      = 5;
+        int NUM_ITEM_TOPICS     = 6;
         int NUM_PART_TOPICS     = 11;
         int NUM_DOCUMENTS       = 100;
         int NUM_ITEMS           = 1;
@@ -121,8 +126,6 @@ public class ConsistencyTest {
             words.forEach(word -> udm.save(Relation.newMentionsFromTopic(topic.getUri(),word.getUri())));
         });
 
-        // Join
-        ForkJoinPool.commonPool().awaitTermination(10, TimeUnit.SECONDS);
 
         // Documents
         List<Part> parts            = new ArrayList<>();
@@ -154,8 +157,6 @@ public class ConsistencyTest {
             items.addAll(internalItems);
         });
 
-        // Join
-        ForkJoinPool.commonPool().awaitTermination(10, TimeUnit.SECONDS);
 
         // -> similar_to document
         documents.forEach(d1 -> {

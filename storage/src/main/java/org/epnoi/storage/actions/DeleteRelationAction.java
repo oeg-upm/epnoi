@@ -98,7 +98,7 @@ public class DeleteRelationAction {
 
             LOG.debug("Deleted: "+type.name()+" in " + refType + "[" + uri+"]");
         }catch (Exception e){
-            LOG.error("Unexpected error during delete of relations '"+ type + " in " + type +" by uri "+uri,e);
+            LOG.error("Unexpected error during delete of relations '"+ type + " in " + refType +" by uri "+uri,e);
         }
     }
 

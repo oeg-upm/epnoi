@@ -46,8 +46,8 @@ public class TemplateExecutor extends RepeatableActionExecutor{
             template.clear();
             QueryStatistics res = template.execute(query, parameters);
             // TODO This piece of code should be removed when Neo4j uses Bolt
-            if (!res.containsUpdates()) {
-                LOG.error("No operation done!");
+            if (!res.containsUpdates() && (!query.contains("delete"))) {
+//                LOG.error("No operation done!");
                 throw new ResultProcessingException("No contains updates", new HttpResponseException(404,"Not found"));
             }
             return res;

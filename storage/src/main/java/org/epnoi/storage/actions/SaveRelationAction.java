@@ -12,6 +12,8 @@ import org.epnoi.storage.system.graph.domain.edges.Edge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Random;
+
 /**
  * Created by cbadenes on 04/02/16.
  */
@@ -27,6 +29,7 @@ public class SaveRelationAction {
             relation.setUri(helper.getUriGenerator().newFor(relation.getType()));
         }
 
+        Random random = new Random();
         helper.getQueryExecutor().execute(new QueryTask(() -> {
             try{
                 LOG.debug("trying to save :" + relation);
@@ -50,7 +53,10 @@ public class SaveRelationAction {
             }catch (Exception e){
                 LOG.error("Unexpected error while saving relation: "+relation,e);
             }
-        }, 10, 100L));
+        }, 10, 50L + random.nextInt(100)));
+
+
+
     }
 
 }
