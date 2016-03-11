@@ -5,12 +5,10 @@ import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.utils.ResourceUtils;
 import org.epnoi.storage.Helper;
 import org.epnoi.storage.session.UnifiedTransaction;
-import org.neo4j.ogm.session.result.ResultProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,16 +34,16 @@ public class SearchRelationAction {
         List<Relation> relations = new ArrayList<>();
         try{
 
-            if (helper.getGraphQueryFactory().handle(type)){
-                helper.getGraphQueryFactory().of(type).findAll().forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
+            if (helper.getTemplateFactory().handle(type)){
+                helper.getTemplateFactory().of(type).findAll().forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
             }else{
                 helper.getUnifiedEdgeGraphRepository().findAll(type).forEach(x -> relations.add(Relation.class.cast(x)));
             }
 
             LOG.trace(type.name() + "s: " + relations);
 
-        }catch (ResultProcessingException e){
-            LOG.warn("getting all " + type,e.getMessage());
+//        }catch (ResultProcessingException e){
+//            LOG.warn("getting all " + type,e.getMessage());
         }catch (Exception e){
             LOG.error("Unexpected error while getting all " + type,e);
         }
@@ -66,16 +64,16 @@ public class SearchRelationAction {
             helper.getSession().clean();
             UnifiedTransaction transaction = helper.getSession().beginTransaction();
 
-            if (helper.getGraphQueryFactory().handle(type)){
-                helper.getGraphQueryFactory().of(type).query(startUri,endUri).forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
+            if (helper.getTemplateFactory().handle(type)){
+                helper.getTemplateFactory().of(type).findOne(startUri,endUri).forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
             }else{
                 helper.getUnifiedEdgeGraphRepository().findBetween(type, startUri, endUri).forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
             }
 
             transaction.commit();
             return relations;
-        }catch (ResultProcessingException e){
-            LOG.warn("exception while finding " + type +"s between " + startUri+ " and " + endUri+ ":: " + e.getMessage());
+//        }catch (ResultProcessingException e){
+//            LOG.warn("exception while finding " + type +"s between " + startUri+ " and " + endUri+ ":: " + e.getMessage());
         }catch (Exception e){
             LOG.error("Unexpected error while finding " + type +"s between " + startUri+ " and " + endUri,e);
         }
@@ -95,16 +93,16 @@ public class SearchRelationAction {
             helper.getSession().clean();
             UnifiedTransaction transaction = helper.getSession().beginTransaction();
 
-            if (helper.getGraphQueryFactory().handle(type)){
-                helper.getGraphQueryFactory().of(type).inDomain(referenceURI).forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
+            if (helper.getTemplateFactory().handle(type)){
+                helper.getTemplateFactory().of(type).findIn(referenceType,referenceURI).forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
             }else{
                 helper.getUnifiedEdgeGraphRepository().findIn(type, referenceType, referenceURI).forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
             }
 
             transaction.commit();
             return relations;
-        }catch (ResultProcessingException e){
-            LOG.warn("exception while finding " + type +"s in " + referenceType + ": " + referenceURI + ":: " + e.getMessage());
+//        }catch (ResultProcessingException e){
+//            LOG.warn("exception while finding " + type +"s in " + referenceType + ": " + referenceURI + ":: " + e.getMessage());
         }catch (Exception e){
             LOG.error("Unexpected error while finding " + type +"s in " + referenceType + ": " + referenceURI,e);
         }
@@ -112,7 +110,7 @@ public class SearchRelationAction {
     }
 
     /**
-     * Find resources by a field value
+     * Find relations by a field value
      * @param field
      * @param value
      * @return
@@ -128,8 +126,8 @@ public class SearchRelationAction {
 
             transaction.commit();
             return relations;
-        }catch (ResultProcessingException e){
-            LOG.warn("getting all " + type,e.getMessage());
+//        }catch (ResultProcessingException e){
+//            LOG.warn("getting all " + type,e.getMessage());
         }catch (Exception e){
             LOG.error("Unexpected error while getting all " + type,e);
         }

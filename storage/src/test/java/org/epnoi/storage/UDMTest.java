@@ -2,15 +2,16 @@ package org.epnoi.storage;
 
 import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.model.Event;
-import org.epnoi.model.domain.relations.Contains;
 import org.epnoi.model.domain.relations.HypernymOf;
 import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.*;
-import org.epnoi.model.modules.*;
+import org.epnoi.model.modules.BindingKey;
+import org.epnoi.model.modules.EventBus;
+import org.epnoi.model.modules.EventBusSubscriber;
+import org.epnoi.model.modules.RoutingKey;
 import org.epnoi.storage.generator.URIGenerator;
 import org.epnoi.storage.system.document.domain.WordDocument;
 import org.epnoi.storage.system.document.repository.WordDocumentRepository;
-import org.epnoi.storage.system.graph.domain.edges.SimilarToDocumentsEdge;
 import org.epnoi.storage.system.graph.repository.edges.DealsWithFromDocumentEdgeRepository;
 import org.epnoi.storage.system.graph.repository.edges.SimilarToEdgeRepository;
 import org.epnoi.storage.system.graph.repository.nodes.DocumentGraphRepository;
@@ -21,16 +22,16 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.neo4j.ogm.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -57,9 +58,6 @@ public class UDMTest {
 
     @Autowired
     Helper helper;
-
-    @Autowired
-    Session session;
 
     @Autowired
     DocumentGraphRepository documentGraphRepository;

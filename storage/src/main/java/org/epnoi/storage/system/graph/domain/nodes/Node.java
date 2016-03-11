@@ -6,7 +6,6 @@ import lombok.ToString;
 import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.storage.system.graph.domain.edges.Edge;
 import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.Property;
 
 /**
@@ -20,7 +19,7 @@ public abstract class Node extends Resource {
     @GraphId
     Long id;
 
-    @Index(unique = true)
+    @Property
     String uri;
 
     @Property

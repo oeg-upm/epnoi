@@ -2,10 +2,11 @@ package org.epnoi.storage.actions;
 
 import org.apache.http.client.HttpResponseException;
 import org.epnoi.storage.exception.RepositoryNotFound;
-import org.neo4j.ogm.session.result.ResultProcessingException;
+import org.neo4j.ogm.exception.ResultProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 /**
@@ -40,21 +41,15 @@ public abstract class RepeatableActionExecutor {
     protected Optional<Object> performRetries(Integer retries, String id, RepeatableAction function){
         try {
             return Optional.of(function.run());
-        }catch (ResultProcessingException e){
-
-            if (e.getCause() instanceof HttpResponseException){
-                if (retries > MAX_RETRIES){
-                    LOG.error("Error executing "+id+" after " + MAX_RETRIES + " retries",e);
-                    return Optional.empty();
-                }
-                else{
-                    LOG.info("Trying to retry "+id+": " + retries);
-                    waitForRetry(retries);
-                    return performRetries(++retries,id,function);
-                }
-            }else{
-                LOG.warn("Error on operation: " + id, e);
+        }catch (ResultProcessingException | NullPointerException e){
+            if (retries > MAX_RETRIES){
+                LOG.error("Error executing "+id+" after " + MAX_RETRIES + " retries",e);
                 return Optional.empty();
+            }
+            else{
+                LOG.warn("Trying to retry "+id+": " + retries);
+                waitForRetry(retries);
+                return performRetries(++retries,id,function);
             }
         }catch (RepositoryNotFound e){
             LOG.debug(e.getMessage());
@@ -64,4 +59,12 @@ public abstract class RepeatableActionExecutor {
             return Optional.empty();
         }
     }
+
+//    protected Optional<Object> performRetries(Integer retries, String id, RepeatableAction function){
+//        try {
+//            return Optional.of(function.run());
+//        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }

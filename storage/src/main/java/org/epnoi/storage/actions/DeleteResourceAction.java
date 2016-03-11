@@ -4,6 +4,7 @@ import org.epnoi.model.Event;
 import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.modules.RoutingKey;
 import org.epnoi.storage.Helper;
+import org.epnoi.storage.exception.RepositoryNotFound;
 import org.epnoi.storage.session.UnifiedTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,9 +38,13 @@ public class DeleteResourceAction {
             List<Resource.Type> types = (type.equals(Resource.Type.ANY)) ? Arrays.asList(Resource.Type.values()) : Arrays.asList(new Resource.Type[]{type});
 
             types.stream().filter(x -> !x.equals(Resource.Type.ANY)).forEach(t ->{
-                helper.getUnifiedColumnRepository().deleteAll(t);
-                helper.getUnifiedDocumentRepository().deleteAll(t);
-                helper.getUnifiedNodeGraphRepository().deleteAll(t);
+                try{
+                    helper.getUnifiedColumnRepository().deleteAll(t);
+                    helper.getUnifiedDocumentRepository().deleteAll(t);
+                    helper.getUnifiedNodeGraphRepository().deleteAll(t);
+                }catch (RepositoryNotFound e){
+                    LOG.warn("" + e.getMessage());
+                }
             });
 
 

@@ -18,7 +18,7 @@ public abstract class Edge<S extends Node,E extends Node> extends Relation{
     @GraphId
     protected Long id;
 
-    @Index(unique = true)
+    @Property
     protected String uri;
 
     @Property
@@ -35,6 +35,7 @@ public abstract class Edge<S extends Node,E extends Node> extends Relation{
 
     public void setStart(Node node){
         this.startNode = (S) node;
+        this.startUri = node.getUri();
     }
 
     public S getStart(){
@@ -43,6 +44,7 @@ public abstract class Edge<S extends Node,E extends Node> extends Relation{
 
     public void setEnd(Node node){
         this.endNode = (E) node;
+        this.endUri = node.getUri();
     }
 
     public E getEnd(){
@@ -51,12 +53,12 @@ public abstract class Edge<S extends Node,E extends Node> extends Relation{
 
     @Override
     public String getStartUri(){
-        return startNode.getUri();
+        return startUri;
     }
 
     @Override
     public String getEndUri(){
-        return endNode.getUri();
+        return endUri;
     }
 
     @Override

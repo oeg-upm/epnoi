@@ -3,7 +3,6 @@ package org.epnoi.storage.actions;
 import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.storage.Helper;
 import org.epnoi.storage.session.UnifiedTransaction;
-import org.neo4j.ogm.session.result.ResultProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +34,8 @@ public class SearchResourceAction {
             helper.getUnifiedNodeGraphRepository().findAll(type).forEach(x -> uris.add(x.getUri()));
             LOG.trace(type.name() + "s: " + uris);
 
-        }catch (ResultProcessingException e){
-            LOG.warn("getting all " + type,e.getMessage());
+//        }catch (ResultProcessingException e){
+//            LOG.warn("getting all " + type,e.getMessage());
         }catch (Exception e){
             LOG.error("Unexpected error while getting all " + type,e);
         }
@@ -60,8 +59,8 @@ public class SearchResourceAction {
 
             transaction.commit();
             LOG.debug("In "+referenceType+": " + referenceURI + " found: ["+type + "]: " + uris);
-        }catch (ResultProcessingException e){
-            LOG.warn("exception while finding " + type +"s in " + referenceType + ": " + referenceURI + ":: " + e.getMessage());
+//        }catch (ResultProcessingException e){
+//            LOG.warn("exception while finding " + type +"s in " + referenceType + ": " + referenceURI + ":: " + e.getMessage());
         }catch (Exception e){
             LOG.error("Unexpected error while finding " + type +"s in " + referenceType + ": " + referenceURI,e);
         }
@@ -85,8 +84,8 @@ public class SearchResourceAction {
 
             transaction.commit();
             LOG.debug("By "+field+": '" + value+ "' found: ["+type + "]: " + uris);
-        }catch (ResultProcessingException e){
-            LOG.warn("getting all " + type,e.getMessage());
+//        }catch (ResultProcessingException e){
+//            LOG.warn("getting all " + type,e.getMessage());
         }catch (Exception e){
             LOG.error("Unexpected error while getting all " + type,e);
         }

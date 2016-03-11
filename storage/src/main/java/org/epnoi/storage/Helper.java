@@ -2,13 +2,14 @@ package org.epnoi.storage;
 
 import lombok.Getter;
 import org.epnoi.model.modules.EventBus;
+import org.epnoi.storage.executor.QueryExecutor;
 import org.epnoi.storage.generator.URIGenerator;
 import org.epnoi.storage.session.UnifiedSession;
 import org.epnoi.storage.system.column.repository.UnifiedColumnRepository;
 import org.epnoi.storage.system.document.repository.UnifiedDocumentRepository;
 import org.epnoi.storage.system.graph.repository.edges.UnifiedEdgeGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.UnifiedNodeGraphRepository;
-import org.epnoi.storage.system.graph.queries.GraphQueryFactory;
+import org.epnoi.storage.system.graph.template.TemplateFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,9 +38,12 @@ public class Helper {
     EventBus eventBus;
 
     @Autowired @Getter
-    GraphQueryFactory graphQueryFactory;
+    TemplateFactory templateFactory;
 
     @Autowired @Getter
     URIGenerator uriGenerator;
+
+    @Autowired @Getter
+    QueryExecutor queryExecutor;
 
 }

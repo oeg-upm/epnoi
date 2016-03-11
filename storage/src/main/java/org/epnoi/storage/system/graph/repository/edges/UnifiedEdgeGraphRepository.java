@@ -5,11 +5,11 @@ import org.epnoi.model.domain.relations.Relation;
 import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.model.utils.ResourceUtils;
 import org.epnoi.storage.actions.RepeatableActionExecutor;
-import org.epnoi.storage.system.Repository;
+import org.epnoi.storage.system.graph.repository.Repository;
 import org.epnoi.storage.system.graph.domain.edges.Edge;
 import org.epnoi.storage.system.graph.domain.nodes.Node;
-import org.epnoi.storage.system.graph.repository.nodes.UnifiedNodeGraphRepository;
 import org.epnoi.storage.system.graph.repository.nodes.UnifiedNodeGraphRepositoryFactory;
+import org.neo4j.ogm.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +31,16 @@ public class UnifiedEdgeGraphRepository extends RepeatableActionExecutor impleme
     @Autowired
     UnifiedEdgeGraphRepositoryFactory factory;
 
+    @Autowired
+    Session session;
+
+
     private static final Logger LOG = LoggerFactory.getLogger(UnifiedEdgeGraphRepository.class);
 
     @Override
     public void save(Relation relation){
-
         performRetries(0, "save " + relation.getType() + "[" + relation + "]", () -> {
+
             Resource snode = nodeFactory.repositoryOf(relation.getStartType()).findOneByUri(relation.getStartUri());
             Resource enode = nodeFactory.repositoryOf(relation.getEndType()).findOneByUri(relation.getEndUri());
 

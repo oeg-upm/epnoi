@@ -1,4 +1,4 @@
-package org.epnoi.storage.system;
+package org.epnoi.storage.system.graph.repository;
 
 import org.epnoi.model.domain.LinkableElement;
 import org.epnoi.model.domain.resources.Resource;
