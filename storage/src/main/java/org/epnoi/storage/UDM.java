@@ -89,6 +89,27 @@ public class UDM {
         return new SearchRelationAction(helper,type);
     }
 
+//    /**
+//     * Count 'type' resources
+//     * @param type
+//     * @return uris
+//     */
+//    public CountResourceAction count(Resource.Type type){
+//        return new CountResourceAction(helper,type);
+//    }
+
+    /**
+     * Count 'type' relations
+     * @param type
+     * @return uris
+     */
+    public CountRelationAction count(Relation.Type type){
+        return new CountRelationAction(helper,type);
+    }
+
+
+
+
     /**
      * Delete 'type' resources
      * @param type

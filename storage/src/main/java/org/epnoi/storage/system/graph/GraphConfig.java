@@ -41,9 +41,6 @@ public class GraphConfig extends Neo4jConfiguration {
     Integer port;
 
 
-    @Autowired
-    GraphIdFactory graphIdFactory;
-
 
 //    @Override
 //    @Bean

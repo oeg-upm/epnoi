@@ -1,28 +1,34 @@
-package org.epnoi.storage.system.graph.template;
+package org.epnoi.storage.system.graph.template.edges;
 
-import org.epnoi.model.domain.relations.AppearedIn;
-import org.epnoi.model.domain.relations.EmbeddedIn;
 import org.epnoi.model.domain.relations.Relation;
+import org.epnoi.model.domain.resources.Resource;
 import org.springframework.stereotype.Component;
 
 /**
  * Created by cbadenes on 28/02/16.
  */
 @Component
-public class AppearedInTemplateGraph extends TemplateGraph<AppearedIn> {
+public class AppearedInEdgeTemplate extends EdgeTemplate {
 
-    public AppearedInTemplateGraph() {
+    public AppearedInEdgeTemplate() {
         super(Relation.Type.APPEARED_IN);
     }
 
     @Override
-    protected String simplePath() {
-        return "(s:Term{uri:{0}})-[r:APPEARED_IN]->(e:Domain{uri:{1}})";
+    protected String pathBy(Resource.Type type) {
+        switch (type){
+            case ANY:           return "(s:Term)-[r:APPEARED_IN]->(e:Domain)";
+            case DOMAIN:        return "(e:Domain{uri:{0}})<-[r:APPEARED_IN]-(s:Term)";
+            default: throw new RuntimeException("Path for " + type.name() + " not implemented yet");
+        }
     }
 
     @Override
-    protected String byDomainPath() {
-        return "(e:Domain{uri:{0}})<-[r:APPEARED_IN]-(s:Term)";
+    protected String pathBy(Relation.Type type) {
+        switch (type){
+            case APPEARED_IN:   return "(s:Term{uri:{0}})-[r:APPEARED_IN]->(e:Domain{uri:{1}})";
+            default: throw new RuntimeException("Path for " + type.name() + " not implemented yet");
+        }
     }
 
     @Override

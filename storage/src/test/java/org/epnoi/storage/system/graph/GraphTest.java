@@ -4,8 +4,8 @@ import es.cbadenes.lab.test.IntegrationTest;
 import org.epnoi.storage.system.graph.template.TemplateExecutor;
 import org.epnoi.storage.system.graph.repository.edges.*;
 import org.epnoi.storage.system.graph.repository.nodes.DocumentGraphRepository;
-import org.epnoi.storage.system.graph.template.SimilarDocTemplateGraph;
-import org.epnoi.storage.system.graph.template.SimilarItemTemplateGraph;
+import org.epnoi.storage.system.graph.template.edges.SimilarDocEdgeTemplate;
+import org.epnoi.storage.system.graph.template.edges.SimilarItemEdgeTemplate;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -57,10 +57,10 @@ public class GraphTest {
 
 
     @Autowired
-    SimilarDocTemplateGraph similarDocGraphQuery;
+    SimilarDocEdgeTemplate similarDocGraphQuery;
 
     @Autowired
-    SimilarItemTemplateGraph similarItemGraphQuery;
+    SimilarItemEdgeTemplate similarItemGraphQuery;
 
 
     @Test
@@ -85,8 +85,8 @@ public class GraphTest {
 //        System.out.println("Query Results: "+ result2.queryResults());
 
 
-        System.out.println("0->" + similarDocGraphQuery.query(startDocUri, endDocUri));
-        System.out.println("1->" + similarItemGraphQuery.query(startItemUri, endItemUri));
+        System.out.println("0->" + similarDocGraphQuery.findOne(startDocUri, endDocUri));
+        System.out.println("1->" + similarItemGraphQuery.findOne(startItemUri, endItemUri));
 
         try{
 //            Iterable<SimilarToDocumentsEdge> result = similarToDocumentsEdgeRepository.giveme(startUri, endUri);

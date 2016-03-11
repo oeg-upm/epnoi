@@ -75,8 +75,8 @@ public class DeleteRelationAction {
             helper.getSession().clean();
             UnifiedTransaction transaction = helper.getSession().beginTransaction();
 
-            if (helper.getGraphQueryFactory().handle(type)){
-                helper.getGraphQueryFactory().of(type).deleteIn(refType,uri);
+            if (helper.getTemplateFactory().handle(type)){
+                helper.getTemplateFactory().of(type).deleteIn(refType,uri);
             }else{
                 Iterable<Relation> pairs = helper.getUnifiedEdgeGraphRepository().findIn(type,refType, uri);
                 if (pairs != null){

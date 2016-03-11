@@ -41,23 +41,7 @@ public abstract class RepeatableActionExecutor {
     protected Optional<Object> performRetries(Integer retries, String id, RepeatableAction function){
         try {
             return Optional.of(function.run());
-        }catch (ResultProcessingException e){
-
-            if (e.getCause() instanceof HttpResponseException){
-                if (retries > MAX_RETRIES){
-                    LOG.error("Error executing "+id+" after " + MAX_RETRIES + " retries",e);
-                    return Optional.empty();
-                }
-                else{
-                    LOG.warn("Trying to retry "+id+": " + retries);
-                    waitForRetry(retries);
-                    return performRetries(++retries,id,function);
-                }
-            }else{
-                LOG.warn("Error on operation: " + id, e);
-                return Optional.empty();
-            }
-        }catch (NullPointerException e){
+        }catch (ResultProcessingException | NullPointerException e){
             if (retries > MAX_RETRIES){
                 LOG.error("Error executing "+id+" after " + MAX_RETRIES + " retries",e);
                 return Optional.empty();

@@ -3,7 +3,7 @@ package org.epnoi.storage.system.document.repository;
 import org.apache.commons.lang.WordUtils;
 import org.epnoi.model.domain.resources.Resource;
 import org.epnoi.storage.exception.RepositoryNotFound;
-import org.epnoi.storage.system.Repository;
+import org.epnoi.storage.system.graph.repository.Repository;
 import org.epnoi.model.utils.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

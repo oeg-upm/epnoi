@@ -1,4 +1,4 @@
-package org.epnoi.storage.system.graph.template;
+package org.epnoi.storage.system.graph.template.edges;
 
 import lombok.Getter;
 import org.epnoi.model.domain.relations.Relation;

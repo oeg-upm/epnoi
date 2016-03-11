@@ -1,6 +1,7 @@
 package org.epnoi.storage.system.graph.template;
 
 import org.epnoi.model.domain.relations.Relation;
+import org.epnoi.storage.system.graph.template.edges.EdgeTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,26 +14,26 @@ import java.util.Map;
  * Created by cbadenes on 28/02/16.
  */
 @Component
-public class GraphQueryFactory {
+public class TemplateFactory {
 
     @Autowired
-    List<TemplateGraph> graphQueries;
+    List<EdgeTemplate> edgeTemplates;
 
-    Map<Relation.Type, TemplateGraph> queryTable;
+    Map<Relation.Type, EdgeTemplate> edgeTable;
 
     @PostConstruct
     public void setup(){
-        queryTable = new HashMap<>();
-        for (TemplateGraph templateGraph : graphQueries){
-            queryTable.put(templateGraph.accept(), templateGraph);
+        edgeTable = new HashMap<>();
+        for (EdgeTemplate edgeTemplate : edgeTemplates){
+            edgeTable.put(edgeTemplate.accept(), edgeTemplate);
         }
     }
 
-    public TemplateGraph of(Relation.Type type){
-        return queryTable.get(type);
+    public EdgeTemplate of(Relation.Type type){
+        return edgeTable.get(type);
     }
 
     public boolean handle(Relation.Type type){
-        return queryTable.containsKey(type);
+        return edgeTable.containsKey(type);
     }
 }

@@ -34,8 +34,8 @@ public class SearchRelationAction {
         List<Relation> relations = new ArrayList<>();
         try{
 
-            if (helper.getGraphQueryFactory().handle(type)){
-                helper.getGraphQueryFactory().of(type).findAll().forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
+            if (helper.getTemplateFactory().handle(type)){
+                helper.getTemplateFactory().of(type).findAll().forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
             }else{
                 helper.getUnifiedEdgeGraphRepository().findAll(type).forEach(x -> relations.add(Relation.class.cast(x)));
             }
@@ -64,8 +64,8 @@ public class SearchRelationAction {
             helper.getSession().clean();
             UnifiedTransaction transaction = helper.getSession().beginTransaction();
 
-            if (helper.getGraphQueryFactory().handle(type)){
-                helper.getGraphQueryFactory().of(type).query(startUri,endUri).forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
+            if (helper.getTemplateFactory().handle(type)){
+                helper.getTemplateFactory().of(type).findOne(startUri,endUri).forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
             }else{
                 helper.getUnifiedEdgeGraphRepository().findBetween(type, startUri, endUri).forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
             }
@@ -93,8 +93,8 @@ public class SearchRelationAction {
             helper.getSession().clean();
             UnifiedTransaction transaction = helper.getSession().beginTransaction();
 
-            if (helper.getGraphQueryFactory().handle(type)){
-                helper.getGraphQueryFactory().of(type).inDomain(referenceURI).forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
+            if (helper.getTemplateFactory().handle(type)){
+                helper.getTemplateFactory().of(type).findIn(referenceType,referenceURI).forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
             }else{
                 helper.getUnifiedEdgeGraphRepository().findIn(type, referenceType, referenceURI).forEach(x -> relations.add((Relation) ResourceUtils.map(x,Relation.classOf(type))));
             }
@@ -110,7 +110,7 @@ public class SearchRelationAction {
     }
 
     /**
-     * Find resources by a field value
+     * Find relations by a field value
      * @param field
      * @param value
      * @return

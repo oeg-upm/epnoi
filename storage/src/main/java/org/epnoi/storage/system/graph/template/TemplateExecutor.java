@@ -2,6 +2,8 @@ package org.epnoi.storage.system.graph.template;
 
 import org.apache.http.client.HttpResponseException;
 import org.epnoi.storage.actions.RepeatableActionExecutor;
+import org.joda.time.Interval;
+import org.joda.time.Period;
 import org.neo4j.ogm.exception.ResultProcessingException;
 import org.neo4j.ogm.model.QueryStatistics;
 import org.neo4j.ogm.model.Result;
@@ -36,22 +38,30 @@ public class TemplateExecutor extends RepeatableActionExecutor{
 
 
     public Optional<Result> query(String query, Map<String, ?> parameters){
-        Optional<Object> result = performRetries(0, query, () -> template.query(query, parameters));
+        Long start = System.currentTimeMillis();
+        Optional<Object> result = performRetries(0, query, () -> {
+            Result res = template.query(query, parameters);
+            return res;
+        });
+        Period period = new Interval(start, System.currentTimeMillis()).toPeriod();
+        LOG.debug("Query : " + query + " in: " + period.getMinutes() + " minutes, " + period.getSeconds() + " seconds [" + query+"]");
         return (result.isPresent())? Optional.of((Result)result.get()) : Optional.empty();
     }
 
 
     public QueryStatistics execute(String query, Map<String, Object> parameters){
+        Long start = System.currentTimeMillis();
         Optional<Object> result = performRetries(0, query, () -> {
             template.clear();
             QueryStatistics res = template.execute(query, parameters);
-            // TODO This piece of code should be removed when Neo4j uses Bolt
+            // TODO This part of code should be removed when Neo4j uses Bolt
             if (!res.containsUpdates() && (!query.contains("delete"))) {
-//                LOG.error("No operation done!");
                 throw new ResultProcessingException("No contains updates", new HttpResponseException(404,"Not found"));
             }
             return res;
         });
+        Period period = new Interval(start, System.currentTimeMillis()).toPeriod();
+        LOG.debug("Executed : " + query + " in: " + period.getMinutes() + " minutes, " + period.getSeconds() + " seconds [" + query+"]");
         if (!result.isPresent()) throw new RuntimeException("Operation not completed");
         return (QueryStatistics) result.get();
     }

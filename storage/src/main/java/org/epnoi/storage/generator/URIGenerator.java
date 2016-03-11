@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -25,11 +27,14 @@ public class URIGenerator {
 
     private static final String SEPARATOR = "/";
 
+    private static final SimpleDateFormat df;
+
+    static{
+        df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+    }
+
     @Value("${epnoi.uri.base}")
     String base;
-
-    @Autowired
-    UDM udm;
 
     public String basedOnContent(Resource.Type resource, String content){
         return new StringBuilder(base).append(resource.route()).append(SEPARATOR).append(getMD5(content)).toString();
@@ -44,19 +49,11 @@ public class URIGenerator {
     }
 
     public String newFor(Resource.Type type){
-        String uri;
-        do {
-            uri = from(type,getUUID()).toString();
-        } while (udm.exists(type).withUri(uri));
-        return uri;
+        return from(type,df.format(new Date())+"-"+getMD5(getUUID())).toString();
     }
 
     public String newFor(Relation.Type type){
-        String uri;
-        do {
-            uri = from(type,getUUID()).toString();
-        } while (udm.exists(type).withUri(uri));
-        return uri;
+        return from(type,df.format(new Date())+"-"+getMD5(getUUID())).toString();
     }
 
     private String getUUID(){
